@@ -1,0 +1,21 @@
+{
+  "project_triage": [
+    {
+      "component_id": "auth_and_session_module",
+      "component_name": "Módulo de Autenticación y Sesión",
+      "risk_level": "CRITICAL",
+      "asset_tags": ["auth_service", "session_store", "backend_controller"],
+      "files_to_audit": [
+        "auth.py",
+        "core/*"
+      ],
+      "initial_semantic_context": {
+        "architectural_role": "Punto de entrada de identidad, validación de credenciales y emisión de tokens JWT.",
+        "data_inputs": ["Depends(OAuth2PasswordRequestForm)", "Headers (Bearer Token)"],
+        "data_outputs": ["Access Token (JWT)", "Refresh Token"],
+        "state_management": "Stateless (JWT), dependiente de base de datos para validación de hashes.",
+        "external_interactions": ["Base de datos MongoDB (vía Beanie)", "Librería Passlib/Bcrypt"]
+      }
+    }
+  ]
+}

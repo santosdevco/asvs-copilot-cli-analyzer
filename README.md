@@ -1,0 +1,321 @@
+# ASVS Audit Pipeline — CLI
+
+Pipeline semi-automatizado para auditar aplicaciones contra **OWASP ASVS v5.0**.  
+Cada comando corresponde a un paso del flujo descrito en el README principal.
+
+---
+
+## Estructura del proyecto
+
+```
+sonarqube-reports/
+├── cli.py                          ← entry point
+├── cli/
+│   ├── config.py                   ← rutas globales (OUTPUTS_DIR, FORMATS_DIR, …)
+│   ├── requirements.txt
+│   ├── models/
+│   │   ├── component.py            ← ComponentIndex, ComponentItem
+│   │   └── audit_result.py         ← AuditOutput, AuditResultItem
+│   ├── core/
+│   │   ├── prompt_renderer.py      ← reemplaza {{keys}} en los .md
+│   │   ├── context_builder.py      ← arma el contexto para cada prompt
+│   │   ├── llm_client.py           ← abstracción OpenAI / Anthropic
+│   │   └── output_writer.py        ← escribe/actualiza artefactos en outputs/
+│   └── commands/
+│       ├── extract.py              ← Step 1
+│       ├── triage.py               ← Step 2
+│       └── audit.py                ← Step 4
+├── formats/
+│   ├── asvs_json/                  ← reglas OWASP por capítulo
+│   ├── prompts/                    ← plantillas con {{keys}}
+│   ├── taxonomy/                   ← asset_category, asvs_asset_relation, context_choose
+│   └── outputs/                    ← ejemplos de formato (mostrados al LLM)
+└── outputs/
+    └── {app_name}/
+        ├── static_context/         ← .txt generados por run_mapper.py
+        └── components/
+            ├── index.json
+            └── {component_id}/
+                ├── context.md
+                └── analysis/
+                    └── V6.json
+```
+
+---
+
+## Instalación
+
+```bash
+# Desde la raíz del repositorio
+pip install -r cli/requirements.txt
+```
+
+### Variables de entorno
+
+Crea un `.env` en la raíz (o expórtalas manualmente):
+
+```dotenv
+# ── GitHub Copilot / GitHub Models (proveedor por defecto) ───────────────────
+# Genera el token en: https://github.com/settings/tokens  (sin scopes especiales)
+GITHUB_TOKEN=ghp_...
+
+LLM_PROVIDER=github          # github (default) | openai | anthropic
+LLM_MODEL=gpt-4o             # gpt-4o | o4-mini | meta-llama-3.1-405b-instruct | …
+LLM_MAX_TOKENS=8192
+
+# Proveedores alternativos (solo si cambias LLM_PROVIDER)
+OPENAI_API_KEY=sk-...
+ANTHROPIC_API_KEY=sk-ant-...
+```
+
+> El proveedor `github` usa el SDK oficial `azure-ai-inference` contra  
+> `https://models.inference.ai.azure.com`, el mismo endpoint que alimenta  
+> el catálogo de modelos de GitHub Copilot.
+
+---
+
+## Comandos
+
+### `extract` — Paso 1: Extracción estática
+
+Llama a `run_mapper.py` y genera los archivos `.txt` de contexto estático.
+
+```bash
+python3 cli.py extract <app_name> [--source-dir PATH]
+```
+
+| Argumento | Descripción |
+|---|---|
+| `app_name` | Nombre lógico de la app (se usa como carpeta en `outputs/`) |
+| `--source-dir` | Ruta al código fuente. Por defecto se pasa `app_name` al mapper. |
+
+**Salida:** `outputs/{app_name}/static_context/*.txt`
+
+```bash
+# Ejemplo
+python3 cli.py extract watshelp-bancodebogota-api \
+  --source-dir analysis-repos/watshelp-bancodebogota-api
+```
+
+---
+
+### `triage` — Paso 2: Agente Arquitecto
+
+El LLM analiza el contexto estático completo, agrupa los archivos en componentes
+y genera `index.json` + `context.md` por componente.
+
+```bash
+python3 cli.py triage <app_name> [--dry-run]
+```
+
+| Opción | Descripción |
+|---|---|
+| `--dry-run` | Muestra el prompt renderizado sin llamar al LLM |
+
+**Salida:**
+- `outputs/{app_name}/components/index.json`
+- `outputs/{app_name}/components/{component_id}/context.md`
+
+```bash
+python3 cli.py triage watshelp-bancodebogota-api
+python3 cli.py triage watshelp-bancodebogota-api --dry-run   # inspección
+```
+
+> **Formato esperado de respuesta del LLM**  
+> El LLM debe devolver un JSON con dos claves:
+> ```json
+> {
+>   "index":    { ...ComponentIndex... },
+>   "contexts": { "<component_id>": "<contenido context.md>" }
+> }
+> ```
+
+---
+
+### `audit` — Paso 4: Bucle de Auditoría
+
+Itera sobre cada componente × capítulo ASVS aplicable y genera un `.json` de hallazgos.
+
+```bash
+python3 cli.py audit <app_name> [OPTIONS]
+```
+
+| Opción | Descripción |
+|---|---|
+| `--component ID` | Auditar solo un componente específico |
+| `--chapter V6` | Restringir a un solo capítulo ASVS (acepta prefijo, ej. `V6`) |
+| `--dry-run` | Renderiza prompts sin llamar al LLM |
+
+**Salida por cada (componente, capítulo):**
+- `outputs/{app_name}/components/{component_id}/analysis/{chapter}.json`
+- Append en `outputs/{app_name}/components/{component_id}/context.md`
+
+```bash
+# Auditar todo el proyecto
+python3 cli.py audit watshelp-bancodebogota-api
+
+# Solo un componente
+python3 cli.py audit watshelp-bancodebogota-api \
+  --component auth_and_session_module
+
+# Un componente, un capítulo
+python3 cli.py audit watshelp-bancodebogota-api \
+  --component auth_and_session_module \
+  --chapter V6
+
+# Ver prompts sin gastar tokens
+python3 cli.py audit watshelp-bancodebogota-api --dry-run
+```
+
+---
+
+### `run` — Pipeline completo
+
+Encadena `extract → triage → audit` en un solo comando.
+
+```bash
+python3 cli.py run <app_name> [--source-dir PATH] [--component ID] [--chapter V6]
+```
+
+```bash
+python3 cli.py run watshelp-bancodebogota-api \
+  --source-dir analysis-repos/watshelp-bancodebogota-api
+```
+
+Para reducir consumo de tokens durante audit, puedes excluir el diario incremental del contexto:
+
+```bash
+python3 cli.py audit <app_name> --no-include-auditor-diary
+```
+
+Esto elimina del prompt la sección `=== AUDITOR DIARY ... ===` dentro de `context.md`.
+
+---
+
+### `report` — Reporte final en Markdown
+
+Genera un reporte MD por aplicación, consolidando:
+
+- logs de ejecución por app (`log_app.log`)
+- reportes de consumo (`usage/*_usage.json`)
+- resumen de análisis por componente/capítulo
+
+Incluye menú interactivo para elegir qué secciones incluir en el reporte final.
+
+```bash
+python3 cli.py report <app_name>
+python3 cli.py report <app_name> --no-interactive-menu
+python3 cli.py report <app_name> --no-interactive-menu \
+  --no-include-sessions --no-include-events --no-include-prompts --no-include-outputs \
+  --include-audit-summary --include-usage-files
+```
+
+En modo `--no-interactive-menu` puedes controlar secciones con flags:
+
+- `--include-sessions/--no-include-sessions`
+- `--include-events/--no-include-events`
+- `--include-prompts/--no-include-prompts`
+- `--include-outputs/--no-include-outputs`
+- `--include-audit-summary/--no-include-audit-summary`
+- `--include-usage-files/--no-include-usage-files`
+- `--max-events <N>`
+- `--max-block-chars <N>`
+
+**Salidas:**
+
+- `outputs/{app_name}/reports/{timestamp}_app_report.md`
+- `outputs/{app_name}/reports/latest_app_report.md`
+
+El reporte incluye al final el **consumo total de tokens** (sumatoria de usage reports).
+
+---
+
+## Token usage tracking (real values)
+
+When using `LLM_PROVIDER=copilot`, the CLI captures real token usage from Copilot SDK
+`assistant.usage` events (not estimates based on characters).
+
+After each execution:
+
+- `triage` writes:
+  - `outputs/{app_name}/usage/{timestamp}_triage_usage.json`
+  - `outputs/{app_name}/usage/latest_triage_usage.json`
+- `audit` writes:
+  - `outputs/{app_name}/usage/{timestamp}_audit_usage.json`
+  - `outputs/{app_name}/usage/latest_audit_usage.json`
+
+Each usage report includes:
+
+- Total input/output tokens
+- Cache read/write tokens
+- Reasoning tokens
+- Provider/model metadata
+- Per-call usage breakdown
+
+---
+
+## App execution log (`log_app.log`)
+
+Each command execution now writes a per-app log file:
+
+- `outputs/{app_name}/log_app.log`
+
+The log includes:
+
+- Command executed (full CLI command line)
+- Parsed options selected
+- Input prompts sent to the LLM (full prompt text)
+- AI/chat output returned by the model (full response text)
+- Interactive choices (menu selections and answers in interactive mode)
+
+Example path:
+
+- `outputs/watshelp-bancodebogota-admin/log_app.log`
+
+---
+
+## Flujo completo resumido
+
+```
+extract         →   outputs/{app}/static_context/*.txt
+    ↓
+triage          →   outputs/{app}/components/index.json
+                    outputs/{app}/components/{id}/context.md
+    ↓
+audit (loop)    →   outputs/{app}/components/{id}/analysis/V6.json
+                    outputs/{app}/components/{id}/analysis/V8.json
+                    …
+                    outputs/{app}/components/{id}/context.md  ← APPEND
+```
+
+---
+
+## Taxonomía y archivos de configuración clave
+
+| Archivo | Propósito |
+|---|---|
+| `formats/taxonomy/asvs_asset_relation.json` | Qué capítulos ASVS aplican a cada `asset_tag` |
+| `formats/taxonomy/cotext_choose.json` | Qué `.txt` cargar del static_context para cada capítulo |
+| `formats/taxonomy/asset_category.json` | Catálogo de `asset_tag` válidos |
+| `formats/asvs_json/0x{nn}-{Vn}-*.json` | Reglas OWASP por capítulo |
+| `formats/prompts/components_creation.md` | Prompt del Agente Arquitecto (usa `{{keys}}`) |
+| `formats/prompts/asvs_analysis.md` | Prompt del Agente Auditor (usa `{{keys}}`) |
+
+### Placeholders `{{key}}` en los prompts
+
+El motor `prompt_renderer.py` sustituye `{{key}}` con los valores del contexto construido.
+Los **keys disponibles** para cada prompt son:
+
+**`components_creation.md`**
+- `{{app_name}}` — nombre de la app
+- `{{asset_tags}}` — catálogo de asset_tags disponibles
+- `{{component_json_format}}` — ejemplo de `index.json`
+- `{{component_context_format}}` — ejemplo de `context.md`
+- `{{full_static_context}}` — todos los `.txt` concatenados
+
+**`asvs_analysis.md`**
+- `{{app_name}}` / `{{component_key}}` — identificadores
+- `{{asvs_i_rules_txt}}` — reglas del capítulo en texto plano
+- `{{context_md}}` — diario del auditor actual
+- `{{filtered_static_context}}` — `.txt` relevantes según `context_choose.json`
+- `{{audit_output.json}}` — ejemplo del formato de salida
