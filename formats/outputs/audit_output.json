@@ -12,12 +12,6 @@
       "affected_function": "UserCreateSchema",
       "line_range": [45, 50],
       "remediation_hint": "Añadir Field(min_length=8) en el modelo de Pydantic."
-    },
-    {
-      "requirement_id": "6.3.2",
-      "status": "PASS",
-      "severity": "INFO",
-      "description": "No se detectan credenciales por defecto quemadas en el código para usuarios administrativos."
     }
   ],
   "context_update_notes": [

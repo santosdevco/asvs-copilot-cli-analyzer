@@ -305,6 +305,15 @@ def _run_grouped_batch(
                     usage_calls.extend(r for r in results if r.get("usage"))
                 except Exception as exc:
                     console.print(f"[bold red]✗ grouped job {job_id} raised: {exc}[/bold red]")
+                    # Print missing files and rerun command for failed grouped jobs
+                    if hasattr(exc, 'expected_files'):
+                        missing_files = [f for f in exc.expected_files if not os.path.exists(f)]
+                        if missing_files:
+                            console.print("[bold yellow]Missing expected files:[/bold yellow]")
+                            for f in missing_files:
+                                console.print(f"  [red]- {f}[/red]")
+                    rerun_cmd = f"python cli.py batch-audit {app_name} --group-by {group_by} --chapter {job_id} --streaming --override"
+                    console.print(f"[bold cyan]To rerun this job in isolation:[/bold cyan]\n  {rerun_cmd}")
     elif group_by in ("asvs_chapter", "asset_tags"):
         for asvs_key, components in worklist:
             results = run_grouped_by_chapter_job(app_name, asvs_key, components, **common_kwargs)
