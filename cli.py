@@ -33,7 +33,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 import click
 from rich.console import Console
 
-from cli.commands import audit_cmd, extract_cmd, triage_cmd, chat_cmd, report_cmd
+from cli.commands import audit_cmd, batch_audit_cmd, extract_cmd, triage_cmd, chat_cmd, report_cmd
 
 console = Console()
 
@@ -47,6 +47,7 @@ def main() -> None:
 main.add_command(extract_cmd)
 main.add_command(triage_cmd)
 main.add_command(audit_cmd)
+main.add_command(batch_audit_cmd)
 main.add_command(chat_cmd)
 main.add_command(report_cmd)
 

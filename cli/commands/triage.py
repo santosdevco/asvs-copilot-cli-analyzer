@@ -17,6 +17,9 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 
+# Summary/status output goes to stderr so stdout stays clean for redirection
+console = Console(stderr=True)
+
 from cli.config import TRIAGE_PROMPT_FILE
 from cli.core import (
     build_triage_context,
@@ -33,8 +36,6 @@ from cli.core import (
 )
 from cli.models import ComponentIndex
 from cli.core.app_logger import init_app_logger, log_event, log_prompt
-
-console = Console()
 
 
 def _print_dry_run_summary(prompt: str, app_name: str) -> None:
@@ -62,9 +63,9 @@ def _extract_context_map(raw_response: str) -> dict[str, str]:
     The LLM is asked to return a JSON object with two keys:
       {
         "index": { ... ComponentIndex ... },
-        "contexts": { "<component_id>": "<context.md content>" }
+        "contexts": { "<component_id>": "<context.xml content>" }
       }
-    Returns a mapping of component_id → context markdown text.
+    Returns a mapping of component_id → context XML text.
     """
     data = parse_json(raw_response)
     return data.get("contexts", {})
@@ -73,10 +74,11 @@ def _extract_context_map(raw_response: str) -> dict[str, str]:
 @click.command("triage")
 @click.argument("app_name")
 @click.option("--dry-run", is_flag=True, help="Print the rendered prompt without calling the LLM.")
+@click.option("--show-prompt", is_flag=True, help="Show full prompt content in dry-run mode.")
 @click.option("--verbose", "-v", is_flag=True, help="Show AI's reasoning and internal analysis.")
 @click.option("--interactive", "-i", is_flag=True, help="Allow AI to ask questions during analysis.")
 @click.option("--streaming", "-s", is_flag=True, help="Stream AI responses in real-time and show file access.")
-def triage_cmd(app_name: str, dry_run: bool, verbose: bool, interactive: bool, streaming: bool) -> None:
+def triage_cmd(app_name: str, dry_run: bool, show_prompt: bool, verbose: bool, interactive: bool, streaming: bool) -> None:
     """Step 2 — Architect agent: identify components and create context files."""
     init_app_logger(
         app_name=app_name,
@@ -84,6 +86,7 @@ def triage_cmd(app_name: str, dry_run: bool, verbose: bool, interactive: bool, s
         command_line=" ".join(sys.argv),
         options={
             "dry_run": dry_run,
+            "show_prompt": show_prompt,
             "verbose": verbose,
             "interactive": interactive,
             "streaming": streaming,
@@ -102,9 +105,12 @@ def triage_cmd(app_name: str, dry_run: bool, verbose: bool, interactive: bool, s
     prompt = render(template, ctx)
     log_prompt(prompt, label="triage_prompt")
 
-    if dry_run:
+    if dry_run or show_prompt:
         log_event("triage.dry_run", {"prompt_chars": len(prompt)})
-        console.print(Panel(prompt, title="Rendered prompt (dry-run)"))
+        if show_prompt:
+            sys.stdout.write(prompt)
+            sys.stdout.write("\n")
+            sys.stdout.flush()
         _print_dry_run_summary(prompt, app_name)
         return
 
@@ -139,7 +145,7 @@ def triage_cmd(app_name: str, dry_run: bool, verbose: bool, interactive: bool, s
     # Expected shape:
     # {
     #   "index": <ComponentIndex JSON>,
-    #   "contexts": { "<component_id>": "<context.md text>", … }
+    #   "contexts": { "<component_id>": "<context.xml text>", … }
     # }
     try:
         # If we used interactive/streaming mode, data is already parsed
@@ -168,10 +174,10 @@ def triage_cmd(app_name: str, dry_run: bool, verbose: bool, interactive: bool, s
         cid = component.component_id
         ctx_content = contexts.get(cid, "")
         if not ctx_content:
-            console.print(f"[yellow]  ⚠ No context.md content returned for '{cid}'[/yellow]")
+            console.print(f"[yellow]  ⚠ No context.xml content returned for '{cid}'[/yellow]")
             continue
         ctx_path = write_component_context(app_name, cid, ctx_content)
-        console.print(f"[green]  ✓ context.md → {ctx_path}[/green]")
+        console.print(f"[green]  ✓ context.xml → {ctx_path}[/green]")
 
     provider, model = get_provider_and_model()
     usage_calls = [

@@ -1,0 +1,41 @@
+[
+  {
+    "component_id": "authentication_mfa_module",
+    "asvs_chapter": "V6",
+    "audit_results": [
+      {
+        "requirement_id": "6.2.1",
+        "status": "FAIL",
+        "severity": "HIGH",
+        "vulnerability_title": "Ausencia de validación de longitud de contraseña",
+        "description": "El esquema de Pydantic para el registro de usuario no impone un mínimo de caracteres. OWASP requiere al menos 8, recomendado 15.",
+        "affected_file": "src/app/Login/LoginForm.js",
+        "affected_function": "handleSubmit",
+        "line_range": [45, 50],
+        "remediation_hint": "Añadir validación de longitud mínima en el formulario y en el servicio backend."
+      },
+      {
+        "requirement_id": "6.3.2",
+        "status": "PASS",
+        "severity": "INFO",
+        "description": "No se detectan credenciales por defecto en el código fuente del módulo de autenticación."
+      }
+    ],
+    "context_update_notes": [
+      "Descubrimiento Técnico: El proceso de login invoca /api/auth/login con POST. Se debe revisar el manejo de errores HTTP 401 en detalle durante la auditoría de V8."
+    ]
+  },
+  {
+    "component_id": "api_client_layer",
+    "asvs_chapter": "V6",
+    "audit_results": [
+      {
+        "requirement_id": "6.4.1",
+        "status": "NOT_APPLICABLE",
+        "severity": "INFO",
+        "description": "El componente es una capa cliente HTTP; la gestión de credenciales del servidor no aplica directamente aquí."
+      }
+    ],
+    "context_update_notes": []
+  }
+]

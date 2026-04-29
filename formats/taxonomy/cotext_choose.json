@@ -9,71 +9,71 @@
   "asvs_tactical_mapping": {
     "V1": {
       "title": "Encoding and Sanitization",
-      "tactical_reports": ["code_signals", "frontend", "middlewares", "backend_controller"]
+      "tactical_reports": ["code_signals", "frontend", "middlewares"]
     },
     "V2": {
       "title": "Validation and Business Logic",
-      "tactical_reports": ["endpoints", "code_signals", "frontend", "middlewares", "backend_controller"]
+      "tactical_reports": ["endpoints", "code_signals", "frontend", "middlewares"]
     },
     "V3": {
       "title": "Web Frontend Security",
-      "tactical_reports": ["frontend", "code_signals", "middlewares", "backend_controller"]
+      "tactical_reports": ["frontend", "code_signals", "middlewares"]
     },
     "V4": {
       "title": "API and Web Service",
-      "tactical_reports": ["endpoints", "middlewares", "code_signals", "backend_controller"]
+      "tactical_reports": ["endpoints", "middlewares", "code_signals"]
     },
     "V5": {
       "title": "File Handling",
-      "tactical_reports": ["endpoints", "code_signals", "backend_controller"]
+      "tactical_reports": ["endpoints", "code_signals"]
     },
     "V6": {
       "title": "Authentication",
-      "tactical_reports": ["code_signals", "endpoints", "middlewares", "env_vars", "frontend", "backend_controller"]
+      "tactical_reports": ["code_signals", "endpoints", "middlewares", "env_vars", "frontend"]
     },
     "V7": {
       "title": "Session Management",
-      "tactical_reports": ["code_signals", "middlewares", "frontend", "env_vars", "backend_controller"]
+      "tactical_reports": ["code_signals", "middlewares", "frontend", "env_vars"]
     },
     "V8": {
       "title": "Authorization",
-      "tactical_reports": ["endpoints", "middlewares", "code_signals", "backend_controller"]
+      "tactical_reports": ["endpoints", "middlewares", "code_signals"]
     },
     "V9": {
       "title": "Self-contained Tokens",
-      "tactical_reports": ["code_signals", "middlewares", "env_vars", "backend_controller"]
+      "tactical_reports": ["code_signals", "middlewares", "env_vars"]
     },
     "V10": {
       "title": "OAuth and OIDC",
-      "tactical_reports": ["endpoints", "code_signals", "env_vars", "frontend", "backend_controller"]
+      "tactical_reports": ["endpoints", "code_signals", "env_vars", "frontend"]
     },
     "V11": {
       "title": "Cryptography",
-      "tactical_reports": ["code_signals", "env_vars", "backend_controller"]
+      "tactical_reports": ["code_signals", "env_vars"]
     },
     "V12": {
       "title": "Secure Communication",
-      "tactical_reports": ["endpoints", "env_vars", "code_signals", "frontend", "backend_controller"]
+      "tactical_reports": ["endpoints", "env_vars", "code_signals", "frontend"]
     },
     "V13": {
       "title": "Configuration",
-      "tactical_reports": ["env_vars", "security", "git", "backend_controller"]
+      "tactical_reports": ["env_vars", "security", "git"]
     },
     "V14": {
       "title": "Data Protection",
-      "tactical_reports": ["frontend", "code_signals", "env_vars", "security", "middlewares", "backend_controller"]
+      "tactical_reports": ["frontend", "code_signals", "env_vars", "security", "middlewares"]
     },
     "V15": {
       "title": "Secure Coding and Architecture",
-      "tactical_reports": ["code_signals", "security", "git", "backend_controller"]
+      "tactical_reports": ["code_signals", "security", "git"]
     },
     "V16": {
       "title": "Security Logging and Error Handling",
-      "tactical_reports": ["code_signals", "middlewares", "backend_controller"]
+      "tactical_reports": ["code_signals", "middlewares"]
     },
     "V17": {
       "title": "WebRTC",
-      "tactical_reports": ["endpoints", "code_signals", "backend_controller"]
+      "tactical_reports": ["endpoints", "code_signals"]
     }
   }
 }

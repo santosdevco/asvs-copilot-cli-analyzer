@@ -36,10 +36,20 @@ from cli.core import (
     render,
     write_usage_report,
 )
+from cli.core.grouped_audit import (
+    build_grouped_worklist,
+    run_grouped_by_chapter_job,
+    run_grouped_by_component_job,
+    get_tag_chapter_stats,
+    get_pending_components_for_tag_chapter,
+    get_asvs_key_for_chapter,
+    TagStats,
+)
 from cli.models import ComponentItem
 from cli.core.app_logger import init_app_logger, log_event, log_prompt
 
-console = Console()
+# Summary/status output goes to stderr so stdout stays clean for redirection
+console = Console(stderr=True)
 
 
 def _write_audit_usage_report(app_name: str, usage_calls: list[dict]) -> None:
@@ -102,18 +112,18 @@ def _scan_existing_analyses(app_name: str) -> dict[str, dict[str, dict]]:
         
         analysis_dir = component_dir / "analysis"
         if analysis_dir.exists():
-            for analysis_file in analysis_dir.glob("*.json"):
+            for analysis_file in analysis_dir.glob("*.xml"):
                 chapter = analysis_file.stem  # V1, V2, etc.
                 try:
-                    with open(analysis_file, 'r', encoding='utf-8') as f:
-                        data = json.load(f)
-                        # Count issues
-                        issues = len([r for r in data.get('audit_results', []) if r.get('status') == 'FAIL'])
-                        analyses[component_id][chapter] = {
-                            'file': analysis_file,
-                            'issues': issues,
-                            'total_checks': len(data.get('audit_results', []))
-                        }
+                    import xml.etree.ElementTree as ET
+                    root = ET.parse(analysis_file).getroot()
+                    reqs = root.findall("requirements/requirement")
+                    issues = sum(1 for r in reqs if r.get("status") == "FAIL")
+                    analyses[component_id][chapter] = {
+                        'file': analysis_file,
+                        'issues': issues,
+                        'total_checks': len(reqs)
+                    }
                 except Exception:
                     continue
     
@@ -256,6 +266,244 @@ def _select_chapter_interactive(component: ComponentItem, analyses: dict) -> str
     return chapter_map[choice]
 
 
+def _pct(done: int, total: int) -> str:
+    if total == 0:
+        return "—"
+    p = done / total * 100
+    color = "green" if p == 100 else ("yellow" if p > 0 else "dim")
+    return f"[{color}]{done}/{total} ({p:.0f}%)[/{color}]"
+
+
+def _select_tag_interactive(
+    tag_stats: dict[str, "TagStats"],
+) -> str | None:
+    """Show asset-tag selection table; return chosen tag or None to quit."""
+    tags = sorted(tag_stats.keys())
+    table = Table(show_header=True, header_style="bold magenta",
+                  title="[bold cyan]📦 Asset Tags — Select a group to audit[/bold cyan]")
+    table.add_column("#", style="cyan", width=3)
+    table.add_column("Asset Tag", style="bold")
+    table.add_column("Components", justify="right")
+    table.add_column("Progress (pairs)", justify="center")
+    table.add_column("Pending chapters", style="dim")
+
+    for i, tag in enumerate(tags, 1):
+        ts = tag_stats[tag]
+        pending = ts.pending_chapters
+        table.add_row(
+            str(i),
+            tag,
+            str(sum(v["total"] for v in ts.chapters.values())),
+            _pct(ts.completed_pairs, ts.total_pairs),
+            ", ".join(sorted(pending)) if pending else "[green]all done[/green]",
+        )
+
+    console.print(table)
+    choice = Prompt.ask(
+        "\nEnter tag number (or 'q' to quit)",
+        choices=[str(i) for i in range(1, len(tags) + 1)] + ["q"],
+    )
+    if choice == "q":
+        return None
+    return tags[int(choice) - 1]
+
+
+def _select_chapter_for_tag(
+    tag: str,
+    tag_stats: dict[str, "TagStats"],
+    override: bool,
+) -> str | None:
+    """Show chapter selection for a given tag; return chapter_id or None to go back."""
+    ts = tag_stats[tag]
+    chapters = sorted(ts.chapters.keys())
+    table = Table(show_header=True, header_style="bold magenta",
+                  title=f"[bold cyan]📖 Chapters for tag:[/bold cyan] [yellow]{tag}[/yellow]")
+    table.add_column("#", style="cyan", width=3)
+    table.add_column("Chapter", style="bold")
+    table.add_column("Progress", justify="center")
+    table.add_column("Pending components", justify="right")
+
+    for i, ch in enumerate(chapters, 1):
+        v = ts.chapters[ch]
+        pending = v["total"] - v["completed"]
+        table.add_row(
+            str(i),
+            ch,
+            _pct(v["completed"], v["total"]),
+            str(pending) if pending > 0 else "[green]0[/green]",
+        )
+
+    console.print(table)
+    choice = Prompt.ask(
+        "\nEnter chapter number (or 'b' to go back, 'q' to quit)",
+        choices=[str(i) for i in range(1, len(chapters) + 1)] + ["b", "q"],
+    )
+    if choice in ("b", "q"):
+        return choice
+    return chapters[int(choice) - 1]
+
+
+def _run_asset_tags_interactive(
+    app_name: str,
+    override: bool,
+    dry_run: bool,
+    show_prompt: bool,
+    verbose: bool,
+    interactive: bool,
+    streaming: bool,
+    include_auditor_diary: bool,
+    usage_calls: list[dict],
+) -> None:
+    """Full interactive loop for --group-by asset_tags."""
+    common_kwargs = dict(
+        dry_run=dry_run,
+        show_prompt=show_prompt,
+        verbose=verbose,
+        interactive=interactive,
+        streaming=streaming,
+        include_auditor_diary=include_auditor_diary,
+    )
+
+    while True:
+        console.clear()
+        console.print(f"[bold cyan]🔒 Security Audit[/bold cyan] {app_name}  "
+                      f"[yellow]group-by: asset_tags[/yellow]"
+                      + ("  [dim](override)[/dim]" if override else ""))
+
+        tag_stats = get_tag_chapter_stats(app_name, override=override)
+        if not tag_stats:
+            console.print("[red]No components found. Run triage first.[/red]")
+            return
+
+        tag = _select_tag_interactive(tag_stats)
+        if tag is None:
+            break
+
+        while True:
+            console.clear()
+            console.print(f"[bold cyan]🔒 Security Audit[/bold cyan] {app_name}  "
+                          f"[yellow]tag: {tag}[/yellow]")
+
+            # Refresh stats so chapter progress reflects any just-completed runs
+            tag_stats = get_tag_chapter_stats(app_name, override=override)
+            result = _select_chapter_for_tag(tag, tag_stats, override)
+
+            if result == "q":
+                return
+            if result == "b":
+                break
+
+            chapter_id = result
+            try:
+                asvs_key = get_asvs_key_for_chapter(chapter_id)
+            except KeyError as exc:
+                console.print(f"[red]{exc}[/red]")
+                continue
+
+            pending = get_pending_components_for_tag_chapter(app_name, tag, asvs_key, override)
+            if not pending:
+                console.print(
+                    f"[green]✓ All components for tag '{tag}' / {chapter_id} already analysed.[/green]\n"
+                    "  Use [bold]--override[/bold] to force re-run."
+                )
+                Prompt.ask("Press Enter to continue", default="")
+                continue
+
+            console.print(
+                f"\n[bold]Running grouped audit:[/bold] tag=[cyan]{tag}[/cyan]  "
+                f"chapter=[cyan]{chapter_id}[/cyan]  "
+                f"components=[cyan]{len(pending)}[/cyan]"
+            )
+
+            results = run_grouped_by_chapter_job(app_name, asvs_key, pending, **common_kwargs)
+            usage_calls.extend(r for r in results if r.get("usage"))
+
+            if not dry_run:
+                console.print(
+                    f"\n[bold green]✓ Done:[/bold green] "
+                    f"{len(results)} file(s) written for {chapter_id} / tag '{tag}'"
+                )
+
+            if not Confirm.ask("\nRun another chapter for this tag?"):
+                break
+
+        if not Confirm.ask("\nSelect another tag?"):
+            break
+
+
+def _run_grouped_audit(
+    app_name: str,
+    group_by: str,
+    component_filter: str | None,
+    chapter_filter: str | None,
+    override: bool,
+    dry_run: bool,
+    show_prompt: bool,
+    verbose: bool,
+    interactive: bool,
+    streaming: bool,
+    include_auditor_diary: bool,
+    usage_calls: list[dict],
+) -> None:
+    """Delegate to grouped runners and collect usage records."""
+    mode_label = {"asvs_chapter": "per chapter", "asset_tags": "per tag × chapter", "component": "per component"}
+    console.print(
+        f"[bold cyan]Group-by:[/bold cyan] [yellow]{group_by}[/yellow] "
+        f"({mode_label.get(group_by, group_by)})"
+    )
+
+    # asset_tags always shows the interactive menu (unless --chapter was given)
+    if group_by == "asset_tags" and not chapter_filter:
+        _run_asset_tags_interactive(
+            app_name=app_name,
+            override=override,
+            dry_run=dry_run,
+            show_prompt=show_prompt,
+            verbose=verbose,
+            interactive=interactive,
+            streaming=streaming,
+            include_auditor_diary=include_auditor_diary,
+            usage_calls=usage_calls,
+        )
+        return
+
+    try:
+        worklist = build_grouped_worklist(
+            mode=group_by,
+            app_name=app_name,
+            component_filter=component_filter,
+            chapter_filter=chapter_filter,
+            override=override,
+        )
+    except (FileNotFoundError, ValueError) as exc:
+        console.print(f"[bold red]✗ {exc}[/bold red]")
+        raise SystemExit(1)
+
+    if not worklist:
+        console.print("[green]✓ Nothing to do — all analyses already exist.[/green]")
+        return
+
+    console.print(f"[dim]{len(worklist)} job(s) to run[/dim]")
+
+    common_kwargs = dict(
+        dry_run=dry_run,
+        show_prompt=show_prompt,
+        verbose=verbose,
+        interactive=interactive,
+        streaming=streaming,
+        include_auditor_diary=include_auditor_diary,
+    )
+
+    if group_by in ("asvs_chapter", "asset_tags"):
+        for asvs_key, components in worklist:
+            results = run_grouped_by_chapter_job(app_name, asvs_key, components, **common_kwargs)
+            usage_calls.extend(r for r in results if r.get("usage"))
+    else:  # component
+        for component_id, asvs_keys in worklist:
+            results = run_grouped_by_component_job(app_name, component_id, asvs_keys, **common_kwargs)
+            usage_calls.extend(r for r in results if r.get("usage"))
+
+
 def _target_components(
     app_name: str,
     component_filter: str | None,
@@ -297,6 +545,21 @@ def _target_chapters(
 @click.argument("app_name")
 @click.option("--component", "component_filter", default=None, help="Audit a single component ID.")
 @click.option("--chapter", "chapter_filter", default=None, help="Restrict to one ASVS chapter (e.g. V6).")
+@click.option(
+    "--group-by", "group_by",
+    type=click.Choice(["asset_tags", "asvs_chapter", "component"], case_sensitive=False),
+    default=None,
+    help=(
+        "Group multiple (component × chapter) pairs into fewer LLM calls.\n"
+        "  asvs_chapter — one call per chapter (all applicable components grouped).\n"
+        "  asset_tags   — interactive menu: pick tag → chapter → run pending components.\n"
+        "  component    — one call per component (all applicable chapters grouped)."
+    ),
+)
+@click.option(
+    "--override", is_flag=True, default=False,
+    help="Re-run analyses that already exist (also shows completed items in the menus).",
+)
 @click.option("--dry-run", is_flag=True, help="Print rendered prompts without calling the LLM.")
 @click.option("--show-prompt", is_flag=True, help="Show full prompt content in dry-run mode.")
 @click.option("--verbose", "-v", is_flag=True, help="Show AI's reasoning and internal analysis.")
@@ -312,6 +575,8 @@ def audit_cmd(
     app_name: str,
     component_filter: str | None,
     chapter_filter: str | None,
+    group_by: str | None,
+    override: bool,
     dry_run: bool,
     show_prompt: bool,
     verbose: bool,
@@ -327,6 +592,8 @@ def audit_cmd(
         options={
             "component": component_filter,
             "chapter": chapter_filter,
+            "group_by": group_by,
+            "override": override,
             "dry_run": dry_run,
             "show_prompt": show_prompt,
             "verbose": verbose,
@@ -337,6 +604,25 @@ def audit_cmd(
     )
     console.print(f"[bold cyan]🔒 Security Audit[/bold cyan] {app_name}")
     usage_calls: list[dict] = []
+
+    # ── Grouped mode: bypass interactive menu, delegate to grouped runners ────
+    if group_by:
+        _run_grouped_audit(
+            app_name=app_name,
+            group_by=group_by,
+            component_filter=component_filter,
+            chapter_filter=chapter_filter,
+            override=override,
+            dry_run=dry_run,
+            show_prompt=show_prompt,
+            verbose=verbose,
+            interactive=interactive,
+            streaming=streaming,
+            include_auditor_diary=include_auditor_diary,
+            usage_calls=usage_calls,
+        )
+        _write_audit_usage_report(app_name, usage_calls)
+        return
 
     # Load components and scan existing analyses
     components = _target_components(app_name, component_filter)
@@ -477,17 +763,15 @@ def _run_audit(
         },
     )
 
-    if dry_run:
+    if dry_run or show_prompt:
         chars = len(prompt)
         tokens_est = chars // 4
         console.print(f"[dim]chars={chars:,}  tokens≈{tokens_est:,}[/dim]")
-        
+
         if show_prompt:
-            console.print(Panel(
-                prompt,
-                title=f"[cyan]{chapter_id} Audit Prompt for {component.component_id}[/cyan]",
-                border_style="cyan"
-            ))
+            sys.stdout.write(prompt)
+            sys.stdout.write("\n")
+            sys.stdout.flush()
         return None
 
     # Call LLM

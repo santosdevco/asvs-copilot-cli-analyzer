@@ -13,19 +13,27 @@ Static-context files follow the naming convention produced by run_mapper.py:
 from __future__ import annotations
 
 import json
+from html import escape
 from pathlib import Path
 from typing import Any, Dict, List
+import xml.etree.ElementTree as ET
 
 from cli.config import (
     ASVS_ASSET_RELATION_FILE,
     ASVS_JSON_DIR,
     ASSET_CATEGORY_FILE,
     AUDIT_OUTPUT_FORMAT_FILE,
+    AUDIT_OUTPUT_XML_FORMAT_FILE,
     COMPONENT_CTX_FORMAT_FILE,
+    COMPONENT_CTX_XML_FORMAT_FILE,
     COMPONENT_INDEX_FORMAT_FILE,
     CONTEXT_CHOOSE_FILE,
     OUTPUTS_DIR,
 )
+
+
+# ── module-level static context cache (keyed by app_name, lives for process lifetime) ─
+_static_xml_cache: Dict[str, str] = {}
 
 
 # ── helpers ──────────────────────────────────────────────────────────────────
@@ -35,21 +43,60 @@ def _load_json(path: Path) -> Any:
         return json.load(fh)
 
 
-def _find_static_file(static_dir: Path, report_name: str) -> Path | None:
-    """Locate *{nn}_{report_name}.txt* inside *static_dir*, case-insensitive."""
-    for candidate in static_dir.glob(f"*_{report_name}.txt"):
-        return candidate
-    return None
+def _get_static_xml_path(app_name: str) -> Path:
+    """Return the canonical XML static-context path for an app."""
+    return OUTPUTS_DIR / app_name / "static_context.xml"
 
 
-def _load_static_reports(static_dir: Path, report_names: List[str]) -> str:
-    """Concatenate multiple static-context report files into a single string."""
-    chunks: List[str] = []
-    for name in report_names:
-        path = _find_static_file(static_dir, name)
-        if path and path.exists():
-            chunks.append(f"=== [{name.upper()}] {path.name} ===\n{path.read_text(encoding='utf-8')}")
-    return "\n\n".join(chunks)
+def _read_static_xml(app_name: str) -> str:
+    """Return static_context.xml text, caching the result for the process lifetime."""
+    if app_name not in _static_xml_cache:
+        path = _get_static_xml_path(app_name)
+        if not path.exists():
+            raise FileNotFoundError(
+                f"Static context XML not found at {path}. "
+                "Run `extract --format xml` first."
+            )
+        _static_xml_cache[app_name] = path.read_text(encoding="utf-8")
+    return _static_xml_cache[app_name]
+
+
+def clear_static_cache() -> None:
+    """Invalidate the static context cache (primarily for testing)."""
+    _static_xml_cache.clear()
+
+
+def _to_cdata(text: str) -> str:
+    """Wrap arbitrary text as XML CDATA, preserving literal content."""
+    return "<![CDATA[" + text.replace("]]>", "]]]]><![CDATA[>") + "]]>"
+
+
+def _parse_static_reports(xml_text: str, report_names: List[str]) -> str:
+    """Extract selected reports from an already-loaded static_context.xml string."""
+    try:
+        root = ET.fromstring(xml_text)
+    except ET.ParseError as exc:
+        raise ValueError(f"Invalid static context XML: {exc}") from exc
+
+    selected_reports: list[str] = []
+    needed = set(report_names)
+    for report in root.findall("report"):
+        report_type = (report.get("type") or "").strip().lower()
+        if report_type not in needed:
+            continue
+        filename = escape((report.get("filename") or "").strip())
+        rtype = escape(report_type)
+        content = _to_cdata("".join(report.itertext()).strip())
+        selected_reports.append(
+            f"  <report type=\"{rtype}\" filename=\"{filename}\">{content}</report>"
+        )
+
+    return "\n".join(["<static_context>", *selected_reports, "</static_context>"])
+
+
+def _load_static_reports(static_xml: Path, report_names: List[str]) -> str:
+    """Extract selected reports from consolidated static_context.xml (reads from disk)."""
+    return _parse_static_reports(static_xml.read_text(encoding="utf-8"), report_names)
 
 
 def _format_asset_tags(asset_categories: list) -> str:
@@ -80,30 +127,19 @@ def _asvs_json_to_text(asvs_data: Dict[str, Any]) -> str:
 
 
 def _strip_auditor_diary(context_md: str) -> str:
-    """Return context.md without the AUDITOR DIARY section and everything after it."""
-    marker = "=== AUDITOR DIARY"
-    idx = context_md.find(marker)
-    if idx == -1:
-        return context_md
-    return context_md[:idx].rstrip()
+    """No-op: context.xml no longer contains an auditor diary section.
+
+    Kept for backward compatibility with code that imports this function.
+    """
+    return context_md
 
 
 # ── public API ────────────────────────────────────────────────────────────────
 
 def build_triage_context(app_name: str) -> Dict[str, str]:
     """Build the context dict for the Architect (triage) prompt."""
-    static_dir = OUTPUTS_DIR / app_name / "static_context"
-    if not static_dir.exists():
-        raise FileNotFoundError(
-            f"Static context not found at {static_dir}. "
-            "Run `extract` first."
-        )
-
-    # 1. Full static context – concatenate every .txt file
-    full_static = "\n\n".join(
-        f"=== {f.name} ===\n{f.read_text(encoding='utf-8')}"
-        for f in sorted(static_dir.glob("*.txt"))
-    )
+    # 1. Full static context in XML format (cached)
+    full_static = _read_static_xml(app_name)
 
     # 2. Asset-tag reference (describes the allowed IDs)
     asset_categories = _load_json(ASSET_CATEGORY_FILE).get("asset_categories", [])
@@ -111,7 +147,7 @@ def build_triage_context(app_name: str) -> Dict[str, str]:
 
     # 3. Output format examples shown verbatim to the LLM
     component_json_format = COMPONENT_INDEX_FORMAT_FILE.read_text(encoding="utf-8")
-    component_context_format = COMPONENT_CTX_FORMAT_FILE.read_text(encoding="utf-8")
+    component_context_format = COMPONENT_CTX_XML_FORMAT_FILE.read_text(encoding="utf-8")
 
     return {
         "app_name": app_name,
@@ -126,10 +162,9 @@ def build_audit_context(
     app_name: str,
     component_id: str,
     asvs_key: str,           # e.g. "V6_Authentication"
-    include_auditor_diary: bool = True,
+    include_auditor_diary: bool = True,  # kept for backward compat; context.xml has no diary
 ) -> Dict[str, str]:
     """Build the context dict for the Audit-loop prompt."""
-    static_dir = OUTPUTS_DIR / app_name / "static_context"
     component_dir = OUTPUTS_DIR / app_name / "components" / component_id
 
     # 1. ASVS chapter rules → plain text
@@ -138,30 +173,34 @@ def build_audit_context(
     asvs_json_path = ASVS_JSON_DIR / chapter_meta["source_file"]
     asvs_rules_txt = _asvs_json_to_text(_load_json(asvs_json_path))
 
-    # 2. Auditor diary (current component context)
-    context_md_path = component_dir / "context.md"
-    context_md = context_md_path.read_text(encoding="utf-8") if context_md_path.exists() else ""
-    if not include_auditor_diary:
-        context_md = _strip_auditor_diary(context_md)
+    # 2. Component context (context.xml, fallback to context.md for legacy outputs)
+    context_xml_path = component_dir / "context.xml"
+    context_md_path  = component_dir / "context.md"
+    if context_xml_path.exists():
+        context_content = context_xml_path.read_text(encoding="utf-8")
+    elif context_md_path.exists():
+        context_content = context_md_path.read_text(encoding="utf-8")
+    else:
+        context_content = ""
 
-    # 3. Filtered static context based on context_choose.json
+    # 3. Filtered static context based on context_choose.json (uses cache)
     context_choose = _load_json(CONTEXT_CHOOSE_FILE)
     v_num = asvs_key.split("_")[0]                           # "V6_Auth…" → "V6"
     tactical = context_choose["asvs_tactical_mapping"].get(v_num, {}).get("tactical_reports", [])
     core     = context_choose.get("core_reports", [])
-    filtered_static = _load_static_reports(static_dir, core + tactical)
+    filtered_static = _parse_static_reports(_read_static_xml(app_name), core + tactical)
 
-    # 4. Output format example
-    audit_output_format = AUDIT_OUTPUT_FORMAT_FILE.read_text(encoding="utf-8")
+    # 4. Output format example (XML)
+    audit_output_format = AUDIT_OUTPUT_XML_FORMAT_FILE.read_text(encoding="utf-8")
 
     return {
         "app_name": app_name,
         "component_key": component_id,
-        "asvsid": v_num,                     # Add the ASVS chapter ID (e.g., "V1", "V6")
+        "asvsid": v_num,
         "asvs_i_rules_txt": asvs_rules_txt,
-        "context_md": context_md,
+        "context_md": context_content,      # key name kept; prompt reads it as <component_context>
         "filtered_static_context": filtered_static,
-        "audit_output.json": audit_output_format,
+        "audit_output.xml": audit_output_format,
     }
 
 

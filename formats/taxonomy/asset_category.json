@@ -11,6 +11,21 @@
       "description": "Browser-based storage mechanisms: localStorage, sessionStorage, IndexedDB, Cache API, and cookies. They persist or cache client-side data between requests or sessions."
     },
     {
+      "asset_id": "frontend_http_client",
+      "name": "Frontend HTTP Client / API Client Layer",
+      "description": "Browser-side HTTP client layer: axios instances, fetch wrappers, and API service modules running in the browser. They construct requests, inject authorization headers (Bearer tokens, cookies), handle authentication errors (401/403), centralize base URL and interceptor configuration, and process API responses. Unlike backend controllers, they run in an untrusted environment with all logic visible to the user and must never store secrets or perform authorization decisions."
+    },
+    {
+      "asset_id": "frontend_router",
+      "name": "Frontend Router / Client-side Navigation Guard",
+      "description": "Client-side routing and navigation guard components: React Router, Vue Router, Angular Router, PrivateRoute/AuthGuard wrappers, and access control checks based on in-memory or localStorage state. They enforce UI-level routing decisions. These controls are presentation-layer only and can be bypassed by the user; they must never be the sole authorization mechanism — all authorization must also be enforced server-side."
+    },
+    {
+      "asset_id": "frontend_realtime_client",
+      "name": "Frontend Realtime Client / WebSocket & SSE Client",
+      "description": "WebSocket, Socket.io-client, and Server-Sent Events (SSE) consumers running in the browser. They establish persistent connections to backend services, transmit authentication tokens in the initial handshake (query param or header), and process streaming events in real time. Security concerns include token exposure in connection URLs, event injection from untrusted or spoofed sources, missing WSS enforcement, and absence of origin validation."
+    },
+    {
       "asset_id": "api_gateway",
       "name": "API Gateway / Reverse Proxy / Edge Layer",
       "description": "HTTP/S traffic entry layer: API Gateways (Kong, AWS API Gateway, NGINX), reverse proxies, load balancers, WAFs, and BFF (Backend-for-Frontend) components. They handle routing, throttling, TLS termination, security headers, and enforcement of perimeter authentication policies."
@@ -94,6 +109,21 @@
       "asset_id": "container_infra",
       "name": "Container & Orchestration Infrastructure",
       "description": "Container and orchestration infrastructure: Docker, Kubernetes (deployments, pods, namespaces), Helm charts, image registries (ECR, Docker Hub). Manages the application runtime environment, including configuration, environment variables, and resource limits."
+    },
+    {
+      "asset_id": "scheduled_job",
+      "name": "Scheduled Job / Event-driven Worker / ETL Processor",
+      "description": "Non-interactive backend processes triggered by time (cron, CloudWatch Events, Quartz) or cloud events (Lambda S3/SQS/SNS triggers, Azure Functions EventGrid). Includes ETL pipelines, data migration scripts run as jobs, and recurring batch processors. They run without an HTTP request context — there is no user session, no CSRF surface, and no interactive authentication. Credentials are injected via environment variables, IAM roles, or mounted secrets. Risk is concentrated in: secrets management, data injection via input files or queue messages, silent failure modes, and excessive privilege of the execution identity."
+    },
+    {
+      "asset_id": "batch_and_admin",
+      "name": "Admin Script / CLI Tool / Maintenance Utility",
+      "description": "Operator-executed scripts, CLI tools, and maintenance utilities: database migration scripts, data repair scripts, one-off admin operations, internal CLI commands, and seed scripts. They run with elevated privileges (DBA accounts, admin API keys, superuser roles), are often excluded from code review, and rarely have audit logging. Risk is concentrated in: hardcoded credentials, privilege escalation, absence of audit trail for admin actions, and processing of sensitive data without data protection controls. Unlike scheduled_job, these are triggered manually by an operator rather than automatically."
+    },
+    {
+      "asset_id": "iac_config",
+      "name": "Infrastructure as Code / Configuration as Code",
+      "description": "Declarative infrastructure and configuration definitions: Terraform (.tf), Pulumi, AWS CloudFormation, Azure Bicep, Ansible playbooks, Helm values files, and Kubernetes manifests (Deployment, ServiceAccount, ClusterRole, NetworkPolicy, Secret). They define IAM roles, network boundaries, secret injection, and RBAC policies — making them the source of truth for privilege and access control in the environment. Security concerns are architectural rather than runtime: over-permissive IAM policies, hardcoded secrets in vars files, use of unverified modules from public registries, missing network policies, and absence of drift detection."
     }
   ]
 }

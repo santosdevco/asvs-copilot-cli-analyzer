@@ -1,0 +1,53 @@
+<component_context>
+  <component_id>auth_and_session_module</component_id>
+  <component_name>Módulo de Autenticación y Sesión</component_name>
+  <last_updated>2026-04-28</last_updated>
+  <description>
+    Punto de entrada de identidad, validación de credenciales y emisión de tokens JWT.
+    Gestiona el flujo completo de autenticación incluyendo MFA y rotación de tokens.
+  </description>
+  <architecture_role>Backend authentication service — stateless JWT-based identity provider</architecture_role>
+  <framework>FastAPI + Pydantic v2</framework>
+  <base_path>/auth</base_path>
+
+  <data_flows>
+    <inputs>
+      <input>Depends(OAuth2PasswordRequestForm) — username, password</input>
+      <input>Headers: Authorization Bearer token</input>
+      <input>Body: refresh_token (string, opaque)</input>
+    </inputs>
+    <outputs>
+      <output>Access Token (JWT, 15 min expiry, signed RS256)</output>
+      <output>Refresh Token (opaque UUID, 7 d expiry, stored in Redis)</output>
+    </outputs>
+    <api_interactions>
+      <endpoint method="POST" path="/auth/login">Login — returns token pair</endpoint>
+      <endpoint method="POST" path="/auth/refresh">Token rotation — invalidates old refresh token</endpoint>
+      <endpoint method="POST" path="/auth/logout">Revokes refresh token in Redis</endpoint>
+    </api_interactions>
+    <external_dependencies>
+      <dependency>MongoDB via Beanie ODM — users collection (password hash, mfa_secret)</dependency>
+      <dependency>Redis — refresh token store with TTL</dependency>
+      <dependency>Passlib / bcrypt — password hashing</dependency>
+    </external_dependencies>
+  </data_flows>
+
+  <business_logic>
+    <rule>Passwords hashed with bcrypt (cost factor 12); plain-text never stored</rule>
+    <rule>MFA step required when user.mfa_enabled is true; temp token issued for MFA flow</rule>
+    <rule>Failed login attempts tracked in Redis; account soft-locked after 5 failures in 10 min</rule>
+    <rule>Refresh token rotation: each use issues a new refresh token and invalidates the old one</rule>
+  </business_logic>
+
+  <trust_boundaries>
+    <boundary>Public internet → /auth/login (unauthenticated endpoint, rate-limited)</boundary>
+    <boundary>Client-supplied Bearer token → JWT signature validation (server-side only)</boundary>
+    <boundary>Refresh token → Redis TTL check (server-side, not client-visible)</boundary>
+  </trust_boundaries>
+
+  <access_control>
+    <rule>Public: /auth/login, /auth/refresh (with valid refresh token)</rule>
+    <rule>Authenticated: /auth/logout (requires valid Bearer token)</rule>
+    <rule>No admin-only endpoints in this module</rule>
+  </access_control>
+</component_context>

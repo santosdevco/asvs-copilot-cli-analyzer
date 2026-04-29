@@ -1,0 +1,26 @@
+<audit_result>
+  <component_id>auth_and_session_module</component_id>
+  <asvs_chapter>V6</asvs_chapter>
+  <audit_date>2026-04-28</audit_date>
+  <summary passed="1" failed="1" not_applicable="0" />
+
+  <requirements>
+    <requirement id="6.2.1" status="FAIL" severity="HIGH">
+      <vulnerability_title>Ausencia de validación de longitud de contraseña</vulnerability_title>
+      <description>El esquema de Pydantic para el registro de usuario no impone un mínimo de caracteres. OWASP requiere al menos 8, recomendado 15.</description>
+      <affected_file>schemas.py</affected_file>
+      <affected_function>UserCreateSchema</affected_function>
+      <line_range start="45" end="50" />
+      <remediation_hint>Añadir Field(min_length=8) en el modelo de Pydantic.</remediation_hint>
+    </requirement>
+
+    <requirement id="6.3.2" status="PASS" severity="INFO">
+      <description>No se detectan credenciales por defecto quemadas en el código para usuarios administrativos.</description>
+    </requirement>
+  </requirements>
+
+  <auditor_diary>
+    <finding>El proceso de login utiliza hashlib.sha256 combinado con secrets.token según core/security.py. Prestar atención a la validación de entropía en la auditoría del V11 (Criptografía).</finding>
+    <finding>El modelo de usuario incluye un campo is_superuser asignado masivamente desde el body. Riesgo potencial para V8 (Autorización) — revisar en ese capítulo.</finding>
+  </auditor_diary>
+</audit_result>

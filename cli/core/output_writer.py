@@ -12,6 +12,7 @@ Writes and updates the pipeline artefacts:
 from __future__ import annotations
 
 import json
+import threading
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import List
@@ -68,8 +69,8 @@ def write_component_context(
     component_id: str,
     content: str,
 ) -> Path:
-    """Write (overwrite) context.md for a component."""
-    dest = _component_dir(app_name, component_id) / "context.md"
+    """Write (overwrite) context.xml for a component."""
+    dest = _component_dir(app_name, component_id) / "context.xml"
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(content, encoding="utf-8")
     return dest
@@ -79,15 +80,56 @@ def append_context_notes(
     app_name: str,
     component_id: str,
     notes: List[str],
+    lock: threading.Lock | None = None,
 ) -> None:
-    """Append auditor-discovery notes to an existing context.md."""
-    if not notes:
-        return
-    dest = _component_dir(app_name, component_id) / "context.md"
-    dest.parent.mkdir(parents=True, exist_ok=True)
-    block = "\n".join(f"- {note}" for note in notes)
-    with dest.open("a", encoding="utf-8") as fh:
-        fh.write(f"\n\n### New findings\n{block}\n")
+    """No-op: auditor diary notes are now embedded in the chapter XML file.
+
+    Kept for backward compatibility so existing call-sites do not break.
+    """
+
+
+def _audit_output_to_xml(result: AuditOutput, component_id: str, chapter_id: str) -> str:
+    """Serialise an AuditOutput pydantic model to the audit_result XML format."""
+    from datetime import date
+    from xml.sax.saxutils import escape as _esc
+
+    lines: list[str] = ["<audit_result>"]
+    lines.append(f"  <component_id>{_esc(component_id)}</component_id>")
+    lines.append(f"  <asvs_chapter>{_esc(chapter_id)}</asvs_chapter>")
+    lines.append(f"  <audit_date>{date.today().isoformat()}</audit_date>")
+
+    passed = sum(1 for r in result.audit_results if r.status == "PASS")
+    failed = sum(1 for r in result.audit_results if r.status == "FAIL")
+    na     = sum(1 for r in result.audit_results if r.status == "NOT_APPLICABLE")
+    lines.append(f'  <summary passed="{passed}" failed="{failed}" not_applicable="{na}" />')
+
+    lines.append("  <requirements>")
+    for req in result.audit_results:
+        sev = f' severity="{_esc(req.severity)}"' if req.severity else ""
+        lines.append(f'    <requirement id="{_esc(req.requirement_id)}" status="{_esc(req.status)}"{sev}>')
+        if req.vulnerability_title:
+            lines.append(f"      <vulnerability_title>{_esc(req.vulnerability_title)}</vulnerability_title>")
+        if req.description:
+            lines.append(f"      <description>{_esc(req.description)}</description>")
+        if req.affected_file:
+            lines.append(f"      <affected_file>{_esc(req.affected_file)}</affected_file>")
+        if req.affected_function:
+            lines.append(f"      <affected_function>{_esc(req.affected_function)}</affected_function>")
+        if req.line_range:
+            lines.append(f'      <line_range start="{req.line_range[0]}" end="{req.line_range[1]}" />')
+        if req.remediation_hint:
+            lines.append(f"      <remediation_hint>{_esc(req.remediation_hint)}</remediation_hint>")
+        lines.append("    </requirement>")
+    lines.append("  </requirements>")
+
+    if result.context_update_notes:
+        lines.append("  <auditor_diary>")
+        for note in result.context_update_notes:
+            lines.append(f"    <finding>{_esc(note)}</finding>")
+        lines.append("  </auditor_diary>")
+
+    lines.append("</audit_result>")
+    return "\n".join(lines)
 
 
 def write_audit_result(
@@ -95,20 +137,24 @@ def write_audit_result(
     component_id: str,
     asvs_key: str,           # e.g. "V6_Authentication"
     result: AuditOutput,
+    context_lock: threading.Lock | None = None,
 ) -> Path:
-    """Persist an audit JSON file and append context notes to context.md."""
+    """Persist a chapter audit XML file.
+
+    Technical discoveries (context_update_notes) are embedded in the XML
+    <auditor_diary> block.  context.xml is never modified here.
+    The ``context_lock`` parameter is kept for backward compatibility.
+    """
     analysis_dir = _analysis_dir(app_name, component_id)
     analysis_dir.mkdir(parents=True, exist_ok=True)
 
     # e.g. V6_Authentication → V6
     chapter_id = asvs_key.split("_")[0]
-    dest = analysis_dir / f"{chapter_id}.json"
+    dest = analysis_dir / f"{chapter_id}.xml"
     dest.write_text(
-        result.model_dump_json(indent=2, exclude_none=True),
+        _audit_output_to_xml(result, component_id, chapter_id),
         encoding="utf-8",
     )
-
-    append_context_notes(app_name, component_id, result.context_update_notes)
     return dest
 
 

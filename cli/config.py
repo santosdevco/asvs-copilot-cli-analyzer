@@ -15,15 +15,20 @@ ASSET_CATEGORY_FILE       = TAXONOMY_DIR / "asset_category.json"
 ASVS_JSON_DIR = FORMATS_DIR / "asvs_json"
 
 # ── Format templates (examples shown to the LLM) ────────────────────────────
-FORMAT_OUTPUTS_DIR         = FORMATS_DIR / "outputs"
-AUDIT_OUTPUT_FORMAT_FILE   = FORMAT_OUTPUTS_DIR / "audit_output.json"
-COMPONENT_INDEX_FORMAT_FILE= FORMAT_OUTPUTS_DIR / "component-output.json"
-COMPONENT_CTX_FORMAT_FILE  = FORMAT_OUTPUTS_DIR / "component_context.md"
+FORMAT_OUTPUTS_DIR              = FORMATS_DIR / "outputs"
+AUDIT_OUTPUT_FORMAT_FILE        = FORMAT_OUTPUTS_DIR / "audit_output.json"   # kept for backward compat
+AUDIT_OUTPUT_XML_FORMAT_FILE    = FORMAT_OUTPUTS_DIR / "audit_output.xml"
+COMPONENT_INDEX_FORMAT_FILE     = FORMAT_OUTPUTS_DIR / "component-output.json"
+COMPONENT_CTX_FORMAT_FILE       = FORMAT_OUTPUTS_DIR / "component_context.md"  # kept for backward compat
+COMPONENT_CTX_XML_FORMAT_FILE   = FORMAT_OUTPUTS_DIR / "component_context.xml"
 
 # ── Prompt templates ─────────────────────────────────────────────────────────
-PROMPTS_DIR       = FORMATS_DIR / "prompts"
-TRIAGE_PROMPT_FILE = PROMPTS_DIR / "components_creation.md"
-AUDIT_PROMPT_FILE  = PROMPTS_DIR / "asvs_analysis.md"
+PROMPTS_DIR                  = FORMATS_DIR / "prompts"
+TRIAGE_PROMPT_FILE           = PROMPTS_DIR / "components_creation.md"
+AUDIT_PROMPT_FILE            = PROMPTS_DIR / "asvs_analysis.md"
+AUDIT_BY_CHAPTER_PROMPT_FILE = PROMPTS_DIR / "asvs_analysis_by_chapter.md"
+AUDIT_BY_COMPONENT_PROMPT_FILE = PROMPTS_DIR / "asvs_analysis_by_component.md"
+AUDIT_OUTPUT_GROUPED_FORMAT_FILE = FORMAT_OUTPUTS_DIR / "audit_output_grouped.json"
 
 # ── Static context mapper script (called as subprocess) ──────────────────────
 MAPPER_SCRIPT = BASE_DIR / "static_context_generator" / "run_mapper.py"

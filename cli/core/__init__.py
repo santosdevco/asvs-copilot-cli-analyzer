@@ -1,4 +1,4 @@
-from .context_builder import build_triage_context, build_audit_context, get_applicable_asvs_keys
+from .context_builder import build_triage_context, build_audit_context, get_applicable_asvs_keys, clear_static_cache
 from .prompt_renderer import render, missing_keys
 from .llm_client import complete, parse_json, get_last_usage_summary, get_provider_and_model
 from .interactive_llm import complete_interactive, InteractiveLLMClient, StreamingLLMClient
@@ -15,6 +15,7 @@ __all__ = [
     "build_triage_context",
     "build_audit_context",
     "get_applicable_asvs_keys",
+    "clear_static_cache",
     "render",
     "missing_keys",
     "complete",

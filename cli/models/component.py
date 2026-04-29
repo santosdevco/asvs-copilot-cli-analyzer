@@ -17,7 +17,7 @@ class ComponentItem(BaseModel):
     risk_level: str                           # CRITICAL | HIGH | MEDIUM | LOW
     asset_tags: List[str] = Field(default_factory=list)
     files_to_audit: List[str] = Field(default_factory=list)
-    initial_semantic_context: SemanticContext
+    initial_semantic_context: Optional[SemanticContext] = None  # context goes in context.xml
 
 
 class ComponentIndex(BaseModel):
