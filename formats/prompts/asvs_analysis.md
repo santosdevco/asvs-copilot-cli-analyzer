@@ -26,6 +26,11 @@
 			CRÍTICO: Solo puedes modificar el  context.xml Si encuentras algo que esta mal en el, y solo podrias la version final sin comentarios que digan que se modifico. Toda la información de hallazgos va en el archivo de análisis del capítulo.
 		</item>
 		<item id="7">No coloques nada en la salida del chat; solo genera el archivo de salida requerido.</item>
+		<item id="8">
+			CRÍTICO - JERARQUÍA DE ARCHIVOS: Las rutas en &lt;outputs&gt; son RELATIVAS a la raíz del proyecto.
+			NO anides las carpetas de salida dentro de 'analysis-repos'. 
+			La estructura correcta debe ser: ROOT/outputs/..., NO ROOT/analysis-repos/app/outputs/...
+		</item>
 	</strict_instructions>
 	<files_to_audit>
 	{{files_to_audit}}

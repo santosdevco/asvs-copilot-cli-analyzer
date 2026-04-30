@@ -49,6 +49,11 @@
 		<item id="11">
 			core_paths, es la lista de archivos generales que siempre deben tenerse en cuenta para cualquier componente.
 		</item>
+		<item id="12">
+			CRÍTICO - JERARQUÍA DE ARCHIVOS: Las rutas en &lt;outputs&gt; son RELATIVAS a la raíz del proyecto.
+			NO anides las carpetas de salida dentro de 'analysis-repos'. 
+			La estructura correcta debe ser: ROOT/outputs/..., NO ROOT/analysis-repos/app/outputs/...
+		</item>
 	</strict_instructions>
 
 	<allowed_asset_tags><![CDATA[

@@ -409,19 +409,12 @@ def run_grouped_by_chapter_job(
         return []
 
     console.print(f"🤖 Calling AI ({len(components)} components, chapter {ch})…")
-    try:
-        response = _call_llm(prompt, label, verbose, interactive, streaming)
-        usage_summary = get_last_usage_summary()
-        log_event("grouped_audit.by_chapter.completed", {
-            "asvs_key": asvs_key,
-            "response_chars": len(response),
-        })
-    except Exception as exc:
-        usage_summary = get_last_usage_summary()
-        log_event("grouped_audit.by_chapter.failed", {"asvs_key": asvs_key, "error": str(exc)})
-        console.print(f"[bold red]❌ {label} — {exc}[/bold red]")
-        return [{"operation": "grouped_audit_failed", "asvs_key": asvs_key,
-                 "components": comp_ids, "error": str(exc), "usage": usage_summary}]
+    response = _call_llm(prompt, label, verbose, interactive, streaming)
+    usage_summary = get_last_usage_summary()
+    log_event("grouped_audit.by_chapter.completed", {
+        "asvs_key": asvs_key,
+        "response_chars": len(response),
+    })
 
     changed_paths = {
         component_id: path
@@ -534,22 +527,13 @@ def run_grouped_by_component_job(
         return []
 
     console.print(f"🤖 Calling AI ({component_id}, {len(asvs_keys)} chapters)…")
-    try:
-        response = _call_llm(prompt, label, verbose, interactive, streaming)
-        usage_summary = get_last_usage_summary()
-        # Build chapter_id → asvs_key mapping for write_audit_result
-        key_map = {_chapter_id(k): k for k in asvs_keys}
-        log_event("grouped_audit.by_component.completed", {
-            "component_id": component_id, "response_chars": len(response),
-        })
-    except Exception as exc:
-        usage_summary = get_last_usage_summary()
-        log_event("grouped_audit.by_component.failed", {
-            "component_id": component_id, "error": str(exc),
-        })
-        console.print(f"[bold red]❌ {label} — {exc}[/bold red]")
-        return [{"operation": "grouped_audit_failed", "component_id": component_id,
-                 "asvs_keys": asvs_keys, "error": str(exc), "usage": usage_summary}]
+    response = _call_llm(prompt, label, verbose, interactive, streaming)
+    usage_summary = get_last_usage_summary()
+    # Build chapter_id → asvs_key mapping for write_audit_result
+    key_map = {_chapter_id(k): k for k in asvs_keys}
+    log_event("grouped_audit.by_component.completed", {
+        "component_id": component_id, "response_chars": len(response),
+    })
 
     changed_paths = {
         chapter_id: path

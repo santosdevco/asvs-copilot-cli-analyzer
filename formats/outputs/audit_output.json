@@ -1,21 +1,21 @@
 {
-  "component_id": "auth_and_session_module",
-  "asvs_chapter": "V6",
-  "audit_results": [
-    {
-      "requirement_id": "6.2.1",
-      "status": "FAIL",
-      "severity": "HIGH",
-      "vulnerability_title": "Ausencia de validación de longitud de contraseña",
-      "description": "El esquema de Pydantic para el registro de usuario no impone un mínimo de caracteres. OWASP requiere al menos 8, recomendado 15.",
-      "affected_file": "schemas.py",
-      "affected_function": "UserCreateSchema",
-      "line_range": [45, 50],
-      "remediation_hint": "Añadir Field(min_length=8) en el modelo de Pydantic."
-    }
-  ],
-  "context_update_notes": [
-    "Descubrimiento Técnico: El proceso de login utiliza 'hashlib.sha256' combinado con 'secrets.token' según core/security.py. Se debe prestar especial atención a la validación de entropía en la auditoría del V11 (Criptografía).",
-    "Descubrimiento Técnico: El modelo de usuario incluye un campo 'is_superuser' que se asigna masivamente. Riesgo potencial para el V8 (Autorización)."
-  ]
-}
+    "comp_id": "String: El ID exacto del componente evaluado (ej. admin_management).",
+    "chapter": "String: El capítulo ASVS evaluado (ej. V10).",
+    "results": [
+      {
+        "req": "String: ID del requerimiento ASVS que no se cumple (ej. 10.1.1).",
+        "status": "String: Siempre 'FAIL'. (No reportes controles que pasen).",
+        "sev": "String: Severidad de la vulnerabilidad ('LOW', 'MEDIUM', 'HIGH', 'CRITICAL').",
+        "tit": "String: Título corto y descriptivo del hallazgo.",
+        "desc": "String: Explicación técnica de por qué el componente falla este control y su impacto.",
+        "locations": [
+          {
+            "file": "String: Ruta relativa del archivo afectado (ej. src/Api/index.js).",
+            "func": "String: Nombre de la clase, método o bloque afectado (ej. constructor). Usa 'N/A' si es global.",
+            "lines": "Array de enteros: [línea_inicio, línea_fin] (ej. [8, 19]). Array vacío [] si no aplica."
+          }
+        ],
+        "hint": "String: Guía técnica y accionable para que los desarrolladores remedien el fallo."
+      }
+    ]
+  }

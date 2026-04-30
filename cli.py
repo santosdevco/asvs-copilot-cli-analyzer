@@ -30,10 +30,25 @@ from pathlib import Path
 # Allow `python cli.py` from the repo root without installing the package
 sys.path.insert(0, str(Path(__file__).parent))
 
+# Load .env BEFORE importing any cli.* module so that os.getenv() calls
+# at module level in cli/config.py (e.g. CONTEXT_FORMAT, LLM_PROVIDER) pick
+# up the values from the .env file.
+from dotenv import load_dotenv
+load_dotenv()
+
 import click
 from rich.console import Console
 
-from cli.commands import audit_cmd, batch_audit_cmd, extract_cmd, triage_cmd, chat_cmd, report_cmd
+from cli.commands import (
+    audit_cmd,
+    batch_audit_cmd,
+    build_report_cmd,
+    extract_cmd,
+    triage_cmd,
+    chat_cmd,
+    report_cmd,
+  validate_static_context_cmd,
+)
 
 console = Console()
 
@@ -50,6 +65,8 @@ main.add_command(audit_cmd)
 main.add_command(batch_audit_cmd)
 main.add_command(chat_cmd)
 main.add_command(report_cmd)
+main.add_command(build_report_cmd)
+main.add_command(validate_static_context_cmd)
 
 
 # ── Convenience: full pipeline ────────────────────────────────────────────────

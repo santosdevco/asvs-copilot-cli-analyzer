@@ -11,7 +11,8 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Prompt
 
-from cli.core import InteractiveLLMClient, StreamingLLMClient, load_component_index
+from cli.core import load_component_index
+from cli.core.interactive_llm import InteractiveLLMClient, StreamingLLMClient
 from cli.core.app_logger import init_app_logger, log_event
 
 console = Console()

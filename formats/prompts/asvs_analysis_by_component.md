@@ -30,6 +30,11 @@
 			El campo asvs_chapter de cada objeto debe coincidir con el id del capítulo correspondiente.
 		</item>
 		<item id="7">No coloques nada en la salida del chat; solo genera los archivos de salida requeridos.</item>
+		<item id="8">
+			CRÍTICO - JERARQUÍA DE ARCHIVOS: Las rutas en &lt;outputs&gt; son RELATIVAS a la raíz del proyecto.
+			NO anides las carpetas de salida dentro de 'analysis-repos'. 
+			La estructura correcta debe ser: ROOT/outputs/..., NO ROOT/analysis-repos/app/outputs/...
+		</item>
 	</strict_instructions>
 	<files_to_audit>
 	{{files_to_audit}}

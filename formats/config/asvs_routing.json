@@ -1,0 +1,281 @@
+{
+  "asvs_routing_matrix": {
+    "V1_Encoding_and_Sanitization": {
+      "chapter_name": "Encoding and Sanitization",
+      "asvs_version": "5.0",
+      "source_file": "0x10-V1-Encoding-and-Sanitization.json",
+      "target_assets": [
+        "backend_controller",
+        "backend_service",
+        "scheduled_job",
+        "batch_and_admin",
+        "client_ui",
+        "frontend_http_client",
+        "api_gateway",
+        "database",
+        "cache_layer",
+        "file_storage",
+        "external_service"
+      ],
+      "routing_rationale": "Applies to any component that processes untrusted input and produces output toward an interpreter (HTML, SQL, OS shell, LDAP, XPath, JavaScript, URL). Encoding/escaping controls must be applied as close as possible to the target interpreter: backend controllers and services for SQL/OS/LDAP injection, client UI for XSS/DOM injection, and api_gateway for HTTP headers. Cache and file_storage are relevant due to injection in Memcache and path traversal/template injection in stored content. scheduled_job and batch_and_admin are audited for injection via non-HTTP inputs: CSV injection in spreadsheet exports, OS command injection via shell-invoked scripts, template injection in report generation, and argument injection via CLI parameters or environment variables."
+    },
+    "V2_Validation_and_Business_Logic": {
+      "chapter_name": "Validation and Business Logic",
+      "asvs_version": "5.0",
+      "source_file": "0x11-V2-Validation-and-Business-Logic.json",
+      "target_assets": [
+        "backend_controller",
+        "backend_service",
+        "scheduled_job",
+        "batch_and_admin",
+        "api_gateway",
+        "client_ui",
+        "message_broker"
+      ],
+      "routing_rationale": "Business validation must be applied at the trusted server layer (backend_controller, backend_service). Client-side validation (client_ui) improves usability but does not constitute a security control. The api_gateway may apply schema validation at the perimeter. The message_broker is relevant when consuming external events that must be validated before processing. Anti-automation controls, business limits, and sequential flow enforcement reside in backend_service and backend_controller. scheduled_job and batch_and_admin are audited for missing validation of input data from files, queues, or database records before processing — untrusted data at rest is as dangerous as untrusted data in transit."
+    },
+    "V3_Web_Frontend_Security": {
+      "chapter_name": "Web Frontend Security",
+      "asvs_version": "5.0",
+      "source_file": "0x12-V3-Web-Frontend-Security.json",
+      "target_assets": [
+        "client_ui",
+        "client_storage",
+        "frontend_http_client",
+        "frontend_router",
+        "frontend_realtime_client",
+        "api_gateway",
+        "backend_controller"
+      ],
+      "routing_rationale": "Chapter exclusive to browser environments. client_ui is the primary actor: DOM manipulation, secure rendering, JS variable isolation, and cookie configuration. client_storage is relevant due to requirements for clearing sensitive data post-session. frontend_http_client is audited for CORS configuration, credential exposure in requests, and interceptor security. frontend_router is audited for client-side access control patterns and bypassability. frontend_realtime_client is audited for WSS enforcement and event origin validation. api_gateway and backend_controller are where HTTP security headers (CSP, HSTS, CORS, X-Content-Type-Options, Referrer-Policy, frame-ancestors) are configured and emitted for the browser to interpret. Does not apply to machine-to-machine communications."
+    },
+    "V4_API_and_Web_Service": {
+      "chapter_name": "API and Web Service",
+      "asvs_version": "5.0",
+      "source_file": "0x13-V4-API-and-Web-Service.json",
+      "target_assets": [
+        "api_gateway",
+        "backend_controller",
+        "backend_service",
+        "client_ui",
+        "frontend_http_client",
+        "frontend_realtime_client"
+      ],
+      "routing_rationale": "Covers the security of HTTP endpoints: Content-Type enforcement, request smuggling prevention, GraphQL (query depth/cost limiting, introspection), WebSocket (WSS, Origin header validation, session tokens). api_gateway and backend_controller are the primary receivers of HTTP requests and where message structure is validated. backend_service applies when it exposes internal APIs. client_ui applies to the WebSocket side where the browser initiates the connection and manages the handshake. frontend_http_client is audited for Content-Type enforcement in requests, handling of unexpected response structures, and absence of credential leakage in URLs. frontend_realtime_client is audited for WebSocket security requirements: WSS-only, auth token in handshake (not URL), and validation of received event types."
+    },
+    "V5_File_Handling": {
+      "chapter_name": "File Handling",
+      "asvs_version": "5.0",
+      "source_file": "0x14-V5-File-Handling.json",
+      "target_assets": [
+        "file_storage",
+        "backend_controller",
+        "backend_service",
+        "client_ui"
+      ],
+      "routing_rationale": "file_storage is the central component: where files are stored, validated, and served. backend_controller and backend_service implement validation logic for file types, sizes, magic bytes, zip bombs, and path traversal before writing to file_storage. client_ui manages the initial upload (input type=file) and file downloads, being responsible for UI-level controls such as size limits presented to the user. Antivirus scanning also applies at the backend layer before storing."
+    },
+    "V6_Authentication": {
+      "chapter_name": "Authentication",
+      "asvs_version": "5.0",
+      "source_file": "0x15-V6-Authentication.json",
+      "target_assets": [
+        "auth_service",
+        "backend_controller",
+        "api_gateway",
+        "client_ui",
+        "token_service",
+        "database",
+        "secret_manager"
+      ],
+      "routing_rationale": "auth_service and token_service are the primary components: they manage credentials, MFA, secure password storage (hashing), and token issuance post-authentication. database stores hashed credentials and must be configured to prevent timing attacks. backend_controller applies when it implements its own authentication logic. api_gateway may apply perimeter authentication. client_ui is relevant for the login flow, type=password fields, and MFA UX. secret_manager manages keys used in the authentication process."
+    },
+    "V7_Session_Management": {
+      "chapter_name": "Session Management",
+      "asvs_version": "5.0",
+      "source_file": "0x16-V7-Session-Management.json",
+      "target_assets": [
+        "auth_service",
+        "backend_controller",
+        "backend_service",
+        "session_store",
+        "token_service",
+        "client_storage",
+        "frontend_http_client",
+        "frontend_router",
+        "frontend_realtime_client",
+        "api_gateway"
+      ],
+      "routing_rationale": "Session management covers the full lifecycle of the session token: creation (auth_service, backend_controller), server-side storage (session_store for reference tokens, token_service for self-contained tokens), transmission (api_gateway), and client-side storage (client_storage — HttpOnly/Secure/SameSite cookies). Inactivity timeouts and absolute expiration are implemented in backend_service/auth_service. Session revocation is the responsibility of session_store and token_service. frontend_http_client is audited for how it attaches, refreshes, and invalidates session tokens — including token storage location (memory vs localStorage), interceptor logic for 401 handling, and absence of token logging. frontend_router is audited for whether route guard checks session validity on every navigation or only at app load (stale auth state). frontend_realtime_client is audited for session token transmission in the WebSocket handshake and behavior on session expiry during a live connection."
+    },
+    "V8_Authorization": {
+      "chapter_name": "Authorization",
+      "asvs_version": "5.0",
+      "source_file": "0x17-V8-Authorization.json",
+      "target_assets": [
+        "authz_service",
+        "backend_controller",
+        "backend_service",
+        "api_gateway",
+        "frontend_router",
+        "batch_and_admin",
+        "iac_config",
+        "database"
+      ],
+      "routing_rationale": "Authorization must be applied at the trusted server layer. authz_service centralizes policy decisions (RBAC/ABAC). backend_controller and backend_service enforce controls at the function, data, and field levels to prevent IDOR/BOLA/BOPLA. api_gateway may apply basic perimeter authorization but cannot replace data-level controls. database is relevant for row-level security (RLS) and to prevent direct access to sensitive data without permission checks. frontend_router is included specifically to audit for over-reliance on client-side access control: the auditor must verify that every route/view protected by a client-side guard is also protected by server-side authorization on the API it calls, and that the guard cannot be bypassed by direct URL navigation or state manipulation. batch_and_admin is audited for privilege escalation: scripts that run as DBA, superuser, or admin API key must be reviewed for least-privilege violations, hardcoded high-privilege credentials, and absence of scope limitations. iac_config is audited as the definition layer of IAM roles and Kubernetes RBAC: overly permissive IAM policies (Action:*, Resource:*), wildcard ClusterRole bindings, missing NetworkPolicies, and ServiceAccount tokens mounted unnecessarily into pods."
+    },
+    "V9_Self_contained_Tokens": {
+      "chapter_name": "Self-contained Tokens",
+      "asvs_version": "5.0",
+      "source_file": "0x18-V9-Self-contained-Tokens.json",
+      "target_assets": [
+        "token_service",
+        "auth_service",
+        "backend_controller",
+        "backend_service",
+        "api_gateway",
+        "frontend_http_client",
+        "secret_manager"
+      ],
+      "routing_rationale": "Applies to any component that issues or consumes self-contained tokens (JWT, SAML assertions). token_service and auth_service issue tokens with digital signature or MAC. backend_controller, backend_service, and api_gateway are consumers that must validate signature, algorithm (allowlist, never 'None'), expiration (nbf/exp), audience (aud), and token type before trusting its contents. secret_manager stores the key material for signing/verification. The source of verification keys must be pre-configured and trusted (preventing jku/x5u injection in JWS headers). frontend_http_client is included to audit for insecure JWT handling in the browser: tokens decoded client-side without signature verification, token stored in localStorage (XSS-accessible), token sent to unintended origins, and access token refresh logic."
+    },
+    "V10_OAuth_and_OIDC": {
+      "chapter_name": "OAuth and OIDC",
+      "asvs_version": "5.0",
+      "source_file": "0x19-V10-OAuth-and-OIDC.json",
+      "target_assets": [
+        "token_service",
+        "auth_service",
+        "backend_controller",
+        "client_ui",
+        "frontend_http_client",
+        "frontend_router",
+        "api_gateway",
+        "backend_service"
+      ],
+      "routing_rationale": "token_service acts as the Authorization Server (AS) or OpenID Provider (OP): issues access tokens, refresh tokens, and ID tokens, manages consent, and validates redirect_uris. auth_service verifies the identity of the resource owner. backend_controller and backend_service act as confidential OAuth clients or Resource Servers (RS) that validate access tokens. client_ui acts as a public client in browser-based flows (PKCE required, CSRF state, OIDC nonce). api_gateway may act as a perimeter Resource Server. The BFF pattern requires that the api_gateway never exposes tokens to frontend JavaScript. frontend_http_client is audited for how it handles token storage, refresh, and attachment in Authorization headers — and whether it inadvertently sends tokens cross-origin. frontend_router is audited for correct handling of OAuth redirect callbacks: extracting the authorization code from the URL, validating state parameter (CSRF), and clearing the code from the URL bar after exchange."
+    },
+    "V11_Cryptography": {
+      "chapter_name": "Cryptography",
+      "asvs_version": "5.0",
+      "source_file": "0x20-V11-Cryptography.json",
+      "target_assets": [
+        "backend_controller",
+        "backend_service",
+        "auth_service",
+        "token_service",
+        "secret_manager",
+        "database",
+        "file_storage",
+        "network_infra"
+      ],
+      "routing_rationale": "Applies transversally to all components performing cryptographic operations: encryption at rest (database, file_storage), token signing (token_service, auth_service), key management (secret_manager, with HSM support for L3), TLS (network_infra, api_gateway). backend_controller and backend_service implement application-level cryptographic operations. Crypto agility requirements, cryptographic inventory, and migration to post-quantum cryptography (PQC) apply to the entire architecture. Algorithms must be reconfigurable without redeployment."
+    },
+    "V12_Secure_Communication": {
+      "chapter_name": "Secure Communication",
+      "asvs_version": "5.0",
+      "source_file": "0x21-V12-Secure-Communication.json",
+      "target_assets": [
+        "network_infra",
+        "api_gateway",
+        "backend_service",
+        "backend_controller",
+        "frontend_realtime_client",
+        "database",
+        "external_service",
+        "message_broker",
+        "webrtc_server"
+      ],
+      "routing_rationale": "Applies to all communications in transit between components. network_infra and api_gateway terminate external TLS and must use TLS 1.2/1.3, approved cipher suites, and certificate revocation management (OCSP Stapling). Internal service-to-service communications (backend_service, database, message_broker) must use TLS with trusted certificates. external_service requires server certificate validation. webrtc_server uses DTLS/SRTP. mTLS authentication between internal services is required for L3. Fallback to unencrypted protocols is not permitted."
+    },
+    "V13_Configuration": {
+      "chapter_name": "Configuration",
+      "asvs_version": "5.0",
+      "source_file": "0x22-V13-Configuration.json",
+      "target_assets": [
+        "backend_controller",
+        "backend_service",
+        "scheduled_job",
+        "batch_and_admin",
+        "iac_config",
+        "api_gateway",
+        "secret_manager",
+        "ci_cd_pipeline",
+        "container_infra",
+        "database",
+        "network_infra"
+      ],
+      "routing_rationale": "Covers the secure configuration of all application components. secret_manager is critical: centralized secrets management, rotation, and least-privilege access. ci_cd_pipeline and container_infra are where environment variables, deployment secrets, and runtime configurations are managed. backend_controller and backend_service implement communication allowlists, least-privilege service accounts, and timeout/connection pool configuration. database and network_infra apply for authenticated access configuration and connectivity allowlists. Default credentials and secrets in source code are prohibited. scheduled_job is audited for secrets injected via environment variables or mounted files — verifying they come from a secret_manager and are not hardcoded in the job definition or scheduler configuration. batch_and_admin is audited for hardcoded credentials in script files, configuration files loaded at runtime, and absence of secrets rotation. iac_config is the primary target for V13: secrets in .tf vars files or YAML values, Terraform state files containing plaintext secrets, over-permissive default configurations, and unverified external module sources (Terraform Registry, Ansible Galaxy, Helm Hub)."
+    },
+    "V14_Data_Protection": {
+      "chapter_name": "Data Protection",
+      "asvs_version": "5.0",
+      "source_file": "0x23-V14-Data-Protection.json",
+      "target_assets": [
+        "database",
+        "cache_layer",
+        "file_storage",
+        "client_storage",
+        "client_ui",
+        "frontend_http_client",
+        "frontend_router",
+        "frontend_realtime_client",
+        "scheduled_job",
+        "batch_and_admin",
+        "backend_controller",
+        "backend_service",
+        "api_gateway"
+      ],
+      "routing_rationale": "Protection of sensitive data at rest, in transit, and in use. database, cache_layer, and file_storage are repositories of sensitive data that must implement encryption, retention, and access controls defined by classification level. client_storage and client_ui must avoid persisting sensitive data in the browser (localStorage, DOM) and must clear it on session termination. api_gateway and backend_controller control cache headers (Cache-Control: no-store) and ensure that sensitive data is not sent via query strings. backend_service implements masking, data minimization on exposed responses, and enforces retention rules. scheduled_job and batch_and_admin are audited for PII and sensitive data leaking into log output during processing, absence of data minimization in intermediate files or temp tables created during batch operations, and missing cleanup of sensitive artifacts post-execution."
+    },
+    "V15_Secure_Coding_and_Architecture": {
+      "chapter_name": "Secure Coding and Architecture",
+      "asvs_version": "5.0",
+      "source_file": "0x24-V15-Secure-Coding-and-Architecture.json",
+      "target_assets": [
+        "backend_controller",
+        "backend_service",
+        "scheduled_job",
+        "batch_and_admin",
+        "iac_config",
+        "client_ui",
+        "frontend_http_client",
+        "api_gateway",
+        "ci_cd_pipeline",
+        "container_infra",
+        "message_broker"
+      ],
+      "routing_rationale": "Applies to architectural decisions and defensive coding practices. ci_cd_pipeline implements SCA (Software Composition Analysis) for vulnerable dependency management and SBOM. container_infra ensures that production does not expose test or debug functionality. backend_controller and backend_service are where language-specific insecure patterns are avoided (prototype pollution, type juggling, mass assignment, insecure deserialization). client_ui applies for prototype pollution in JavaScript. api_gateway and backend_service implement sandboxing/isolation for components with 'dangerous functionality'. message_broker applies when processing deserialized objects. scheduled_job and batch_and_admin are audited for insecure deserialization of input files (pickle, YAML.load, XML with entity expansion), use of shell=True in subprocess calls, and absence of dependency pinning in scripts that install packages at runtime. iac_config is audited for use of unverified external modules and providers, absence of version pinning in Terraform/Helm dependencies, and infrastructure patterns that embed application logic in user-data scripts without integrity verification."
+    },
+    "V16_Security_Logging_and_Error_Handling": {
+      "chapter_name": "Security Logging and Error Handling",
+      "asvs_version": "5.0",
+      "source_file": "0x25-V16-Security-Logging-and-Error-Handling.json",
+      "target_assets": [
+        "backend_controller",
+        "backend_service",
+        "scheduled_job",
+        "batch_and_admin",
+        "iac_config",
+        "api_gateway",
+        "auth_service",
+        "authz_service",
+        "database",
+        "network_infra"
+      ],
+      "routing_rationale": "Security logging must be implemented at each layer where relevant security events occur. auth_service logs all authentication attempts (success and failure, type of factor used). authz_service and backend_controller log failed authorization decisions and access to sensitive data. api_gateway logs anomalous traffic events, bypass attempts, and TLS errors. database logs access to classified data where applicable. backend_service logs unexpected errors and security control failures. All components must synchronize timestamps (UTC), structure logs in a parseable format, and avoid including sensitive data in logs. scheduled_job is audited for: structured logging of execution start/end/outcome (silent failure is the primary risk), logging of record counts processed vs skipped vs failed, and absence of sensitive data (PII, tokens) in error messages sent to log aggregators. batch_and_admin is audited for: audit trail of operator identity and timestamp for every admin action executed, logging of data mutations performed (which records affected, before/after if applicable), and whether logs are written to an append-only destination the operator cannot delete. iac_config is audited for: whether infrastructure changes (terraform apply, helm upgrade) produce an audit trail captured in a log aggregator, and whether plan/apply outputs are stored for post-incident forensic review."
+    },
+    "V17_WebRTC": {
+      "chapter_name": "WebRTC",
+      "asvs_version": "5.0",
+      "source_file": "0x26-V17-WebRTC.json",
+      "target_assets": [
+        "webrtc_server",
+        "backend_service",
+        "network_infra",
+        "backend_controller"
+      ],
+      "routing_rationale": "Applies exclusively to architectures with their own WebRTC infrastructure (product developers, CPaaS, service providers). Does not apply to developers using only SDKs from external CPaaS providers. webrtc_server is the central component: TURN servers (IP access control, resource exhaustion prevention), SFU/MCU (approved DTLS cipher suites, SRTP authentication, protection against SRTP floods and malformed packets, ClientHello race condition). network_infra manages the exposure and protection of the TURN server. backend_service implements the WebRTC signaling server. backend_controller manages authentication and authorization for access to WebRTC resources."
+    }
+  }
+}

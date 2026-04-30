@@ -40,7 +40,7 @@ from cli.core import (
     write_usage_report,
     append_context_notes,
 )
-from cli.core.llm_client import init_llm_session, finalize_llm_session
+from cli.core import init_llm_session, finalize_llm_session
 from cli.core.grouped_audit import (
     build_grouped_worklist,
     run_grouped_by_chapter_job,

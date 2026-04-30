@@ -10,6 +10,3 @@
 [ACCESS CONTROL & ROLES]    Ejemplo: Endpoints públicos (/login, /register). Requiere rol 'Admin' para rutas de borrado. Validado vía middleware 'checkAdmin'
 
 [TRUST BOUNDARIES] Ejemplo: Los datos del cliente pasan directamente de la API Gateway a la base de datos sin una capa de sanitización intermedia (DTOs).
-
-=== AUDITOR DIARY (Contexto Descubierto en Ejecución) ===
-(Este bloque inicia vacío y los Agentes Auditores V1, V2, etc., hacen 'append' aquí)

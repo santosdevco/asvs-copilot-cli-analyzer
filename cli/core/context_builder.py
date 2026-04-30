@@ -184,20 +184,30 @@ _BANNED_HEADERS = frozenset([
     "[CLIENT-SIDE ROUTES]",
 ])
 
+from typing import List, Optional
 
-def _slice_report_content(raw_text: str, component_paths: List[str], core_paths: List[str]) -> str:
+def _slice_report_content(
+    raw_text: str, 
+    component_paths: Optional[List[str]] = None, 
+    core_paths: Optional[List[str]] = None
+) -> str:
     """Filter report content line-by-line using FILE-tagged lines and path matching.
 
     Blocks introduced by a BANNED_HEADERS marker are skipped entirely to reduce
-    token usage.  A new non-banned section header (starts with '[', ends with ']')
+    token usage. A new non-banned section header (starts with '[', ends with ']')
     resets skip_mode so subsequent lines are processed normally.
+    
+    If no paths are provided (Triage mode), it applies skip_mode but keeps all files.
     """
-    all_targets = _clean_target_paths(core_paths) + _clean_target_paths(component_paths)
-    if not all_targets:
-        return raw_text
+    # Manejar listas vacías o None de forma segura
+    comp_paths = component_paths or []
+    cor_paths = core_paths or []
+    
+    all_targets = _clean_target_paths(cor_paths) + _clean_target_paths(comp_paths)
 
     filtered_lines: list[str] = []
     skip_mode = False
+    
     for line in raw_text.splitlines():
         # Check for a banned section header → enter skip mode
         if any(banned in line for banned in _BANNED_HEADERS):
@@ -212,14 +222,16 @@ def _slice_report_content(raw_text: str, component_paths: List[str], core_paths:
         if skip_mode:
             continue
 
-        # Original path-matching logic
+        # Original path-matching logic + Soporte para Triage (all_targets vacío)
         if "FILE:" in line:
-            if any(target in line for target in all_targets):
+            # Si NO hay targets (Triage), deja pasar todos los archivos.
+            # Si SÍ hay targets (Audit), filtra solo los que hagan match.
+            if not all_targets or any(target in line for target in all_targets):
                 filtered_lines.append(line)
         else:
             filtered_lines.append(line)
+            
     return "\n".join(filtered_lines)
-
 
 def _get_component_scope_paths(app_name: str, component_id: str) -> tuple[List[str], List[str]]:
     """Read component and core paths from outputs/<app>/components/index.json."""
@@ -375,8 +387,15 @@ def _strip_auditor_diary(context_md: str) -> str:
 
 def build_triage_context(app_name: str) -> Dict[str, str]:
     """Build the context dict for the Architect (triage) prompt."""
-    # 1. Full static context in XML format (cached)
-    full_static = _read_static_xml(app_name)
+    # Respect CONTEXT_FORMAT env var
+    preferred = _context_format_preference()
+    full_static = _slice_report_content(_read_static_xml(app_name))
+
+    # 1. Full static context in preferred format
+    if preferred in ("yaml", "yml"):
+        component_context_format = COMPONENT_CTX_YML_FORMAT_FILE.read_text(encoding="utf-8")    
+    else:
+        component_context_format = COMPONENT_CTX_XML_FORMAT_FILE.read_text(encoding="utf-8")
 
     # 2. Asset-tag reference (describes the allowed IDs)
     asset_categories = _load_json(ASSET_CATEGORY_FILE).get("asset_categories", [])
@@ -384,8 +403,6 @@ def build_triage_context(app_name: str) -> Dict[str, str]:
 
     # 3. Output format examples shown verbatim to the LLM
     component_json_format = COMPONENT_INDEX_FORMAT_FILE.read_text(encoding="utf-8")
-    component_context_format = COMPONENT_CTX_YML_FORMAT_FILE.read_text(encoding="utf-8")
-
     return {
         "app_name": app_name,
         "asset_tags": asset_tags_txt,

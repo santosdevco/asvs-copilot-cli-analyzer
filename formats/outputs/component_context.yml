@@ -1,24 +1,54 @@
+# REGLAS DE LLENADO (META-ESQUELETO)
+# component_name: "String: Nombre legible y descriptivo."
+# description: "String: Resumen de 1 a 3 líneas del propósito."
+# architecture_role: "String: Rol técnico en la arquitectura."
+# framework: "String: Tecnologías principales."
+# base_path: "String: Ruta base o prefijo principal."
+# data_flows:
+#   inputs: ["Lista de Strings: Orígenes de datos"]
+#   outputs: ["Lista de Strings: Datos enviados hacia afuera"]
+#   api_interactions: ["Lista ESTRICTA: 'MÉTODO /ruta: Descripción corta'"]
+#   external_dependencies: ["Lista de Strings: Bases de datos, APIs externas"]
+# business_logic: ["Lista de Strings: Reglas de negocio clave"]
+# trust_boundaries: ["Lista de Strings: Cruces de niveles de confianza"]
+# access_control: ["Lista de Strings: Reglas de autorización"]
 
-description: "String: Resumen de 1 a 3 líneas explicando el propósito principal del componente y su responsabilidad en el sistema."
-architecture_role: "String: Rol técnico dentro de la arquitectura general (ej. Frontend admin UI, Backend microservice, API Gateway)."
-framework: "String: Tecnologías, lenguajes o librerías principales que sostienen el componente."
-base_path: "String: Ruta base del directorio en el código fuente o prefijo principal de la API (ej. src/app/Users/ o /api/v1/auth)."
+# ==============================================================================
+# GOLDEN EXAMPLE (Copia EXACTAMENTE este formato y nivel de detalle técnico)
+# ==============================================================================
+component_name: "Módulo de Gestión de Usuarios"
+description: "Interfaz frontend para la administración de usuarios, asignación de roles y control de estado."
+architecture_role: "Frontend admin UI — proporciona operaciones CRUD para la entidad Usuario"
+framework: "React 17.0.2 + Carbon Design System + Axios"
+base_path: "src/app/User/"
 
 data_flows:
   inputs:
-    - "Lista de Strings: Orígenes de datos que entran al componente (ej. Formularios UI, Parámetros URL, Webhooks externos, Headers)."
+    - "Formularios de UI — datos de creación/edición de usuario (nombre, email, rol)"
+    - "Query params — filtros de búsqueda en la tabla de usuarios"
   outputs:
-    - "Lista de Strings: Datos o acciones que el componente envía hacia afuera (ej. Llamadas a APIs externas, Respuestas JSON, Eventos emitidos)."
+    - "GET /api/users — recupera lista paginada de usuarios"
+    - "POST /api/users — envía payload con datos del nuevo usuario"
   api_interactions:
-    - "Lista de Strings: [REGLA DE FORMATO ESTRICTO] Deben tener el formato 'MÉTODO /ruta: Descripción corta' (ej. 'GET /api/users: Obtiene lista de usuarios')."
+    - "GET /api/users: Lista usuarios con filtros de rol y estado"
+    - "GET /api/users/:id: Detalle de usuario y permisos"
+    - "POST /api/users: Crea nuevo usuario administrador"
+    - "PUT /api/users/:id: Actualiza perfil y roles"
+    - "DELETE /api/users/:id: Desactivación lógica (soft delete)"
   external_dependencies:
-    - "Lista de Strings: Dependencias críticas externas, bases de datos, librerías de terceros o servicios cloud."
+    - "src/Api/index.js — cliente Axios centralizado"
+    - "carbon-components-react — componentes UI (DataTable, Modal)"
 
 business_logic:
-  - "Lista de Strings: Reglas de negocio clave, validaciones específicas, límites, restricciones o algoritmos importantes del componente."
+  - "La vista de lista utiliza paginación del lado del servidor"
+  - "El formulario valida formato de email en el cliente antes del envío"
+  - "Los usuarios se marcan como inactivos (soft delete) en lugar de eliminación física"
 
 trust_boundaries:
-  - "Lista de Strings: Puntos de cruce donde los datos cambian de nivel de confianza (ej. Input del navegador del cliente → API del Backend)."
+  - "Input del usuario admin → Cliente React (los datos se envían sin sanitizar al backend)"
+  - "Respuesta del API → Renderizado en UI"
 
 access_control:
-  - "Lista de Strings: Reglas de autorización, roles requeridos, protecciones de rutas o permisos específicos para usar este componente."
+  - "Rutas protegidas en cliente: requiere rol SuperAdmin para acceder a /users"
+  - "Botones de Eliminar ocultos condicionalmente en la UI si el usuario no tiene permisos"
+		

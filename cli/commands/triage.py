@@ -27,14 +27,11 @@ from cli.core import (
     complete_interactive,
     get_last_usage_summary,
     get_provider_and_model,
+    load_component_index,
     missing_keys,
-    parse_json,
     render,
-    write_component_context,
-    write_component_index,
     write_usage_report,
 )
-from cli.models import ComponentIndex
 from cli.core.app_logger import init_app_logger, log_event, log_prompt
 
 
@@ -56,19 +53,6 @@ def _print_dry_run_summary(prompt: str, app_name: str) -> None:
     table.add_row("Tokens (est.)", f"~{tokens_est:,}")
 
     console.print(table)
-
-
-def _extract_context_map(raw_response: str) -> dict[str, str]:
-    """
-    The LLM is asked to return a JSON object with two keys:
-      {
-        "index": { ... ComponentIndex ... },
-        "contexts": { "<component_id>": "<context.xml content>" }
-      }
-    Returns a mapping of component_id → context XML text.
-    """
-    data = parse_json(raw_response)
-    return data.get("contexts", {})
 
 
 @click.command("triage")
@@ -118,19 +102,16 @@ def triage_cmd(app_name: str, dry_run: bool, show_prompt: bool, verbose: bool, i
     console.print("Sending prompt to LLM…")
     
     if verbose or interactive or streaming:
-        # Use interactive client for enhanced experience
-        parsed_data, response = complete_interactive(
+        _, response = complete_interactive(
             prompt, 
             verbose=verbose, 
             interactive=interactive,
             streaming=streaming,
             context=f"Triage analysis for {app_name}"
         )
-        data = parsed_data
     else:
         # Standard non-interactive mode
         response = complete(prompt)
-        data = parse_json(response)
 
     usage_summary = get_last_usage_summary()
     log_event(
@@ -141,43 +122,20 @@ def triage_cmd(app_name: str, dry_run: bool, show_prompt: bool, verbose: bool, i
         },
     )
 
-    # ── Parse response ────────────────────────────────────────────────────────
-    # Expected shape:
-    # {
-    #   "index": <ComponentIndex JSON>,
-    #   "contexts": { "<component_id>": "<context.xml text>", … }
-    # }
+    # ── Load outputs written by the agent directly to disk ───────────────────
     try:
-        # If we used interactive/streaming mode, data is already parsed
-        # Otherwise, we need to parse the raw response
-        if (verbose or interactive or streaming):
-            # data is already parsed from complete_interactive()
-            pass  
-        else:
-            # Parse raw response for standard mode
-            data = parse_json(response)
-            
-        index = ComponentIndex.model_validate(data["index"])
-        contexts: dict[str, str] = data.get("contexts", {})
-    except (KeyError, ValueError) as exc:
-        console.print(f"[bold red]✗ Failed to parse LLM response: {exc}[/bold red]")
+        index = load_component_index(app_name)
+    except FileNotFoundError as exc:
+        console.print(f"[bold red]✗ Triage did not produce components/index.json: {exc}[/bold red]")
         console.print("[dim]Raw response saved to /tmp/triage_response.txt[/dim]")
-        import tempfile, pathlib
+        import pathlib
         pathlib.Path("/tmp/triage_response.txt").write_text(response, encoding="utf-8")
         raise SystemExit(1)
 
-    # ── Persist outputs ───────────────────────────────────────────────────────
-    index_path = write_component_index(app_name, index)
-    console.print(f"[green]✓ index.json → {index_path}[/green]")
-
+    # ── Report outputs already persisted by the agent ────────────────────────
     for component in index.project_triage:
         cid = component.component_id
-        ctx_content = contexts.get(cid, "")
-        if not ctx_content:
-            console.print(f"[yellow]  ⚠ No context.xml content returned for '{cid}'[/yellow]")
-            continue
-        ctx_path = write_component_context(app_name, cid, ctx_content)
-        console.print(f"[green]  ✓ context.xml → {ctx_path}[/green]")
+        console.print(f"[green]  ✓ component detected → {cid}[/green]")
 
     provider, model = get_provider_and_model()
     usage_calls = [

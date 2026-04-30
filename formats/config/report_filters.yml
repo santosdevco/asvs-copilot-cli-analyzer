@@ -1,0 +1,21 @@
+# Report filtering rules
+banned_sections:
+  - pattern: "\\[BLAST RADIUS"
+    reason: "Token optimization - not needed for security audit"
+  - pattern: "\\[LARGEST FILES\\]"
+    reason: "Token optimization"
+  - pattern: "\\[MOST COMPLEX FILES\\]"
+    reason: "Token optimization"
+  - pattern: "\\[CLIENT-SIDE ROUTES\\]"
+    reason: "Token optimization"
+
+slice_strategies:
+  code_signals:
+    match_type: file_tag
+    scope: component_and_core
+  frontend:
+    match_type: file_tag
+    scope: component_and_core
+  imports:
+    match_type: file_tag
+    scope: component_and_core
