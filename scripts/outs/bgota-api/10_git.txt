@@ -1,0 +1,1 @@
+GIT: branch:main | commits:394 | last:8606a2322ef6d8d09c7fcc9067f53079f796ce27 [CHORE] remove whitesource trigger dependency 2026-04-22\n

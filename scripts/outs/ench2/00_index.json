@@ -1,0 +1,190 @@
+{
+  "_meta": {
+    "generated_at": "2026-04-24T08:45:43.144010",
+    "root": "/home/santosdev/devme/accountant_software/order_manager",
+    "scanner_version": "3.0.0"
+  },
+  "project": {
+    "name": "order_manager",
+    "type": "cli",
+    "primary_language": "Other",
+    "frameworks": [
+      "FastAPI"
+    ]
+  },
+  "instructions": "Load 00_index.json first to understand the project. Then load only the section files relevant to your task using the 'use_when' field as guidance. Avoid loading all files at once unless doing a full audit.",
+  "files": [
+    {
+      "file": "01_identity.txt",
+      "section": "identity",
+      "title": "Project identity",
+      "use_when": "Understanding the project stack, language, frameworks and installed packages.",
+      "stats": {
+        "primary_language": "Other",
+        "frameworks": [
+          "FastAPI"
+        ],
+        "production_deps": 25
+      }
+    },
+    {
+      "file": "02_structure.json",
+      "section": "structure",
+      "title": "Directory structure & architecture",
+      "use_when": "Navigating the codebase, finding files, understanding folder conventions and entry points.",
+      "stats": {
+        "total_files": 266,
+        "entry_points": [
+          "main.py"
+        ]
+      }
+    },
+    {
+      "file": "03_endpoints.json",
+      "section": "endpoints",
+      "title": "HTTP API endpoints",
+      "use_when": "Working with API routes: adding/modifying endpoints, understanding URL layout.",
+      "stats": {
+        "total_endpoints": 162,
+        "domains": [
+          "/",
+          "analytics",
+          "audit",
+          "auth",
+          "batches",
+          "calculate",
+          "cash",
+          "cash-closing",
+          "catalog-performance",
+          "chargev1",
+          "create",
+          "daily-attendance",
+          "daily-delivery-orders",
+          "employees",
+          "expense_categories",
+          "filter_financial-record",
+          "financial-record",
+          "forgot-password",
+          "internal",
+          "item",
+          "items",
+          "items_without_code",
+          "list_duplicated",
+          "login",
+          "logout",
+          "logs",
+          "margins",
+          "mark_as_charged",
+          "me",
+          "movements",
+          "orders",
+          "products",
+          "profile",
+          "recipes",
+          "refresh",
+          "register",
+          "removeduplicated",
+          "sales",
+          "seed",
+          "set-password",
+          "settings",
+          "stations",
+          "stats",
+          "status",
+          "supplies",
+          "supply",
+          "test-listeng-active-orders",
+          "test-websocket",
+          "token",
+          "transactions",
+          "update",
+          "users",
+          "waiter-orders-report",
+          "wallets",
+          "walletss",
+          "warehouses",
+          "weekly-pattern",
+          "{link_id}",
+          "{order_id}"
+        ]
+      }
+    },
+    {
+      "file": "04_env_vars.json",
+      "section": "env_vars",
+      "title": "Environment variables",
+      "use_when": "Working with configuration, deployment, or understanding runtime dependencies.",
+      "stats": {
+        "unique_vars": 30,
+        "total_references": 57
+      }
+    },
+    {
+      "file": "05_database.txt",
+      "section": "database",
+      "title": "Database schema and SQL usage",
+      "use_when": "Writing queries, understanding the data model, adding migrations.",
+      "stats": {
+        "schema_tables": 0,
+        "tables_used": 0,
+        "orm_detected": [
+          "Peewee",
+          "SQLAlchemy",
+          "Tortoise ORM"
+        ]
+      }
+    },
+    {
+      "file": "06_middlewares.txt",
+      "section": "middlewares",
+      "title": "Middleware chains in routes",
+      "use_when": "Adding or modifying middleware, understanding auth/permission flows.",
+      "stats": {
+        "distinct_middlewares": 0,
+        "routes_protected": 0
+      }
+    },
+    {
+      "file": "07_imports.txt",
+      "section": "imports",
+      "title": "Internal import graph",
+      "use_when": "Understanding module coupling, refactoring, tracing dependencies.",
+      "stats": {
+        "internal_edges": 145,
+        "external_packages": 124
+      }
+    },
+    {
+      "file": "08_code_signals.txt",
+      "section": "code_signals",
+      "title": "Code signals (complexity, TODOs)",
+      "use_when": "Code quality review, identifying god-objects, tracking tech debt.",
+      "stats": {
+        "functions": 803,
+        "classes": 257,
+        "todos": 10
+      }
+    },
+    {
+      "file": "09_security.json",
+      "section": "security",
+      "title": "Security findings",
+      "use_when": "Security audit, reviewing credential handling, finding hardcoded secrets.",
+      "stats": {
+        "total_findings": 11,
+        "exposed_env_files": 3
+      }
+    },
+    {
+      "file": "10_git.json",
+      "section": "git",
+      "title": "Git activity",
+      "use_when": "Understanding recent changes, hot files, and contributors.",
+      "stats": {
+        "available": false,
+        "branch": null,
+        "total_commits": null
+      }
+    }
+  ]
+}

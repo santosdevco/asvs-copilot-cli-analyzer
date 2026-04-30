@@ -1,0 +1,15 @@
+PROJECT: static_context_generator | TYPE: cli | LANG: Python | FRAMEWORKS: none
+USAGE: Load sections as needed based on task requirements
+
+FILES:
+  01_identity.txt: Project identity [primary_language:Python]
+  02_structure.txt: Directory structure & architecture [total_files:45]
+  03_endpoints.txt: HTTP API endpoints [no data]
+  04_env_vars.txt: Environment variables [no data]
+  05_database.txt: Database schema and SQL usage [no data]
+  06_middlewares.txt: Middleware chains in routes [no data]
+  07_imports.txt: Internal import graph [internal_edges:74|external_packages:14]
+  08_code_signals.txt: Code signals (complexity, TODOs) [functions:73|classes:2|todos:21]
+  09_security.txt: Security findings [no data]
+  10_git.txt: Git activity [no data]
+  11_frontend.txt: Frontend security (XSS, DOM leaks, client routes) [no data]

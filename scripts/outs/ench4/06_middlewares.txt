@@ -1,0 +1,1 @@
+MIDDLEWARES: 0 routes with middleware | 1 unique middleware types\nGLOBAL_MW: CORSMiddleware\nTOP_MW: CORSMiddleware(1routes)\n

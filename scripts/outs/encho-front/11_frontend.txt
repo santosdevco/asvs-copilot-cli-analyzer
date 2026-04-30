@@ -1,0 +1,92 @@
+====================================================================
+  FRONTEND SECURITY ANALYSIS
+  Project : /home/santosdev/devme/accountant_software/vue-order-app
+  Generated: 2026-04-24T11:38:17.231527
+====================================================================
+
+Frameworks detected : vue
+XSS sink hits       : 4
+CSP meta tag        : MISSING — no Content-Security-Policy meta tag found
+Client routes       : 50
+
+────────────────────────────────────────────────────────────────────
+[CRITICAL FILES — high-severity XSS sinks]
+────────────────────────────────────────────────────────────────────
+  None found.
+
+────────────────────────────────────────────────────────────────────
+[XSS SINKS BY FILE]
+────────────────────────────────────────────────────────────────────
+  src/services/authService.js  (1 hit)
+    L  87  [open redirect]  window.location.href = '/login';   } };  /**  * Recarga los datos del usuario de
+  src/services/axiosConfig.js  (1 hit)
+    L 100  [open redirect]  window.location.href = '/login';         }                  return Promise.rejec
+  src/services/walletService.js  (2 hits)
+    L  93  [createObjectURL]  URL.createObjectURL(new Blob([response.data], { type: 'text/csv;charset=utf-8;'
+    L 131  [createObjectURL]  URL.createObjectURL(new Blob([response.data], { type: 'application/zip' }));   c
+
+────────────────────────────────────────────────────────────────────
+[SENSITIVE DATA IN localStorage / sessionStorage]
+────────────────────────────────────────────────────────────────────
+  No sensitive storage writes detected.
+
+────────────────────────────────────────────────────────────────────
+[postMessage LISTENERS WITHOUT event.origin CHECK]
+────────────────────────────────────────────────────────────────────
+  None found.
+
+────────────────────────────────────────────────────────────────────
+[CLIENT-SIDE ROUTES]
+────────────────────────────────────────────────────────────────────
+  PATH                                     FILE
+  ────────────────────────────────────────────────────────────────────────────────
+  /:pathMatch(.*)*                         src/router/index.ts:94
+  /admin/app-version                       src/router.js:223
+  /admin/gmail-settings                    src/router.js:213
+  /admin/settings/password-policy          src/router.js:218
+  /admin/users                             src/router.js:208
+  /caja                                    src/router.js:86
+  /cash-diary                              src/router.js:148
+  /catalog                                 src/router.js:193
+  /catalog/products                        src/router.js:203
+  /catalog/supplies                        src/router.js:198
+  /categorias-de-gastos                    src/router.js:143
+  /daily-delivery-orders                   src/router.js:163
+  /dashboard                               src/router.js:276
+  /dashboard                               src/router/index.ts:16
+  /duplicated                              src/router.js:81
+  /employee-payments                       src/router.js:153
+  /forgot-password                         src/router.js:238
+  /forgot-password                         src/router/index.ts:64
+  /forgot-password/:company                src/router.js:243
+  /forgot-password/:company                src/router/index.ts:70
+  /inventory                               src/router.js:133
+  /items                                   src/router.js:117
+  /listsales                               src/router.js:91
+  /login                                   src/router.js:122
+  /login                                   src/router/index.ts:51
+  /login/:company                          src/router.js:127
+  /login/:company                          src/router/index.ts:57
+  /order-details                           src/router.js:55
+  /production/history                      src/router.js:183
+  /production/recipes                      src/router.js:178
+  /production/register                     src/router.js:173
+  /production/stats                        src/router.js:188
+  /profile                                 src/router.js:249
+  /recogerd                                src/router.js:96
+  /reset-password                          src/router.js:233
+  /reset-password                          src/router/index.ts:83
+  /sales-by-category/:category             src/router.js:255
+  /sales/top-products                      src/router.js:71
+  /salesggeneral                           src/router.js:138
+  /salesxx                                 src/router.js:76
+  /salesxx/orders-daily-stats              src/router.js:61
+  /salesxx/total-per                       src/router.js:66
+  /set-password                            src/router.js:228
+  /set-password                            src/router/index.ts:77
+  /shortlinks                              src/router.js:268
+  /waiter-payroll                          src/router.js:158
+  /wallet                                  src/router.js:101
+  /wallet/full-transactions                src/router.js:112
+  /walletscreens                           src/router.js:107
+  /xxxproductionxx                         src/router.js:168

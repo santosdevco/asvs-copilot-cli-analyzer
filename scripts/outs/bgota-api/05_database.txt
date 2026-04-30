@@ -1,0 +1,304 @@
+====================================================================
+  DATABASE CONTEXT
+  Project : /home/santosdev/tbbc/sonarqube-reports/analysis-repos/watshelp-bancodebogota-api
+  Generated: 2026-04-24T09:53:57.191896
+====================================================================
+
+Schema files used as map : db.sql
+Declared tables          : 35
+Tables referenced in code: 43
+Undeclared tables        : 10
+ORM/ODM detected         : Mongoose, Sequelize
+
+[DECLARED TABLES]
+────────────────────────────────────────────────────────────────────
+Table: agent_areas
+  Defined in  : db.sql  (lines: 598)
+  Operations  : DELETE, INSERT, SELECT
+  Used in ( 2): Agent.js, Area.js
+
+Table: agent_logs
+  Defined in  : db.sql  (lines: 618)
+  Operations  : INSERT, SELECT
+  Used in ( 8): Agent.js, Alert.js, Area.js, Auth.js, Metrics.js, Mfa.js … (+2 more — 8 total)
+
+Table: agent_mfa
+  Defined in  : db.sql  (lines: 1089)
+  Operations  : INSERT, SELECT, UPDATE
+  Used in ( 2): Auth.js, Mfa.js
+
+Table: agent_rooms
+  Defined in  : db.sql  (lines: 842)
+  Operations  : INSERT, JOIN, SELECT, UPDATE
+  Used in ( 7): rooms.js, Agent.js, Alert.js, Queue.js, Report.js, Room.js … (+1 more — 7 total)
+
+Table: agents
+  Defined in  : db.sql  (lines: 316)
+  Operations  : INSERT, JOIN, SELECT, UPDATE
+  Used in (28): agentController.js, alertController.js, assistantController.js, authController.js, metricsController.js, mfaController.js … (+22 more — 28 total)
+
+Table: alerts
+  Defined in  : db.sql  (lines: 636)
+  Operations  : DELETE, INSERT, UPDATE
+  Used in ( 2): Alert.js, api.js
+
+Table: areas
+  Defined in  : db.sql  (lines: 352)
+  Operations  : INSERT, JOIN, SELECT, UPDATE
+  Used in (10): agentController.js, areaController.js, queue.js, Agent.js, Area.js, Metrics.js … (+4 more — 10 total)
+
+Table: closure_reasons
+  Defined in  : db.sql  (lines: 658)
+  Operations  : DELETE, INSERT, SELECT, UPDATE
+  Used in ( 2): ClosureReason.js, api.js
+
+Table: error_mindx
+  Defined in  : db.sql  (lines: 373)
+  Operations  : INSERT
+  Used in ( 1): ErrorModel.js
+
+Table: errors
+  Defined in  : db.sql  (lines: 392)
+  Operations  : INSERT
+  Used in ( 6): app.js, jwt.js, ErrorModel.js, errors.js, valid-request.js, postgresql.js
+
+Table: event_mindx
+  Defined in  : db.sql  (lines: 407)
+  Operations  : INSERT
+  Used in ( 1): WebhookMindx.js
+
+Table: external_room
+  Defined in  : db.sql  (lines: 868)
+  Operations  : INSERT, JOIN, SELECT
+  Used in ( 3): rooms.js, ExternalRoom.js, User.js
+
+Table: general_configurations
+  Defined in  : db.sql  (lines: 430)
+  Operations  : SELECT, UPDATE
+  Used in ( 5): app.js, queue.js, rooms.js, Metrics.js, Queue.js
+
+Table: general_surveys
+  Defined in  : db.sql  (lines: 885)
+  Operations  : INSERT, SELECT
+  Used in ( 3): GeneralSurvey.js, Report.js, Survey.js
+
+Table: intentions
+  Defined in  : db.sql  (lines: 1070)
+  Operations  : INSERT, SELECT
+  Used in ( 5): report.js, Intention.js, Manual.js, Metrics.js, Report.js
+
+Table: log_audio_agents
+  Defined in  : db.sql  (lines: 682)
+  Operations  : INSERT
+  Used in ( 1): Alert.js
+
+Table: mass_alerts
+  Defined in  : db.sql  (lines: 699)
+  Operations  : INSERT, JOIN, SELECT, UPDATE
+  Used in ( 4): massAlertController.js, room_files.js, MassAlert.js, massive-image.js
+
+Table: membership
+  Defined in  : db.sql  (lines: 447)
+  Operations  : none detected
+  Used in     : not referenced in code
+
+Table: messages
+  Defined in  : db.sql  (lines: 909)
+  Operations  : INSERT, JOIN, SELECT
+  Used in (22): alertController.js, assistantController.js, closureReasonsController.js, messageController.js, pmessageController.js, roomController.js … (+16 more — 22 total)
+
+Table: metrics
+  Defined in  : db.sql  (lines: 948)
+  Operations  : INSERT, UPDATE
+  Used in ( 5): metricsController.js, Agent.js, Metrics.js, Room.js, api.js
+
+Table: notifications
+  Defined in  : db.sql  (lines: 469)
+  Operations  : DELETE, INSERT, SELECT
+  Used in ( 6): notificationController.js, queue.js, tokenRefreshNotifier.js, Notification.js, Socket.js, api.js
+
+Table: pending_logs
+  Defined in  : db.sql  (lines: 484)
+  Operations  : INSERT
+  Used in ( 1): Room.js
+
+Table: pending_messages
+  Defined in  : db.sql  (lines: 974)
+  Operations  : INSERT, SELECT, UPDATE
+  Used in ( 2): Message.js, Room.js
+
+Table: protocol_messages
+  Defined in  : db.sql  (lines: 499)
+  Operations  : DELETE, INSERT, SELECT, UPDATE
+  Used in ( 1): ProtocolMessage.js
+
+Table: queues
+  Defined in  : db.sql  (lines: 996)
+  Operations  : DELETE, INSERT, SELECT
+  Used in ( 4): alertController.js, queue.js, Queue.js, Room.js
+
+Table: report_survey
+  Defined in  : db.sql  (lines: 518)
+  Operations  : INSERT
+  Used in ( 1): Report.js
+
+Table: room_files_logs
+  Defined in  : db.sql  (lines: 1016)
+  Operations  : INSERT
+  Used in ( 1): room_files.js
+
+Table: room_logs
+  Defined in  : db.sql  (lines: 1032)
+  Operations  : INSERT, SELECT
+  Used in ( 4): Agent.js, Queue.js, Room.js, User.js
+
+Table: rooms
+  Defined in  : db.sql  (lines: 720)
+  Operations  : DELETE, INSERT, JOIN, SELECT, UPDATE
+  Used in (22): app.js, agentController.js, alertController.js, metricsController.js, roomController.js, userController.js … (+16 more — 22 total)
+
+Table: surveys
+  Defined in  : db.sql  (lines: 767)
+  Operations  : SELECT
+  Used in ( 3): surveyController.js, Room.js, api.js
+
+Table: teams_conversation
+  Defined in  : db.sql  (lines: 786)
+  Operations  : INSERT, SELECT
+  Used in ( 1): TeamsConversationLogic.js
+
+Table: ubicaciones_ada
+  Defined in  : db.sql  (lines: 554)
+  Operations  : none detected
+  Used in     : not referenced in code
+
+Table: users
+  Defined in  : db.sql  (lines: 574)
+  Operations  : INSERT, JOIN, SELECT, UPDATE
+  Used in (19): alertController.js, assistantController.js, messageController.js, teamsController.js, userController.js, whatsappController.js … (+13 more — 19 total)
+
+Table: watson_session_ids
+  Defined in  : db.sql  (lines: 806)
+  Operations  : INSERT, SELECT, UPDATE
+  Used in ( 1): WatsonSessionId.js
+
+Table: white_list
+  Defined in  : db.sql  (lines: 824)
+  Operations  : DELETE, INSERT, JOIN, SELECT
+  Used in ( 2): MassAlert.js, api.js
+
+────────────────────────────────────────────────────────────────────
+[UNDECLARED / DYNAMIC TABLES]
+────────────────────────────────────────────────────────────────────
+  (Referenced in queries but not found in any CREATE TABLE)
+
+  agent_info
+    Operations : SELECT
+    Files      : Room.js
+  area_info
+    Operations : JOIN, SELECT
+    Files      : Room.js
+  insert_queue
+    Operations : SELECT
+    Files      : Room.js
+  massive_status
+    Operations : SELECT
+    Files      : Room.js
+  new_room
+    Operations : SELECT
+    Files      : Room.js
+  released_agent
+    Operations : SELECT
+    Files      : Room.js
+  target_status
+    Operations : SELECT
+    Files      : Room.js
+  update_room
+    Operations : SELECT
+    Files      : Room.js
+  updated_room
+    Operations : SELECT
+    Files      : Room.js
+  user_info
+    Operations : JOIN
+    Files      : Room.js
+
+────────────────────────────────────────────────────────────────────
+[ORM / ODM DETECTED]
+────────────────────────────────────────────────────────────────────
+ORM: Mongoose
+  Operations : DELETE, INSERT, INSERT/UPDATE, SELECT, UPDATE
+  Models     : Agent, Alert, App, Area, Assistant, AssistantLogic, AssistantV2, Auth, ClosureReason, Date, Error, ErrorModel … (+28 more)
+  Files (45) : app.js, agentController.js, alertController.js, areaController.js, assistantController.js, authController.js … (+39 more — 45 total)
+
+ORM: Sequelize
+  Operations : DELETE, INSERT, INSERT/UPDATE, SELECT, UPDATE
+  Models     : agent, area, generalSurvey, massAlert, pmessage, user, watsonSessionId
+  Files ( 9) : agentController.js, areaController.js, closureReasonsController.js, generalSurveyController.js, massAlertController.js, pmessageController.js … (+3 more — 9 total)
+
+────────────────────────────────────────────────────────────────────
+[FILE → TABLE INDEX]
+────────────────────────────────────────────────────────────────────
+  (Reverse lookup: which tables does each file touch?)
+
+  app.js                                   errors, general_configurations, rooms
+  agentController.js                       agents, areas, rooms
+  alertController.js                       agents, messages, queues, rooms, users
+  areaController.js                        areas
+  assistantController.js                   agents, messages, users
+  authController.js                        agents
+  closureReasonsController.js              messages
+  massAlertController.js                   mass_alerts
+  messageController.js                     messages, users
+  metricsController.js                     agents, metrics, rooms
+  mfaController.js                         agents
+  notificationController.js                notifications
+  pmessageController.js                    messages
+  roomController.js                        agents, messages, rooms
+  surveyController.js                      surveys
+  teamsController.js                       messages, users
+  userController.js                        rooms, users
+  whatsappController.js                    agents, messages, users
+  queue.js                                 general_configurations, messages, notifications, queues, rooms, users
+  report.js                                intentions, rooms
+  room_files.js                            mass_alerts, messages, room_files_logs
+  rooms.js                                 agent_rooms, agents, external_room, general_configurations, messages, rooms, users
+  jwt.js                                   agents, errors, users
+  queue.js                                 agents, areas, rooms
+  tokenRefreshNotifier.js                  notifications
+  Agent.js                                 agent_areas, agent_logs, agent_rooms, agents, areas, metrics, room_logs, rooms, users
+  Alert.js                                 agent_logs, agent_rooms, agents, alerts, log_audio_agents, messages, rooms
+  Area.js                                  agent_areas, agent_logs, areas, rooms
+  AssistantLogic.js                        agents, messages
+  Auth.js                                  agent_logs, agent_mfa, agents, users
+  ClosureReason.js                         closure_reasons
+  ErrorModel.js                            error_mindx, errors
+  ExternalRoom.js                          external_room
+  GeneralSurvey.js                         general_surveys
+  Intention.js                             intentions
+  Manual.js                                intentions, messages, rooms, users
+  MassAlert.js                             agents, mass_alerts, white_list
+  Message.js                               messages, pending_messages, rooms
+  Metrics.js                               agent_logs, agents, areas, general_configurations, intentions, messages, metrics, rooms, users
+  Mfa.js                                   agent_logs, agent_mfa
+  Notification.js                          notifications
+  ProtocolMessage.js                       protocol_messages
+  Queue.js                                 agent_logs, agent_rooms, agents, areas, general_configurations, messages, queues, room_logs, rooms, users
+  Report.js                                agent_rooms, agents, general_surveys, intentions, messages, report_survey, rooms, users
+  Room.js                                  agent_logs, agent_rooms, agents, areas, messages, metrics, pending_logs, pending_messages, queues, room_logs, rooms, surveys, users
+  Socket.js                                agents, messages, notifications, rooms
+  Survey.js                                agents, general_surveys
+  Teams.js                                 messages
+  TeamsConversationLogic.js                teams_conversation
+  User.js                                  agent_rooms, agents, areas, external_room, room_logs, rooms, users
+  WatsonSessionId.js                       watson_session_ids
+  WebhookMindx.js                          event_mindx
+  errors.js                                errors
+  valid-agent.js                           agents
+  valid-jwt.js                             agents
+  valid-mfa-token.js                       agents
+  valid-request.js                         errors
+  validPermission.js                       agents, users
+  api.js                                   agents, alerts, areas, closure_reasons, messages, metrics, notifications, rooms, surveys, users, white_list
+  massive-image.js                         mass_alerts
+  postgresql.js                            errors

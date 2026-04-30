@@ -1,0 +1,66 @@
+====================================================================
+  IMPORT GRAPH
+  Project : /home/santosdev/devme/accountant_software/vue-order-app
+  Generated: 2026-04-24T11:38:17.231527
+====================================================================
+
+Files: 33   Internal edges: 61   External packages: 18
+
+────────────────────────────────────────────────────────────────────
+[BLAST RADIUS — fan-in sorted, top 14]
+────────────────────────────────────────────────────────────────────
+  FILE                                 BR  IMPORTED BY (grouped by role)
+  ────────────────────────────────────────────────────────────────────────────────────────────
+  SVC:axiosConfig                      12  SVC:authService,catalogService,costsService,dailyFinanctialService,inventoryService,i…
+  router                                2  ROOT:main,main-dashboard.ts
+  store                                 1  ROOT:main
+
+────────────────────────────────────────────────────────────────────
+[ADJACENCY LIST  (→internal  +external)]
+────────────────────────────────────────────────────────────────────
+  netlify-version-notify.mjs         → +node:fs
+  useAppVersion.ts                   → +@,vue
+  useDashboardData.ts                → +@,@tanstack,vue
+  useDebounce.ts                     → +vue
+  useFormProtection                  → +@,vue
+  useShortlinks.ts                   → +@,@tanstack,vue
+  dashboard-registry.ts              → +@
+  fontawesome                        → +@fortawesome
+  main-dashboard.ts                  → App.vue,router  +@fortawesome,@tanstack,pinia,v-money3,vue,vue-select
+  main                               → App.vue,router,store  +@fortawesome,@tanstack,pinia,v-money3,vue,vue-select
+  router                             → DashboardLayout.vue,axiosConfig,DailyFinanctial.vue,DashboardView.vue,ForgotPassword.vue,Login.vue,Profile.vue,SetPassword.vue,AppVersionSettings.vue,DailyDeliveryOrders.vue,GmailSettings.vue,PasswordPolicy.vue,UserManagement.vue,WaiterPayrollReport.vue,CatalogHome.vue,ProductsView.vue,SuppliesView.vue,InventoryDashboard.vue,ProductionHistory.vue,ProductionHome.vue,ProductionRecipes.vue,ProductionRegister.vue,ProductionStats.vue,DuplicatedOrders.vue,ListSales.vue,OrdersDailyStats.vue,SalesByCategory.vue,SalesByCategoryDetail.vue,SalesDashboard.vue,SalesTotalPer.vue,SalesUnifiedView.vue,TopProducts.vue,ShortlinksView.vue,CashDiary.vue,Dashboard.vue,DashboardExcepenceCategories.vue,EmployeePayments.vue,FullTransactions.vue,RaiseCash.vue,ScreenShots.vue,ListItems.vue,OrderDetail.vue,OrderForm.vue  +vue-router
+  index.ts                           → +@,vue-router
+  SVC:api.ts                         → axiosConfig  +axios
+  SVC:authService                    → axiosConfig
+  SVC:axiosConfig                    → +axios
+  SVC:catalogService                 → axiosConfig
+  SVC:costsService                   → axiosConfig
+  SVC:dailyFinanctialService         → axiosConfig
+  SVC:errorHandlerService            → +sweetalert2
+  SVC:inventoryService               → axiosConfig
+  SVC:itemsService                   → axiosConfig
+  SVC:metricsService                 → axiosConfig
+  SVC:ordersService                  → axiosConfig
+  SVC:productionService              → axiosConfig
+  SVC:salesService                   → axiosConfig
+  SVC:shortlinksService.ts           → +@
+  SVC:waiterPayrollService           → axiosConfig
+  SVC:walletService                  → axiosConfig
+  store                              → +vuex
+  dashboard.ts                       → +@,pinia,vue
+  shortlinks.ts                      → +@
+  tailwind.config                    → +@tailwindcss,tailwindcss
+  vite.config                        → +@vitejs,fs,path,vite
+
+────────────────────────────────────────────────────────────────────
+[DATA FLOW PATHS — controller → … → service  (≥3 nodes)]
+────────────────────────────────────────────────────────────────────
+  Notation: {A|B|C} = parallel middle nodes  ×N = N merged paths
+
+  No controller/router→service/repository paths found (≥3 nodes).
+
+────────────────────────────────────────────────────────────────────
+[EXTERNAL PACKAGES]
+────────────────────────────────────────────────────────────────────
+  HTTP/EXT : axios
+  INFRA    : @, @fortawesome, @tailwindcss, @tanstack, @vitejs, fs, node:fs, path, pinia, sweetalert2, tailwindcss, v-money3, vite, vue, vue-router, vue-select, vuex

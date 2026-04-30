@@ -1,0 +1,14 @@
+====================================================================
+  DATABASE CONTEXT
+  Project : /home/santosdev/tbbc/sonarqube-reports/static_context_generator
+  Generated: 2026-04-26T19:08:04.908063
+====================================================================
+
+Schema files used as map : 
+Declared tables          : 0
+Tables referenced in code: 0
+Undeclared tables        : 0
+ORM/ODM detected         : none
+
+[DECLARED TABLES]
+────────────────────────────────────────────────────────────────────

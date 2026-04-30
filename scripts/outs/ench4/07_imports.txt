@@ -1,0 +1,172 @@
+====================================================================
+  IMPORT GRAPH
+  Project : /home/santosdev/devme/accountant_software/order_manager
+  Generated: 2026-04-24T09:32:37.830741
+====================================================================
+
+Files: 125   Internal edges: 305   External packages: 76
+
+────────────────────────────────────────────────────────────────────
+[BLAST RADIUS — fan-in sorted, top 14]
+────────────────────────────────────────────────────────────────────
+  FILE                                 BR  IMPORTED BY (grouped by role)
+  ────────────────────────────────────────────────────────────────────────────────────────────
+  settings.py                          24  ROOT:auth.py,conftest.py,create_audit_indexes.py,daily_control.py,employees_payroll.p…
+  pipeline_builder.py                  24  ROOT:__init__.py,catalog_performance.py,category_sales.py,clicks_timeseries.py,clicks…
+  security.py                          19  ROOT:auth.py,conftest.py,daily_control.py,gmail.py,inventory.py,orders.py,password_po…
+  timezone_mixin.py                    17  ROOT:__init__.py,catalog_performance.py,category_sales.py,daily_sales.py,daily_top_pr…
+  models.py                            16  ROOT:auth.py,daily_control.py,models.py,orders.py,rest.py,router.py,service.py,test_a…
+  items_processing_mixin.py            16  ROOT:__init__.py,catalog_performance.py,category_sales.py,daily_sales.py,daily_top_pr…
+  models.py                             9  ROOT:consumption.py,repository.py,router.py,router.py,router.py,service.py,service.py…
+  utils.py                              7  ROOT:daily_control.py,models.py,orders.py,rest.py,service.py,transactions.py,websocke…
+  schemas.py                            7  ROOT:hourly_orders.py,hourly_sales.py,pipeline_builder.py,router.py,service.py,test_d…
+  models.py                             7  ROOT:repository.py,router.py,router.py,schemas.py,service.py,service.py,tenant_regist…
+  models.py                             6  ROOT:analytics_service.py,repository.py,router.py,schemas.py,service.py,tenant_regist…
+  schemas.py                            5  ROOT:auth.py,daily_control.py,rest.py,test_daily_control.py,users.py
+  audit.py                              5  ROOT:daily_control.py,orders.py,production.py,transactions.py,wallet.py
+  tenant_registry.py                    5  ROOT:router.py,router.py,router.py,router.py,settings.py
+
+────────────────────────────────────────────────────────────────────
+[ADJACENCY LIST  (→internal  +external)]
+────────────────────────────────────────────────────────────────────
+  auth.py                            → core.database,core.security,gmail_service,models,password_policy,schemas,settings  +asyncio,bson,datetime,fastapi,hashlib,httpx,jose,logging,secrets
+  broadcast.py                       → +fastapi,json,logging,typing
+  audit.py                           → +bson,datetime,logging,typing
+  security.py                        → core.database,settings  +bson,datetime,fastapi,fastapi.security,hashlib,jose,logging,secrets,typing
+  tenant_registry.py                 → domain.catalog.models,domain.orders.models,domain.shortlinks.models,settings  +beanie,logging,typing
+  types.py                           → +bson,orjson,starlette.responses,typing
+  create_indexes.py                  → +argparse,asyncio,dotenv,motor.motor_asyncio,os
+  daily_control.py                   → core.audit,core.security,models,schemas,settings,utils  +bson,collections,datetime,fastapi,fastapi.encoders,logging,pydantic,pymongo,typing,zoneinfo
+  models.py                          → +beanie,datetime,pydantic,typing
+  repository.py                      → .models  +datetime,typing
+  router.py                          → .schemas,.service,settings  +fastapi,fastapi.security,typing
+  schemas.py                         → +datetime,pydantic,typing
+  service.py                         → .repository,.schemas,settings  +datetime,typing
+  consumption.py                     → .models  +beanie,pydantic,typing
+  models.py                          → +beanie,datetime,pydantic,pymongo,typing
+  repository.py                      → .models  +beanie,beanie.operators,typing
+  router.py                          → .models,.repository,.schemas,.service,core.security,core.tenant_registry  +beanie,fastapi,typing
+  schemas.py                         → +beanie,pydantic,typing
+  service.py                         → .models,.repository,.schemas  +beanie,datetime,fastapi,typing
+  __init__.py                        → .pipeline_builder
+  pipeline_builder.py                → ..schemas  +__future__,abc,datetime,logging,typing,typing_extensions
+  __init__.py                        → .items_processing_mixin,.ranking_mixin,.temporal_grouping_mixin,.timezone_mixin
+  items_processing_mixin.py          → +logging,typing,typing_extensions
+  ranking_mixin.py                   → +typing,typing_extensions
+  sales_pipeline_mixin.py            → +typing
+  temporal_grouping_mixin.py         → +enum,typing_extensions
+  timezone_mixin.py                  → +datetime,logging,typing_extensions
+  __init__.py                        → .catalog_performance,.category_sales,.daily_sales,.daily_top_products,.date_range_sales,.duplicate_orders,.hourly_orders,.hourly_sales,.items_without_code,.margin_by_product,.monthly_sales,.order_items_list,.relate_product_sections,.station_performance,.supply_consumption,.supply_date_range,.top_products,.weekly_pattern
+  catalog_performance.py             → ..base.pipeline_builder,..mixins.items_processing_mixin,..mixins.timezone_mixin  +typing
+  category_sales.py                  → ..base.pipeline_builder,..mixins.items_processing_mixin,..mixins.ranking_mixin,..mixins.timezone_mixin  +datetime,re,typing
+  daily_sales.py                     → ..base.pipeline_builder,..mixins.items_processing_mixin,..mixins.sales_pipeline_mixin,..mixins.timezone_mixin  +typing
+  daily_top_products.py              → ..base.pipeline_builder,..mixins.items_processing_mixin,..mixins.ranking_mixin,..mixins.temporal_grouping_mixin,..mixins.timezone_mixin  +datetime,typing,typing_extensions
+  date_range_sales.py                → ..base.pipeline_builder,..mixins.items_processing_mixin,..mixins.sales_pipeline_mixin,..mixins.timezone_mixin  +typing
+  duplicate_orders.py                → ..base.pipeline_builder  +typing
+  hourly_orders.py                   → ..base.pipeline_builder,..mixins.items_processing_mixin,..mixins.temporal_grouping_mixin,..mixins.timezone_mixin,..schemas  +typing,typing_extensions
+  hourly_sales.py                    → ..base.pipeline_builder,..mixins.timezone_mixin,..schemas  +typing
+  items_without_code.py              → ..base.pipeline_builder,..mixins.items_processing_mixin,..mixins.timezone_mixin  +typing
+  margin_by_product.py               → ..base.pipeline_builder,..mixins.items_processing_mixin,..mixins.timezone_mixin  +typing
+  monthly_sales.py                   → ..base.pipeline_builder,..mixins.items_processing_mixin,..mixins.sales_pipeline_mixin,..mixins.timezone_mixin  +typing
+  order_items_list.py                → ..base.pipeline_builder,..mixins.items_processing_mixin,..mixins.timezone_mixin  +datetime,typing
+  relate_product_sections.py         → ..base.pipeline_builder,..mixins.items_processing_mixin  +bson,typing
+  station_performance.py             → ..base.pipeline_builder,..mixins.items_processing_mixin,..mixins.timezone_mixin  +typing
+  supply_consumption.py              → ..base.pipeline_builder,..mixins.items_processing_mixin,..mixins.timezone_mixin  +typing
+  supply_date_range.py               → ..base.pipeline_builder,..mixins.items_processing_mixin,..mixins.timezone_mixin  +typing
+  top_products.py                    → ..base.pipeline_builder,..mixins.items_processing_mixin,..mixins.ranking_mixin,..mixins.timezone_mixin  +datetime,typing,typing_extensions
+  validate_monthly_sales.py          → ..pipelines.monthly_sales  +json,pathlib,sys
+  weekly_pattern.py                  → ..base.pipeline_builder,..mixins.timezone_mixin,..schemas  +typing
+  router.py                          → .schemas,.service,core.security,core.tenant_registry,domain.catalog.models,domain.orders.models  +datetime,fastapi,logging,typing
+  schemas.py                         → +beanie,datetime,pydantic,typing
+  service.py                         → .base.pipeline_builder,.pipelines.catalog_performance,.pipelines.category_sales,.pipelines.daily_sales,.pipelines.daily_top_products,.pipelines.date_range_sales,.pipelines.duplicate_orders,.pipelines.hourly_orders,.pipelines.hourly_sales,.pipelines.items_without_code,.pipelines.margin_by_product,.pipelines.monthly_sales,.pipelines.order_items_list,.pipelines.relate_product_sections,.pipelines.station_performance,.pipelines.supply_consumption,.pipelines.supply_date_range,.pipelines.top_products,.pipelines.weekly_pattern,.schemas,domain.catalog.models,domain.orders.models  +bson,datetime,logging,math,typing
+  models.py                          → models  +beanie,datetime,pydantic,pymongo,typing
+  repository.py                      → .models  +beanie.operators,datetime,typing
+  router.py                          → .models,.repository,.schemas,.service,core.security,core.tenant_registry,domain.catalog.models,domain.catalog.repository,models,settings  +beanie,fastapi,typing
+  schemas.py                         → .models  +beanie,pydantic,typing
+  service.py                         → .models,.repository,.schemas,broadcast,domain.catalog.models,domain.catalog.repository,models,utils  +bson,datetime,fastapi,typing
+  analytics_service.py               → .models,.pipelines.clicks_timeseries,.pipelines.clicks_total,.pipelines.device_distribution,.schemas  +asyncio,logging,typing
+  models.py                          → +beanie,datetime,pydantic,pymongo,re,typing
+  clicks_timeseries.py               → domain.dashboard.base.pipeline_builder  +datetime,typing
+  clicks_total.py                    → domain.dashboard.base.pipeline_builder  +typing
+  device_distribution.py             → domain.dashboard.base.pipeline_builder  +typing
+  repository.py                      → .models  +beanie,beanie.operators,datetime,typing
+  router.py                          → .analytics_service,.models,.repository,.schemas,.service,core.security,core.tenant_registry,settings  +beanie,fastapi,hmac,logging,secrets,typing
+  schemas.py                         → .models  +beanie,datetime,pydantic,typing
+  service.py                         → .models,.repository,.schemas  +beanie,datetime,fastapi
+  employees_payroll.py               → google_sheets,settings
+  formatters.py                      → +csv,fastapi,fastapi.responses,io
+  gmail.py                           → core.security,gmail_service,settings  +fastapi,fastapi.responses,logging,os
+  gmail_service.py                   → +base64,email.mime.multipart,email.mime.text,google.auth.transport.requests,google.oauth2.credentials,google_auth_oauthlib.flow,googleapiclient.discovery,json,logging,os,secrets
+  google_sheets.py                   → +google.oauth2.service_account,gspread
+  inventory.py                       → core.security,invetory_models,settings  +bson,fastapi
+  invetory_models.py                 → +datetime,enum,pydantic,typing
+  main.py                            → auth,daily_control,domain.app_version.router,domain.catalog.router,domain.dashboard.router,domain.orders.router,domain.shortlinks.router,gmail,inventory,orders,password_policy,production,rest,settings,transactions,users,wallet,websockets_router  +fastapi,fastapi.middleware.cors,fastapi.staticfiles,uvicorn
+  001_add_session_tokens_and_roles.py → +asyncio,datetime,dotenv,motor.motor_asyncio,os,traceback
+  analyze_recipes_products.py        → +collections,json,pathlib,unicodedata
+  backfill_consumption_snapshots.py  → +argparse,asyncio,bson,dotenv,logging,motor.motor_asyncio,os,pymongo
+  backfill_order_catalog_category.py → +argparse,asyncio,collections,dotenv,motor.motor_asyncio,os,pymongo
+  check_esquite.py                   → +asyncio,dotenv,motor.motor_asyncio
+  compress_bills.py                  → +PIL,argparse,concurrent.futures,pathlib,shutil,sys,time,warnings
+  create_audit_indexes.py            → settings  +asyncio,pathlib,sys
+  create_catalog_indexes.py          → +argparse,asyncio,dotenv,motor.motor_asyncio,os
+  fix_papa_config.py                 → +json,pathlib
+  fix_supply_ids.py                  → +json,pathlib
+  insert_from_json.py                → +argparse,asyncio,bson,datetime,dotenv,json,motor.motor_asyncio,os,pathlib
+  map_extras_to_supplies_old.py      → +argparse,asyncio,bson,collections,dotenv,motor.motor_asyncio,os,sys
+  migrate_database.py                → +argparse,asyncio,dotenv,logging,motor.motor_asyncio,os,sys
+  migrate_orders_catalog_categoryy.py → +argparse,asyncio,dotenv,logging,motor.motor_asyncio,os
+  migrate_user_references.py         → +argparse,asyncio,bson,datetime,dotenv,logging,motor.motor_asyncio,os,re
+  migrate_user_refs_simple.py        → +argparse,asyncio,bson,datetime,dotenv,logging,motor.motor_asyncio,os,re
+  recipe_product_mapping.py          → +typing
+  seed_all_recipe_variations.py      → +argparse,asyncio,datetime,dotenv,json,motor.motor_asyncio,os,pathlib,sys,typing,unicodedata
+  seed_catalog.py                    → +argparse,asyncio,collections,datetime,dotenv,json,motor.motor_asyncio,os,pathlib,recipe_product_mapping,sys,typing
+  seed_catalog_old.py                → +argparse,asyncio,datetime,dotenv,json,motor.motor_asyncio,os,pathlib,sys,unicodedata
+  seed_catalog_v2.py                 → +argparse,asyncio,bson,collections,datetime,dotenv,json,motor.motor_asyncio,os,pathlib,re,typing
+  seed_catalog_v3.py                 → +argparse,asyncio,bson,datetime,dotenv,json,motor.motor_asyncio,os,pathlib,re,typing
+  seed_simple.py                     → +argparse,asyncio,bson,collections,datetime,dotenv,json,motor.motor_asyncio,os,pathlib,re,typing
+  set_catalog_categories.py          → +argparse,asyncio,dotenv,json,motor.motor_asyncio,os,pathlib,sys
+  models.py                          → utils  +datetime,enum,pydantic,typing
+  orders.py                          → broadcast,core.audit,core.security,employees_payroll,models,settings,utils  +bson,bson.objectid,datetime,fastapi,logging,typing
+  password_policy.py                 → core.security,settings  +bson,datetime,fastapi,logging,typing
+  production.py                      → core.audit,core.security,production_models,settings  +bson,datetime,fastapi,logging,math,typing
+  production_models.py               → +beanie,datetime,pydantic,typing
+  rename_collections.py              → +asyncio,bson.objectid,motor.motor_asyncio,sys
+  rest.py                            → broadcast,core.security,formatters,html_formatters,models,schemas,settings,utils  +bson,datetime,fastapi,fastapi.encoders,fastapi.responses,fastapi.templating,jose,logging,typing
+  schemas.py                         → +datetime,pydantic,typing
+  seed_catalog.py                    → +argparse,asyncio,collections,datetime,dotenv,json,motor.motor_asyncio,os,pathlib,recipe_product_mapping,sys,typing
+  settings.py                        → core.tenant_registry,domain.app_version.models,settings_logger  +beanie,bson,dotenv,fastapi,fastapi.encoders,logging,motor.motor_asyncio,os,passlib.context,zoneinfo
+  settings_logger.py                 → +datetime,logging,logging.handlers,os,zoneinfo
+  conftest.py                        → core.security,pytest,settings  +asyncio,bson,datetime,motor.motor_asyncio,os,pytest_asyncio,typing,unittest.mock
+  test_auth_current.py               → auth,core.security,models,pytest,settings  +bson,datetime,fastapi,jwt,re,unittest.mock
+  test_daily_control.py              → core.security,daily_control,models,pytest,schemas  +bson,datetime,fastapi,unittest.mock
+  test_daily_control_current.py      → daily_control,models,pytest  +bson,datetime,unittest.mock
+  test_dashboard_filters.py          → domain.dashboard.base.pipeline_builder,domain.dashboard.pipelines.hourly_orders,domain.dashboard.pipelines.hourly_sales,domain.dashboard.schemas,pytest  +datetime,inspect
+  test_domain_orders_service.py      → domain.orders.schemas,domain.orders.service,pytest  +bson,types,unittest.mock
+  test_orders_current.py             → main,models,orders,pytest  +bson,datetime,fastapi,fastapi.testclient,unittest.mock
+  test_orders_integration_simple.py  → models,orders,pytest  +bson,datetime,unittest.mock
+  test_production.py                 → core.security,production,production.router,production_models,pytest  +bson,datetime,fastapi,unittest.mock
+  test_production_current.py         → production,production_models,pytest  +bson,datetime,unittest.mock
+  test_transactions_current.py       → pytest,transactions,wallet  +bson,datetime,decimal,unittest.mock
+  tests.py                           → +json,random,requests
+  week_day_test.py                   → +datetime,json,os,requests
+  transactions.py                    → core.audit,core.security,models,settings,utils  +asyncio,bson,csv,datetime,fastapi,fastapi.responses,io,logging,magic,pathlib,pydantic,pytz,typing,uuid,zipfile
+  users.py                           → core.security,gmail_service,models,schemas,settings  +bson,datetime,fastapi,hashlib,logging,secrets
+  utils.py                           → settings  +bson,datetime,hashlib,json,pytz,random,string,typing
+  wallet.py                          → core.audit,core.security,models,settings  +bson,datetime,fastapi,logging,pydantic,pymongo
+  websockets_router.py               → broadcast,models,settings,utils  +asyncio,fastapi,json,logging,random,wsproto.utilities
+
+────────────────────────────────────────────────────────────────────
+[DATA FLOW PATHS — controller → … → service  (≥3 nodes)]
+────────────────────────────────────────────────────────────────────
+  Notation: {A|B|C} = parallel middle nodes  ×N = N merged paths
+
+  [3 nodes / 2 edges]
+    router.py → {service.py|service.py|service.py|service.py|service.py} → repository.py   ×5
+
+────────────────────────────────────────────────────────────────────
+[EXTERNAL PACKAGES]
+────────────────────────────────────────────────────────────────────
+  STDLIB   : __future__, abc, argparse, asyncio, base64, collections, csv, datetime, decimal, enum, hashlib, hmac, inspect, io, json, logging, math, os, pathlib, random, re, secrets, shutil, string, sys, time, traceback, types, typing, unicodedata, uuid, warnings, zipfile, zoneinfo
+  SECURITY : jose, jwt
+  HTTP/EXT : httpx, requests
+  INFRA    : PIL, beanie, beanie.operators, bson, bson.objectid, concurrent.futures, dotenv, email.mime.multipart, email.mime.text, fastapi, fastapi.encoders, fastapi.middleware.cors, fastapi.responses, fastapi.security, fastapi.staticfiles, fastapi.templating, fastapi.testclient, google.auth.transport.requests, google.oauth2.credentials, google.oauth2.service_account, google_auth_oauthlib.flow, googleapiclient.discovery, gspread, logging.handlers, magic, motor.motor_asyncio, orjson, passlib.context, pydantic, pymongo, pytest_asyncio, pytz, recipe_product_mapping, starlette.responses, typing_extensions, unittest.mock, uvicorn, wsproto.utilities

@@ -36,6 +36,7 @@ from cli.core import (
     render,
     write_usage_report,
 )
+from cli.core.llm_client import init_llm_session, finalize_llm_session
 from cli.core.grouped_audit import (
     build_grouped_worklist,
     run_grouped_by_chapter_job,
@@ -274,6 +275,17 @@ def _pct(done: int, total: int) -> str:
     return f"[{color}]{done}/{total} ({p:.0f}%)[/{color}]"
 
 
+def _summarize_component_ids(components: list[ComponentItem], limit: int = 4) -> str:
+    """Render a compact component-id list for interactive tables."""
+    component_ids = [component.component_id for component in components]
+    if not component_ids:
+        return "[green]none[/green]"
+    if len(component_ids) <= limit:
+        return ", ".join(component_ids)
+    shown = ", ".join(component_ids[:limit])
+    return f"{shown} (+{len(component_ids) - limit})"
+
+
 def _select_tag_interactive(
     tag_stats: dict[str, "TagStats"],
 ) -> str | None:
@@ -309,6 +321,7 @@ def _select_tag_interactive(
 
 
 def _select_chapter_for_tag(
+    app_name: str,
     tag: str,
     tag_stats: dict[str, "TagStats"],
     override: bool,
@@ -322,15 +335,19 @@ def _select_chapter_for_tag(
     table.add_column("Chapter", style="bold")
     table.add_column("Progress", justify="center")
     table.add_column("Pending components", justify="right")
+    table.add_column("Components", style="dim")
 
     for i, ch in enumerate(chapters, 1):
         v = ts.chapters[ch]
         pending = v["total"] - v["completed"]
+        asvs_key = get_asvs_key_for_chapter(ch)
+        chapter_components = get_pending_components_for_tag_chapter(app_name, tag, asvs_key, override)
         table.add_row(
             str(i),
             ch,
             _pct(v["completed"], v["total"]),
             str(pending) if pending > 0 else "[green]0[/green]",
+            _summarize_component_ids(chapter_components),
         )
 
     console.print(table)
@@ -386,7 +403,7 @@ def _run_asset_tags_interactive(
 
             # Refresh stats so chapter progress reflects any just-completed runs
             tag_stats = get_tag_chapter_stats(app_name, override=override)
-            result = _select_chapter_for_tag(tag, tag_stats, override)
+            result = _select_chapter_for_tag(app_name, tag, tag_stats, override)
 
             if result == "q":
                 return
@@ -602,6 +619,7 @@ def audit_cmd(
             "include_auditor_diary": include_auditor_diary,
         },
     )
+    init_llm_session(app_name=app_name, command_name="audit")
     console.print(f"[bold cyan]🔒 Security Audit[/bold cyan] {app_name}")
     usage_calls: list[dict] = []
 
@@ -622,6 +640,7 @@ def audit_cmd(
             usage_calls=usage_calls,
         )
         _write_audit_usage_report(app_name, usage_calls)
+        finalize_llm_session()
         return
 
     # Load components and scan existing analyses
@@ -658,6 +677,7 @@ def audit_cmd(
             usage_calls.append(call_usage)
             _print_call_usage(call_usage)
         _write_audit_usage_report(app_name, usage_calls)
+        finalize_llm_session()
         return
 
     # Interactive mode
@@ -695,6 +715,7 @@ def audit_cmd(
                     usage_calls.append(call_usage)
                     _print_call_usage(call_usage)
                     _write_audit_usage_report(app_name, usage_calls)
+                finalize_llm_session()
                 
                 # Refresh analyses after audit
                 analyses = _scan_existing_analyses(app_name)

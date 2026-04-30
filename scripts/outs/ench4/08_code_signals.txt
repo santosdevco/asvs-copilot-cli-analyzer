@@ -1,0 +1,156 @@
+====================================================================
+  CODE SIGNALS — SECURITY HEATMAP
+  Project : /home/santosdev/devme/accountant_software/order_manager
+  Generated: 2026-04-24T09:32:37.830741
+====================================================================
+
+Total functions : 803  classes: 257  TODOs: 10
+Files with signals: 20
+
+Score legend: sinks×3  sqli×4  authz_gap×3  err_leak×2  source×1  crypto×1  todo×1
+
+────────────────────────────────────────────────────────────────────
+[SECURITY HEATMAP — top files by risk score]
+────────────────────────────────────────────────────────────────────
+  SCORE  FILE                                              SIGNALS PRESENT
+  ──────────────────────────────────────────────────────────────────────────────────────────
+    130  domain/dashboard/router.py                        sources, missing_input_validation
+     60  transactions.py                                   sources
+     27  settings.py                                       sources, crypto, missing_input_validation
+     26  rest.py                                           sources, missing_input_validation
+     24  domain/catalog/router.py                          sources, missing_input_validation
+     23  orders.py                                         sources, missing_input_validation
+     21  production.py                                     sources, missing_input_validation
+     19  inventory.py                                      sources
+     18  core/security.py                                  sources, crypto, missing_input_validation
+     17  daily_control.py                                  sources
+     17  users.py                                          sources, crypto, missing_input_validation
+     15  domain/shortlinks/router.py                       sources, missing_input_validation
+     11  gmail_service.py                                  sinks, sources, crypto, missing_input_validation
+     10  migrations/seed_catalog_v3.py                     sinks, sources, missing_input_validation
+      8  auth.py                                           sources, crypto, missing_input_validation
+      8  seed_catalog.py                                   sources, missing_input_validation
+      8  wallet.py                                         sources
+      8  migrations/map_extras_to_supplies_old.py          sources, missing_input_validation
+      8  migrations/seed_catalog.py                        sources, missing_input_validation
+      8  migrations/seed_catalog_v2.py                     sources, missing_input_validation
+
+────────────────────────────────────────────────────────────────────
+[PER-FILE SIGNAL DETAIL]
+────────────────────────────────────────────────────────────────────
+
+File  : domain/dashboard/router.py
+Meta  : 444 lines  complexity=9  score=130
+  [INPUT SOURCES]    Depends()×19, Query()×108
+
+File  : transactions.py
+Meta  : 730 lines  complexity=125  score=60
+  [INPUT SOURCES]    Depends()×10, Query()×39, Path()×6, Form()×2, File()×1, UploadFile×2
+
+File  : settings.py
+Meta  : 129 lines  complexity=5  score=27
+  [INPUT SOURCES]    environ×23
+  [CRYPTO]           passlib
+
+File  : rest.py
+Meta  : 438 lines  complexity=62  score=26
+  [INPUT SOURCES]    Depends()×11, Query()×12
+
+File  : domain/catalog/router.py
+Meta  : 212 lines  complexity=2  score=24
+  [INPUT SOURCES]    Depends()×17, Query()×4
+
+File  : orders.py
+Meta  : 462 lines  complexity=44  score=23
+  [INPUT SOURCES]    Depends()×12, Query()×8
+
+File  : production.py
+Meta  : 777 lines  complexity=132  score=21
+  [INPUT SOURCES]    Depends()×12, Query()×6
+
+File  : inventory.py
+Meta  : 365 lines  complexity=45  score=19
+  [INPUT SOURCES]    Depends()×19
+
+File  : core/security.py
+Meta  : 677 lines  complexity=40  score=18
+  [INPUT SOURCES]    Depends()×11
+  [CRYPTO]           hashlib.sha256, jwt.encode, jwt.decode, secrets.token
+
+File  : daily_control.py
+Meta  : 878 lines  complexity=106  score=17
+  [INPUT SOURCES]    Depends()×14, Query()×3
+
+File  : users.py
+Meta  : 479 lines  complexity=39  score=17
+  [INPUT SOURCES]    Depends()×12
+  [CRYPTO]           hashlib.sha256, secrets.token
+
+File  : domain/shortlinks/router.py
+Meta  : 198 lines  complexity=3  score=15
+  [INPUT SOURCES]    Depends()×8, Query()×4
+
+File  : gmail_service.py
+Meta  : 159 lines  complexity=10  score=11
+  [DANGEROUS SINKS]  open (write)
+  [INPUT SOURCES]    environ×4
+  [CRYPTO]           secrets.token
+
+File  : migrations/seed_catalog_v3.py
+Meta  : 541 lines  complexity=93  score=10
+  [DANGEROUS SINKS]  open (write)
+  [INPUT SOURCES]    Path()×3, environ×1
+
+File  : auth.py
+Meta  : 629 lines  complexity=56  score=8
+  [INPUT SOURCES]    Depends()×2
+  [CRYPTO]           hashlib.sha256, jwt.decode, secrets.token
+
+File  : seed_catalog.py
+Meta  : 701 lines  complexity=118  score=8
+  [INPUT SOURCES]    Path()×3, environ×2
+
+File  : wallet.py
+Meta  : 280 lines  complexity=19  score=8
+  [INPUT SOURCES]    Depends()×8
+
+File  : migrations/map_extras_to_supplies_old.py
+Meta  : 274 lines  complexity=42  score=8
+  [INPUT SOURCES]    input()×3, environ×2
+
+File  : migrations/seed_catalog.py
+Meta  : 673 lines  complexity=113  score=8
+  [INPUT SOURCES]    Path()×3, environ×2
+
+File  : migrations/seed_catalog_v2.py
+Meta  : 724 lines  complexity=134  score=8
+  [INPUT SOURCES]    Path()×4, environ×1
+
+────────────────────────────────────────────────────────────────────
+[LARGEST FILES]
+────────────────────────────────────────────────────────────────────
+   1231 lines  tests/test_daily_control.py
+    878 lines  daily_control.py
+    777 lines  production.py
+    748 lines  tests/test_production.py
+    730 lines  transactions.py
+    724 lines  migrations/seed_catalog_v2.py
+    701 lines  seed_catalog.py
+    677 lines  core/security.py
+    673 lines  migrations/seed_catalog.py
+    629 lines  auth.py
+
+────────────────────────────────────────────────────────────────────
+[MOST COMPLEX FILES]
+────────────────────────────────────────────────────────────────────
+   FNS    CX  FILE
+    77    40  tests/test_daily_control.py
+    42    15  tests/test_production.py
+    25    62  domain/catalog/service.py
+    24    40  core/security.py
+    23   118  domain/dashboard/service.py
+    22     2  domain/catalog/repository.py
+    22     9  domain/dashboard/router.py
+    21    12  tests/test_dashboard_filters.py
+    20     2  domain/catalog/router.py
+    17    21  test_runner.sh

@@ -1,0 +1,1 @@
+SECURITY: 3 total findings\nEXPOSED_ENV: .env, .env.production\nSECRET_TYPES: uuid_as_secret:1\nHOTSPOT_FILES: .env(1)\n

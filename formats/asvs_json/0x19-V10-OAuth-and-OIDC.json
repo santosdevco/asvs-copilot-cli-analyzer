@@ -5,16 +5,14 @@
     "file": "0x19-V10-OAuth-and-OIDC.md",
     "id": "V10",
     "title": "OAuth and OIDC",
-    "control_objective": "OAuth2 (referred to as OAuth in this chapter) is an industry-standard framework for delegated authorization. For example, using OAuth, a client application can obtain access to APIs (server resources) on a user's behalf, provided the user has authorized the client application to do so. By itself, OAuth is not designed for user authentication. The OpenID Connect (OIDC) framework extends OAuth by adding a user identity layer on top of OAuth. OIDC provides support for features including standardized user information, Single Sign-On (SSO), and session management. As OIDC is an extension of OAuth, the OAuth requirements in this chapter also apply to OIDC. The following roles are defined in OAuth: The OAuth client is the application that attempts to obtain access to server resources (e.g., by calling an API using the issued access token). The OAuth client is often a server-side application. * A confidential client is a client capable of maintaining the confidentiality of the credentials it uses to authenticate itself with the authorization server. * A public client is not capable of maintaining the confidentiality of credentials for authenticating with the authorization server. Therefore, instead of authenticating itself (e.g., using 'client_id' and 'client_secret' parameters), it only identifies itself (using a 'client_id' parameter). The OAuth resource server (RS) is the server API exposing resources to OAuth clients. The OAuth authorization server (AS) is a server application that issues access tokens to OAuth clients. These access tokens allow OAuth clients to access RS resources, either on behalf of an end-user or on the OAuth client's own behalf. The AS is often a separate application, but (if appropriate) it may be integrated into a suitable RS. The resource owner (RO) is the end-user who authorizes OAuth clients to obtain limited access to resources hosted on the resource server on their behalf. The resource owner consents to this delegated authorization by interacting with the authorization server. The following roles are defined in OIDC: The relying party (RP) is the client application requesting end-user authentication through the OpenID Provider. It assumes the role of an OAuth client. The OpenID Provider (OP) is an OAuth AS that is capable of authenticating the end-user and provides OIDC claims to an RP. The OP may be the identity provider (IdP), but in federated scenarios, the OP and the identity provider (where the end-user authenticates) may be different server applications. OAuth and OIDC were initially designed for third-party applications. Today, they are often used by first-party applications as well. However, when used in first-party scenarios, such as authentication and session management, the protocol adds some complexity, which may introduce new security challenges. OAuth and OIDC can be used for many types of applications, but the focus for ASVS and the requirements in this chapter is on web applications and APIs. Since OAuth and OIDC can be considered logic on top of web technologies, general requirements from other chapters always apply, and this chapter cannot be taken out of context. This chapter addresses best current practices for OAuth2 and OIDC aligned with specifications found at <https://oauth.net/2/> and <https://openid.net/developers/specs/>. Even if RFCs are considered mature, they are updated frequently. Thus, it is important to align with the latest versions when applying the requirements in this chapter. See the references section for more details. Given the complexity of the area, it is vitally important for a secure OAuth or OIDC solution to use well-known industry-standard authorization servers and apply the recommended security configuration. Terminology used in this chapter aligns with OAuth RFCs and OIDC specifications, but note that OIDC terminology is only used for OIDC-specific requirements; otherwise, OAuth terminology is used. In the context of OAuth and OIDC, the term \"token\" in this chapter refers to: Access tokens, which shall only be consumed by the RS and can either be reference tokens that are validated using introspection or self-contained tokens that are validated using some key material. Refresh tokens, which shall only be consumed by the authorization server that issued the token. OIDC ID Tokens, which shall only be consumed by the client that triggered the authorization flow. The risk levels for some of the requirements in this chapter depend on whether the client is a confidential client or regarded as a public client. Since using strong client authentication mitigates many attack vectors, a few requirements might be relaxed when using a confidential client for L1 applications.",
     "sections": [
       {
         "id": "V10.1",
         "title": "Generic OAuth and OIDC Security",
-        "description": "This section covers generic architectural requirements that apply to all applications using OAuth or OIDC.",
         "requirements": [
           {
             "id": "10.1.1",
-            "description": "Verify that tokens are only sent to components that strictly need them. For example, when using a backend-for-frontend pattern for browser-based JavaScript applications, access and refresh tokens shall only be accessible for the backend.",
+            "description": "Verify that tokens are only sent to components that strictly need them.",
             "level": 2
           },
           {
@@ -27,7 +25,6 @@
       {
         "id": "V10.2",
         "title": "OAuth Client",
-        "description": "These requirements detail the responsibilities for OAuth client applications. The client can be, for example, a web server backend (often acting as a Backend For Frontend, BFF), a backend service integration, or a frontend Single Page Application (SPA, aka browser-based application). In general, backend clients are regarded as confidential clients and frontend clients are regarded as public clients. However, native applications running on the end-user device can be regarded as confidential when using OAuth dynamic client registration.",
         "requirements": [
           {
             "id": "10.2.1",
@@ -36,7 +33,7 @@
           },
           {
             "id": "10.2.2",
-            "description": "Verify that, if the OAuth client can interact with more than one authorization server, it has a defense against mix-up attacks. For example, it could require that the authorization server return the 'iss' parameter value and validate it in the authorization response and the token response.",
+            "description": "Verify that, if the OAuth client can interact with more than one authorization server, it has a defense against mix-up attacks.",
             "level": 2
           },
           {
@@ -49,7 +46,6 @@
       {
         "id": "V10.3",
         "title": "OAuth Resource Server",
-        "description": "In the context of ASVS and this chapter, the resource server is an API. To provide secure access, the resource server must: Validate the access token, according to the token format and relevant protocol specifications, e.g., JWT-validation or OAuth token introspection. If valid, enforce authorization decisions based on the information from the access token and permissions which have been granted. For example, the resource server needs to verify that the client (acting on behalf of RO) is authorized to access the requested resource. Therefore, the requirements listed here are OAuth or OIDC specific and should be performed after token validation and before performing authorization based on information from the token.",
         "requirements": [
           {
             "id": "10.3.1",
@@ -68,7 +64,7 @@
           },
           {
             "id": "10.3.4",
-            "description": "Verify that, if the resource server requires specific authentication strength, methods, or recentness, it verifies that the presented access token satisfies these constraints. For example, if present, using the OIDC 'acr', 'amr' and 'auth_time' claims respectively.",
+            "description": "Verify that, if the resource server requires specific authentication strength, methods, or recentness, it verifies that the presented access token satisfies these constraints.",
             "level": 2
           },
           {
@@ -81,7 +77,6 @@
       {
         "id": "V10.4",
         "title": "OAuth Authorization Server",
-        "description": "These requirements detail the responsibilities for OAuth authorization servers, including OpenID Providers. For client authentication, the 'self_signed_tls_client_auth' method is allowed with the prerequisites required by [section 2.2](https://datatracker.ietf.org/doc/html/rfc8705#name-self-signed-certificate-mut) of [RFC 8705](https://datatracker.ietf.org/doc/html/rfc8705).",
         "requirements": [
           {
             "id": "10.4.1",
@@ -140,7 +135,7 @@
           },
           {
             "id": "10.4.12",
-            "description": "Verify that for a given client, the authorization server only allows the 'response_mode' value that this client needs to use. For example, by having the authorization server validate this value against the expected values or by using pushed authorization request (PAR) or JWT-secured Authorization Request (JAR).",
+            "description": "Verify that for a given client, the authorization server only allows the 'response_mode' value that this client needs to use.",
             "level": 3
           },
           {
@@ -155,7 +150,7 @@
           },
           {
             "id": "10.4.15",
-            "description": "Verify that, for a server-side client (which is not executed on the end-user device), the authorization server ensures that the 'authorization_details' parameter value is from the client backend and that the user has not tampered with it. For example, by requiring the usage of pushed authorization request (PAR) or JWT-secured Authorization Request (JAR).",
+            "description": "Verify that, for a server-side client (which is not executed on the end-user device), the authorization server ensures that the 'authorization_details' parameter value is from the client backend and that the user has not tampered with it.",
             "level": 3
           },
           {
@@ -168,11 +163,10 @@
       {
         "id": "V10.5",
         "title": "OIDC Client",
-        "description": "As the OIDC relying party acts as an OAuth client, the requirements from the section \"OAuth Client\" apply as well. Note that the \"Authentication with an Identity Provider\" section in the \"Authentication\" chapter also contains relevant general requirements.",
         "requirements": [
           {
             "id": "10.5.1",
-            "description": "Verify that the client (as the relying party) mitigates ID Token replay attacks. For example, by ensuring that the 'nonce' claim in the ID Token matches the 'nonce' value sent in the authentication request to the OpenID Provider (in OAuth2 refereed to as the authorization request sent to the authorization server).",
+            "description": "Verify that the client (as the relying party) mitigates ID Token replay attacks.",
             "level": 2
           },
           {
@@ -200,7 +194,6 @@
       {
         "id": "V10.6",
         "title": "OpenID Provider",
-        "description": "As OpenID Providers act as OAuth authorization servers, the requirements from the section \"OAuth Authorization Server\" apply as well. Note that if using the ID Token flow (not the code flow), no access tokens are issued, and many of the requirements for OAuth AS are not applicable.",
         "requirements": [
           {
             "id": "10.6.1",
@@ -217,7 +210,6 @@
       {
         "id": "V10.7",
         "title": "Consent Management",
-        "description": "These requirements cover the verification of the user's consent by the authorization server. Without proper user consent verification, a malicious actor may obtain permissions on the user's behalf through spoofing or social-engineering.",
         "requirements": [
           {
             "id": "10.7.1",

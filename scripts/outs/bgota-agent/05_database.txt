@@ -1,0 +1,14 @@
+====================================================================
+  DATABASE CONTEXT
+  Project : /home/santosdev/tbbc/sonarqube-reports/analysis-repos/watshelp-bancodebogota-agent
+  Generated: 2026-04-24T10:10:03.778546
+====================================================================
+
+Schema files used as map : —
+Declared tables          : 0
+Tables referenced in code: 0
+Undeclared tables        : 0
+ORM/ODM detected         : none
+
+[DECLARED TABLES]
+────────────────────────────────────────────────────────────────────

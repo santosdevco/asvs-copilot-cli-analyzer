@@ -3,6 +3,8 @@ pydantic>=2.0
 github-copilot-sdk          # official GitHub Copilot SDK (pip install github-copilot-sdk)
 python-dotenv>=1.0
 rich>=13.0
+anyio>=4.0                  # async runtime used by claude-agent-sdk
 # optional BYOK fallbacks
 openai>=1.0                 # LLM_PROVIDER=openai
 anthropic>=0.20             # LLM_PROVIDER=anthropic
+claude-agent-sdk            # LLM_PROVIDER=claude  (pip install claude-agent-sdk)

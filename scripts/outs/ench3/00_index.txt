@@ -1,0 +1,14 @@
+PROJECT: order_manager | TYPE: cli | LANG: Other | FRAMEWORKS: FastAPI
+USAGE: Load sections as needed based on task requirements
+
+FILES:
+  01_identity.txt: Project identity [primary_language:Other|frameworks:1|production_deps:25]
+  02_structure.txt: Directory structure & architecture [total_files:266|entry_points:1]
+  03_endpoints.txt: HTTP API endpoints [total_endpoints:162|domains:59]
+  04_env_vars.txt: Environment variables [unique_vars:30|total_references:57]
+  05_database.txt: Database schema and SQL usage [orm_detected:3]
+  06_middlewares.txt: Middleware chains in routes [no data]
+  07_imports.txt: Internal import graph [internal_edges:145|external_packages:124]
+  08_code_signals.txt: Code signals (complexity, TODOs) [functions:803|classes:257|todos:10]
+  09_security.txt: Security findings [total_findings:11|exposed_env_files:3]
+  10_git.txt: Git activity [no data]

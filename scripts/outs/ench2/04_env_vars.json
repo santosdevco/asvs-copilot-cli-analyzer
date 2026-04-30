@@ -1,0 +1,366 @@
+{
+  "_meta": {
+    "generated_at": "2026-04-24T08:45:43.144010",
+    "root": "/home/santosdev/devme/accountant_software/order_manager",
+    "scanner_version": "3.0.0",
+    "section": "env_vars"
+  },
+  "env_vars": {
+    "total_unique_vars": 30,
+    "total_references": 57,
+    "vars": {
+      "MONGO_CONNECTION": {
+        "files": [
+          "create_indexes.py",
+          "migrations/001_add_session_tokens_and_roles.py",
+          "migrations/backfill_consumption_snapshots.py",
+          "migrations/backfill_order_catalog_category.py",
+          "migrations/check_esquite.py",
+          "migrations/create_catalog_indexes.py",
+          "migrations/insert_from_json.py",
+          "migrations/map_extras_to_supplies_old.py",
+          "migrations/migrate_database.py",
+          "migrations/migrate_orders_catalog_categoryy.py",
+          "migrations/migrate_user_references.py",
+          "migrations/migrate_user_refs_simple.py",
+          "migrations/seed_all_recipe_variations.py",
+          "migrations/seed_catalog.py",
+          "migrations/seed_catalog_old.py",
+          "migrations/seed_catalog_v2.py",
+          "migrations/seed_catalog_v3.py",
+          "migrations/seed_simple.py",
+          "migrations/set_catalog_categories.py",
+          "seed_catalog.py",
+          "settings.py"
+        ],
+        "references": 21
+      },
+      "MAIN_DB_NAME": {
+        "files": [
+          "migrations/map_extras_to_supplies_old.py",
+          "migrations/seed_all_recipe_variations.py",
+          "migrations/seed_catalog.py",
+          "migrations/seed_catalog_old.py",
+          "seed_catalog.py",
+          "settings.py"
+        ],
+        "references": 6
+      },
+      "DB_NAME": {
+        "files": [
+          "migrations/migrate_database.py",
+          "settings.py"
+        ],
+        "references": 2
+      },
+      "TEST_MONGO_URI": {
+        "files": [
+          "tests/conftest.py"
+        ],
+        "references": 2
+      },
+      "GMAIL_CLIENT_SECRET_PATH": {
+        "files": [
+          "gmail_service.py"
+        ],
+        "references": 1
+      },
+      "GMAIL_TOKEN_PATH": {
+        "files": [
+          "gmail_service.py"
+        ],
+        "references": 1
+      },
+      "GMAIL_REDIRECT_URI": {
+        "files": [
+          "gmail_service.py"
+        ],
+        "references": 1
+      },
+      "GMAIL_PKCE_STATE_PATH": {
+        "files": [
+          "gmail_service.py"
+        ],
+        "references": 1
+      },
+      "ORDERS_COLLECTION": {
+        "files": [
+          "settings.py"
+        ],
+        "references": 1
+      },
+      "WEBSOCKET_RESTAURANT_SYNC_SECONDS": {
+        "files": [
+          "settings.py"
+        ],
+        "references": 1
+      },
+      "RESTAURANT_TIMEOUT_SOCKET": {
+        "files": [
+          "settings.py"
+        ],
+        "references": 1
+      },
+      "MAX_WEBSOCKET_REQUESTS": {
+        "files": [
+          "settings.py"
+        ],
+        "references": 1
+      },
+      "MAX_ORDER_PRINT_ATTEMPTS": {
+        "files": [
+          "settings.py"
+        ],
+        "references": 1
+      },
+      "TIMEZONE": {
+        "files": [
+          "settings.py"
+        ],
+        "references": 1
+      },
+      "JWT_EXPIRE_MINUTES": {
+        "files": [
+          "settings.py"
+        ],
+        "references": 1
+      },
+      "SECRET_KEY": {
+        "files": [
+          "settings.py"
+        ],
+        "references": 1
+      },
+      "JWT_ALGORITHM": {
+        "files": [
+          "settings.py"
+        ],
+        "references": 1
+      },
+      "COOKIES_SECURE": {
+        "files": [
+          "settings.py"
+        ],
+        "references": 1
+      },
+      "COOKIE_SAMESITE": {
+        "files": [
+          "settings.py"
+        ],
+        "references": 1
+      },
+      "BILLS_DIR": {
+        "files": [
+          "settings.py"
+        ],
+        "references": 1
+      },
+      "GOOGLE_SHEETS_CREDENTIALS_PATH": {
+        "files": [
+          "settings.py"
+        ],
+        "references": 1
+      },
+      "PAYROLL_SPREADSHEET": {
+        "files": [
+          "settings.py"
+        ],
+        "references": 1
+      },
+      "PAYROLL_SHEET": {
+        "files": [
+          "settings.py"
+        ],
+        "references": 1
+      },
+      "DUPLICATED_ORDER_SECONDS": {
+        "files": [
+          "settings.py"
+        ],
+        "references": 1
+      },
+      "INTERNAL_API_KEY": {
+        "files": [
+          "settings.py"
+        ],
+        "references": 1
+      },
+      "APP_VERSION_API_KEY": {
+        "files": [
+          "settings.py"
+        ],
+        "references": 1
+      },
+      "FRONTEND_URL": {
+        "files": [
+          "settings.py"
+        ],
+        "references": 1
+      },
+      "TURNSTILE_SECRET": {
+        "files": [
+          "settings.py"
+        ],
+        "references": 1
+      },
+      "LOG_LEVEL": {
+        "files": [
+          "settings_logger.py"
+        ],
+        "references": 1
+      },
+      "START_WEEK_DAY": {
+        "files": [
+          "tests/week_day_test.py"
+        ],
+        "references": 1
+      }
+    },
+    "files_using_env": {
+      "create_indexes.py": [
+        "MONGO_CONNECTION"
+      ],
+      "gmail_service.py": [
+        "GMAIL_CLIENT_SECRET_PATH",
+        "GMAIL_PKCE_STATE_PATH",
+        "GMAIL_REDIRECT_URI",
+        "GMAIL_TOKEN_PATH"
+      ],
+      "migrations/001_add_session_tokens_and_roles.py": [
+        "MONGO_CONNECTION"
+      ],
+      "migrations/backfill_consumption_snapshots.py": [
+        "MONGO_CONNECTION"
+      ],
+      "migrations/backfill_order_catalog_category.py": [
+        "MONGO_CONNECTION"
+      ],
+      "migrations/check_esquite.py": [
+        "MONGO_CONNECTION"
+      ],
+      "migrations/create_catalog_indexes.py": [
+        "MONGO_CONNECTION"
+      ],
+      "migrations/insert_from_json.py": [
+        "MONGO_CONNECTION"
+      ],
+      "migrations/map_extras_to_supplies_old.py": [
+        "MAIN_DB_NAME",
+        "MONGO_CONNECTION"
+      ],
+      "migrations/migrate_database.py": [
+        "DB_NAME",
+        "MONGO_CONNECTION"
+      ],
+      "migrations/migrate_orders_catalog_categoryy.py": [
+        "MONGO_CONNECTION"
+      ],
+      "migrations/migrate_user_references.py": [
+        "MONGO_CONNECTION"
+      ],
+      "migrations/migrate_user_refs_simple.py": [
+        "MONGO_CONNECTION"
+      ],
+      "migrations/seed_all_recipe_variations.py": [
+        "MAIN_DB_NAME",
+        "MONGO_CONNECTION"
+      ],
+      "migrations/seed_catalog.py": [
+        "MAIN_DB_NAME",
+        "MONGO_CONNECTION"
+      ],
+      "migrations/seed_catalog_old.py": [
+        "MAIN_DB_NAME",
+        "MONGO_CONNECTION"
+      ],
+      "migrations/seed_catalog_v2.py": [
+        "MONGO_CONNECTION"
+      ],
+      "migrations/seed_catalog_v3.py": [
+        "MONGO_CONNECTION"
+      ],
+      "migrations/seed_simple.py": [
+        "MONGO_CONNECTION"
+      ],
+      "migrations/set_catalog_categories.py": [
+        "MONGO_CONNECTION"
+      ],
+      "seed_catalog.py": [
+        "MAIN_DB_NAME",
+        "MONGO_CONNECTION"
+      ],
+      "settings.py": [
+        "APP_VERSION_API_KEY",
+        "BILLS_DIR",
+        "COOKIES_SECURE",
+        "COOKIE_SAMESITE",
+        "DB_NAME",
+        "DUPLICATED_ORDER_SECONDS",
+        "FRONTEND_URL",
+        "GOOGLE_SHEETS_CREDENTIALS_PATH",
+        "INTERNAL_API_KEY",
+        "JWT_ALGORITHM",
+        "JWT_EXPIRE_MINUTES",
+        "MAIN_DB_NAME",
+        "MAX_ORDER_PRINT_ATTEMPTS",
+        "MAX_WEBSOCKET_REQUESTS",
+        "MONGO_CONNECTION",
+        "ORDERS_COLLECTION",
+        "PAYROLL_SHEET",
+        "PAYROLL_SPREADSHEET",
+        "RESTAURANT_TIMEOUT_SOCKET",
+        "SECRET_KEY",
+        "TIMEZONE",
+        "TURNSTILE_SECRET",
+        "WEBSOCKET_RESTAURANT_SYNC_SECONDS"
+      ],
+      "settings_logger.py": [
+        "LOG_LEVEL"
+      ],
+      "tests/conftest.py": [
+        "TEST_MONGO_URI"
+      ],
+      "tests/week_day_test.py": [
+        "START_WEEK_DAY"
+      ]
+    },
+    "classified": {
+      "SECRET": [
+        "APP_VERSION_API_KEY",
+        "GMAIL_CLIENT_SECRET_PATH",
+        "GMAIL_TOKEN_PATH",
+        "INTERNAL_API_KEY",
+        "JWT_ALGORITHM",
+        "JWT_EXPIRE_MINUTES",
+        "SECRET_KEY",
+        "TURNSTILE_SECRET"
+      ],
+      "CONNECTIVITY": [
+        "DB_NAME",
+        "FRONTEND_URL",
+        "GMAIL_REDIRECT_URI",
+        "MAIN_DB_NAME",
+        "TEST_MONGO_URI"
+      ],
+      "RUNTIME": [
+        "BILLS_DIR",
+        "COOKIES_SECURE",
+        "COOKIE_SAMESITE",
+        "DUPLICATED_ORDER_SECONDS",
+        "GMAIL_PKCE_STATE_PATH",
+        "GOOGLE_SHEETS_CREDENTIALS_PATH",
+        "LOG_LEVEL",
+        "MAX_ORDER_PRINT_ATTEMPTS",
+        "MAX_WEBSOCKET_REQUESTS",
+        "MONGO_CONNECTION",
+        "ORDERS_COLLECTION",
+        "PAYROLL_SHEET",
+        "PAYROLL_SPREADSHEET",
+        "RESTAURANT_TIMEOUT_SOCKET",
+        "START_WEEK_DAY",
+        "TIMEZONE",
+        "WEBSOCKET_RESTAURANT_SYNC_SECONDS"
+      ]
+    }
+  }
+}

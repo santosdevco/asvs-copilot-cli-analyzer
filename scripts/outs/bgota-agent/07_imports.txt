@@ -1,0 +1,103 @@
+====================================================================
+  IMPORT GRAPH
+  Project : /home/santosdev/tbbc/sonarqube-reports/analysis-repos/watshelp-bancodebogota-agent
+  Generated: 2026-04-24T10:10:03.778546
+====================================================================
+
+Files: 58   Internal edges: 133   External packages: 12
+
+────────────────────────────────────────────────────────────────────
+[BLAST RADIUS — fan-in sorted, top 14]
+────────────────────────────────────────────────────────────────────
+  FILE                                 BR  IMPORTED BY (grouped by role)
+  ────────────────────────────────────────────────────────────────────────────────────────────
+  index                                15  ROOT:App,AppRouter,Chat,Contact,Footer,Header,Home,Login,Logout,ModalAreas,SocketCont…
+  index                                14  ROOT:App,Body,Chat,Contact,File,Footer,Header,Header,Home,Line,ModalAreas,ModalClose,…
+  Api                                  12  ROOT:Chat,Contact,Header,Home,Login,ModalAreas,ModalClose,SocketContext,index,index,i…
+  storage                               8  ROOT:Api,Chat,File,SocketContext,W3,index,useSocket,useTokenManager
+  SocketContext                         4  ROOT:App,Line,ModalAreas,ModalClose
+  index                                 4  ROOT:App,AppRouter,index,index
+  LineContext                           2  ROOT:App,Line
+  App                                   1  ROOT:index
+  Body                                  1  ROOT:Chat
+  Footer                                1  ROOT:Chat
+  Header                                1  ROOT:Chat
+  Buttons                               1  ROOT:index
+  File                                  1  ROOT:index
+  Html                                  1  ROOT:index
+
+────────────────────────────────────────────────────────────────────
+[ADJACENCY LIST  (→internal  +external)]
+────────────────────────────────────────────────────────────────────
+  Api                                → config,storage  +axios
+  App                                → AppContext,AuthContext,ChatContext,LineContext,SocketContext,router  +react
+  Body                               → ChatContext,Messages  +react,react-scroll-to-bottom
+  Chat                               → config,storage,Api,BGChat.jpg,AuthContext,ChatContext,Body,Footer,Header,types,components  +axios,react
+  Footer                             → AuthContext,ChatContext,components,Emojis
+  Header                             → config,ChatContext,components,ModalRoom  +bootstrap,react
+  Message                            → components  +react
+  State                              → types  +moment-timezone,react,react-moment
+  Buttons                            → +react
+  File                               → config,storage,ChatContext,types  +axios,react
+  Html                               → +react
+  Image                              → +react
+  Link                               → +react
+  List                               → +react
+  Lists                              → +react
+  PDFFile                            → +react
+  Text                               → +react
+  Video                              → +react
+  index                              → Buttons,File,Html,Image,Link,List,Lists,PDFFile,Text,Video,types  +react
+  DragFile                           → +react,react-dropzone
+  Emojis                             → +emoji-mart,react
+  FloatMenu                          → +react
+  InputFile                          → +react
+  ModalAreas                         → Api,AuthContext,ChatContext,SocketContext  +react
+  ModalClose                         → Api,ChatContext,SocketContext  +react
+  ModalRoom                          → ChatContext  +moment-timezone,react
+  PMessage                           → +react
+  Status                             → +react
+  Contact                            → Api,AuthContext,ChatContext,Header,components  +react
+  Header                             → Api,components,NotificationAlert,AuthContext,ChatContext,components  +react
+  IconoTooltip                       → +react
+  Item                               → +react,react-moment
+  Home                               → config,Api,Chat,Contact,bgta.svg,message.mp3,components,AuthContext,ChatContext  +bootstrap,react
+  Login                              → config,Api,Banco_de_Bogota_logo.svg,components,AuthContext  +react,react-router-dom
+  index                              → Api,Banco_de_Bogota_logo.svg,components,AuthContext  +react,react-router-dom
+  index                              → Api,Banco_de_Bogota_logo.svg,components,AuthContext  +react,react-router-dom
+  W3                                 → storage,AuthContext  +react,react-router-dom
+  AlertMessage                       → +react
+  EmptyChat                          → +react
+  Line                               → ChatContext,LineContext,SocketContext  +react
+  Logout                             → AuthContext  +react
+  ModalBienvenida                    → +react
+  NotificationAlert                  → components  +react
+  appReducer                         → types
+  index                              → appReducer,types  +react
+  authReducer                        → types
+  index                              → storage,Api,AppContext,authReducer,types  +react
+  chatReducer                        → types
+  index                              → Api,AppContext,AuthContext,chatReducer,types
+  LineContext                        → +react
+  SocketContext                      → config,storage,Api,message.mp3,room.mp3,components,hooks,useTokenManager,AuthContext,ChatContext  +react
+  useSocket                          → storage  +react,socket.io-client
+  useTokenManager                    → storage,TokenManager  +react
+  AppRouter                          → Home,Login,MfaSetup,MfaVerify,SSO,AppContext,AuthContext,AuthRoute,PrivateRoute  +react
+  AuthRoute                          → +react,react-router-dom
+  PrivateRoute                       → +react,react-router-dom
+  index                              → App  +react,react-dom
+  storage                            → config  +crypto-js
+
+────────────────────────────────────────────────────────────────────
+[DATA FLOW PATHS — controller → … → service  (≥3 nodes)]
+────────────────────────────────────────────────────────────────────
+  Notation: {A|B|C} = parallel middle nodes  ×N = N merged paths
+
+  No controller/router→service/repository paths found (≥3 nodes).
+
+────────────────────────────────────────────────────────────────────
+[EXTERNAL PACKAGES]
+────────────────────────────────────────────────────────────────────
+  SECURITY : crypto-js
+  HTTP/EXT : axios
+  INFRA    : bootstrap, emoji-mart, moment-timezone, react, react-dom, react-dropzone, react-moment, react-router-dom, react-scroll-to-bottom, socket.io-client

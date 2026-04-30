@@ -1,0 +1,84 @@
+====================================================================
+  IMPORT GRAPH
+  Project : /home/santosdev/tbbc/sonarqube-reports/static_context_generator
+  Generated: 2026-04-26T19:08:04.908063
+====================================================================
+
+Files: 41   Internal edges: 74   External packages: 14
+
+────────────────────────────────────────────────────────────────────
+[BLAST RADIUS — fan-in sorted, top 14]
+────────────────────────────────────────────────────────────────────
+  FILE                                 BR  IMPORTED BY (grouped by role)
+  ────────────────────────────────────────────────────────────────────────────────────────────
+  fs.py                                15  ROOT:architecture.py,base.py,code_signals.py,database.py,dependencies.py,endpoints.py…
+  config.py                             9  ROOT:architecture.py,cli.py,code_signals.py,dependencies.py,fs.py,imports.py,orchestr…
+  base.py                               8  ROOT:code_signals.py,database.py,frontend.py,identity.py,imports.py,md_fmt.py,middlew…
+  base.py                               6  ROOT:__init__.py,go.py,java.py,javascript.py,javascript_broken.py,python_rules.py
+  endpoints.py                          2  ROOT:middlewares.py,orchestrator.py
+  cli.py                                1  ROOT:run_mapper.py
+  orchestrator.py                       1  ROOT:cli.py
+  architecture.py                       1  ROOT:orchestrator.py
+  code_signals.py                       1  ROOT:orchestrator.py
+  database.py                           1  ROOT:orchestrator.py
+  dependencies.py                       1  ROOT:orchestrator.py
+  env_vars.py                           1  ROOT:orchestrator.py
+  frontend.py                           1  ROOT:orchestrator.py
+  git.py                                1  ROOT:orchestrator.py
+
+────────────────────────────────────────────────────────────────────
+[ADJACENCY LIST  (→internal  +external)]
+────────────────────────────────────────────────────────────────────
+  architecture.py                    → ..core.config,..core.fs  +__future__,os,pathlib,re
+  code_signals.py                    → ..core.config,..core.fs,..rules  +__future__,collections,pathlib,re
+  database.py                        → ..core.fs  +__future__,collections,pathlib,re
+  dependencies.py                    → ..core.config,..core.fs  +__future__,json,pathlib,re
+  endpoints.py                       → ..core.fs  +__future__,collections,pathlib,re
+  env_vars.py                        → ..core.fs  +__future__,collections,pathlib,re
+  frontend.py                        → ..core.fs  +__future__,collections,pathlib,re
+  git.py                             → +__future__,collections,pathlib,re,subprocess,typing
+  imports.py                         → ..core.config,..core.fs  +__future__,collections,os,pathlib
+  middlewares.py                     → ..core.fs,.endpoints  +__future__,collections,pathlib,re
+  security.py                        → ..core.config,..core.fs  +__future__,pathlib,re
+  structure.py                       → ..core.config,..core.fs  +__future__,collections,os,pathlib,re,typing
+  cli.py                             → .core.config,.formatters,.orchestrator  +__future__,argparse,pathlib,sys
+  config.py                          → +re
+  fs.py                              → .config  +os,pathlib,re,typing
+  __init__.py                        → .json_fmt,.md_fmt,.sections.code_signals,.sections.database,.sections.endpoints,.sections.env_vars,.sections.frontend,.sections.git,.sections.identity,.sections.imports,.sections.middlewares,.sections.security,.sections.structure,.txt_fmt  +__future__,typing
+  base.py                            → ..core.fs  +__future__,pathlib
+  json_fmt.py                        → +__future__,copy,json
+  md_fmt.py                          → ..core.fs,.base  +__future__
+  code_signals.py                    → ..base  +__future__
+  database.py                        → ..base  +__future__,pathlib
+  endpoints.py                       → +__future__
+  env_vars.py                        → +__future__
+  frontend.py                        → ..base  +__future__
+  git.py                             → +__future__
+  identity.py                        → ..base  +__future__
+  imports.py                         → ..base  +__future__,collections,os,re
+  middlewares.py                     → +__future__
+  middlewares_old.py                 → ..base  +__future__,collections,re
+  security.py                        → +__future__
+  structure.py                       → +__future__
+  txt_fmt.py                         → ..core.fs,.base  +__future__
+  orchestrator.py                    → .analyzers.architecture,.analyzers.code_signals,.analyzers.database,.analyzers.dependencies,.analyzers.endpoints,.analyzers.env_vars,.analyzers.frontend,.analyzers.git,.analyzers.imports,.analyzers.middlewares,.analyzers.security,.analyzers.structure,.core.config,.core.fs,.formatters  +__future__,datetime,json,pathlib,sys,typing
+  __init__.py                        → .base,.go,.java,.javascript,.python_rules
+  base.py                            → +__future__,dataclasses,re,typing
+  go.py                              → .base  +re
+  java.py                            → .base  +re
+  javascript.py                      → .base  +__future__,re
+  javascript_broken.py               → .base  +re
+  python_rules.py                    → .base  +re
+  run_mapper.py                      → mapper.cli  +pathlib,sys,traceback
+
+────────────────────────────────────────────────────────────────────
+[DATA FLOW PATHS — controller → … → service  (≥3 nodes)]
+────────────────────────────────────────────────────────────────────
+  Notation: {A|B|C} = parallel middle nodes  ×N = N merged paths
+
+  No controller/router→service/repository paths found (≥3 nodes).
+
+────────────────────────────────────────────────────────────────────
+[EXTERNAL PACKAGES]
+────────────────────────────────────────────────────────────────────
+  STDLIB   : __future__, argparse, collections, copy, dataclasses, datetime, json, os, pathlib, re, subprocess, sys, traceback, typing

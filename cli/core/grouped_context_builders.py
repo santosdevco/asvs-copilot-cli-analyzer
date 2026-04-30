@@ -31,11 +31,13 @@ from cli.models import ComponentItem
 
 # Re-use private helpers from sibling module — normal within-package usage
 from cli.core.context_builder import (
+    _read_component_context,
     _asvs_json_to_text,
+    _format_files_to_audit,
+    _get_component_scope_paths,
     _load_json,
     _parse_static_reports,
     _read_static_xml,
-    _strip_auditor_diary,
     _to_cdata,
 )
 
@@ -47,13 +49,8 @@ def _component_dir(app_name: str, component_id: str) -> Path:
 
 
 def _read_context_md(app_name: str, component_id: str, include_auditor_diary: bool) -> str:
-    """Load a component's context.xml (falls back to context.md for legacy outputs)."""
-    xml_path = _component_dir(app_name, component_id) / "context.xml"
-    md_path  = _component_dir(app_name, component_id) / "context.md"
-    if xml_path.exists():
-        return xml_path.read_text(encoding="utf-8")
-    text = md_path.read_text(encoding="utf-8") if md_path.exists() else ""
-    return text if include_auditor_diary else _strip_auditor_diary(text)
+    """Load component context honoring CONTEXT_FORMAT through shared reader."""
+    return _read_component_context(app_name, component_id, include_auditor_diary)
 
 
 def _tactical_report_names(asvs_key: str) -> list[str]:
@@ -72,7 +69,7 @@ def _chapter_meta(asvs_key: str) -> tuple[str, dict]:
 
 
 def _output_file_path(app_name: str, component_id: str, chapter_id: str) -> str:
-    return f"outputs/{app_name}/components/{component_id}/analysis/{chapter_id}.xml"
+    return f"outputs/{app_name}/components/{component_id}/analysis/{chapter_id}.json" # TODO se puede hacer le formato parametrizable, pero json es el mas opimo en este momento
 
 
 def _context_file_path(app_name: str, component_id: str) -> str:
@@ -86,6 +83,19 @@ def _wrap_component_context(context_text: str) -> str:
         indented = "\n".join(f"    {line}" for line in stripped.splitlines())
         return f"{indented}\n"
     return f"    <component_context>{_to_cdata(context_text)}</component_context>\n"
+
+
+def _format_grouped_files_to_audit(component_paths_by_id: dict[str, list[str]]) -> str:
+    """Render files_to_audit grouped by component so the prompt preserves ownership."""
+    blocks: list[str] = []
+    for component_id, paths in component_paths_by_id.items():
+        rendered_paths = _format_files_to_audit(paths)
+        blocks.append(
+            f'  <component_paths component_id="{escape(component_id)}">\n'
+            f'{_to_cdata(rendered_paths)}\n'
+            f'  </component_paths>'
+        )
+    return "\n".join(blocks)
 
 
 # ── public API ────────────────────────────────────────────────────────────────
@@ -112,7 +122,24 @@ def build_by_chapter_context(
 
     # Warm the cache once before the loop
     xml_text = _read_static_xml(app_name)
-    filtered_static = _parse_static_reports(xml_text, report_names)
+
+    # Slice static reports using the union of all component paths in this grouped request.
+    all_component_paths: list[str] = []
+    all_core_paths: list[str] = []
+    component_paths_by_id: dict[str, list[str]] = {}
+    for comp in components:
+        component_paths, core_paths = _get_component_scope_paths(app_name, comp.component_id)
+        component_paths_by_id[comp.component_id] = component_paths + core_paths
+        all_component_paths.extend(component_paths)
+        all_core_paths.extend(core_paths)
+
+    filtered_static = _parse_static_reports(
+        xml_text,
+        report_names,
+        component_paths=all_component_paths,
+        core_paths=all_core_paths,
+    )
+    files_to_audit = _format_grouped_files_to_audit(component_paths_by_id)
 
     output_lines: list[str]    = []
     component_nodes: list[str] = []
@@ -139,6 +166,7 @@ def build_by_chapter_context(
         "asvsid":                      chapter_id,
         "component_count":             str(len(components)),
         "asvs_i_rules_txt":            asvs_rules_txt,
+        "files_to_audit":              files_to_audit,
         "filtered_static_context":     filtered_static,
         "outputs_xml":                 "\n".join(output_lines),
         "components_xml":              "\n".join(component_nodes),
@@ -175,7 +203,16 @@ def build_by_component_context(
                 seen_reports.add(name)
 
     xml_text = _read_static_xml(app_name)
-    filtered_static = _parse_static_reports(xml_text, all_report_names)
+    component_paths, core_paths = _get_component_scope_paths(app_name, component_id)
+    filtered_static = _parse_static_reports(
+        xml_text,
+        all_report_names,
+        component_paths=component_paths,
+        core_paths=core_paths,
+    )
+    files_to_audit = _format_grouped_files_to_audit(
+        {component_id: component_paths + core_paths}
+    )
 
     # Output files: one per chapter (no context file — audit never modifies context.xml)
     output_lines: list[str] = []
@@ -201,6 +238,7 @@ def build_by_component_context(
         "component_key":               component_id,
         "chapter_count":               str(len(asvs_keys)),
         "context_md":                  context_md,
+        "files_to_audit":              files_to_audit,
         "filtered_static_context":     filtered_static,
         "outputs_xml":                 "\n".join(output_lines),
         "chapters_xml":                "\n".join(chapter_nodes),

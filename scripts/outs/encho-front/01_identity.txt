@@ -1,0 +1,65 @@
+====================================================================
+  PROJECT IDENTITY
+  Project : /home/santosdev/devme/accountant_software/vue-order-app
+  Generated: 2026-04-24T11:38:17.231527
+====================================================================
+
+Project name     : vue-order-app
+Project type     : frontend
+Primary language : Vue
+Frameworks       : Vite, Vue
+
+────────────────────────────────────────────────────────────────────
+[LANGUAGE DISTRIBUTION]
+────────────────────────────────────────────────────────────────────
+  Vue                 78.9%    35034 lines   103 files    1194.6 KB
+  JSON                 7.6%     3372 lines     2 files     115.2 KB
+  JavaScript           6.8%     3026 lines    25 files      94.8 KB
+  TypeScript           2.9%     1305 lines    13 files      37.6 KB
+  Markdown             2.3%     1022 lines     6 files      24.9 KB
+  Other                1.4%      612 lines     5 files      20.4 KB
+  HTML                 0.0%       16 lines     1 files       0.5 KB
+  CSS                  0.0%       16 lines     1 files       0.3 KB
+  TOML                 0.0%        5 lines     1 files       0.1 KB
+  TOTAL                      44408 lines
+
+────────────────────────────────────────────────────────────────────
+[DEPENDENCIES]
+────────────────────────────────────────────────────────────────────
+  Manifest files : package.json
+  Run scripts    : dev, build, preview, notify:version, deploy:netlify, dev:netlify
+
+  Production (28):
+    @fortawesome/fontawesome-free       ^6.5.2
+    @fortawesome/fontawesome-svg-core   ^6.5.1
+    @fortawesome/free-regular-svg-icons ^6.5.1
+    @fortawesome/free-solid-svg-icons   ^6.5.1
+    @fortawesome/vue-fontawesome        ^3.0.8
+    @heroicons/vue                      ^2.2.0
+    @popperjs/core                      ^2.11.8
+    @tailwindcss/forms                  ^0.5.7
+    @tanstack/vue-query                 ^5.97.0
+    @vuepic/vue-datepicker              ^12.1.0
+    axios                               ^1.6.7
+    chart.js                            ^4.4.3
+    chartjs-adapter-date-fns            ^3.0.0
+    chartjs-plugin-crosshair            ^2.0.0
+    date-fns                            ^4.1.0
+    echarts                             ^6.0.0
+    flowbite                            ^2.5.2
+    flowbite-vue                        ^0.1.6
+    pinia                               ^3.0.4
+    postcss                             ^8.4.38
+    sweetalert2                         ^11.12.3
+    tailwindcss                         ^3.4.4
+    v-money3                            ^3.24.1
+    vue                                 ^3.4.19
+    vue-router                          ^4.3.0
+    vue-search-select                   ^3.2.0
+    vue-select                          ^4.0.0-beta.6
+    vuex                                ^4.0.2
+
+  Development (3):
+    @vitejs/plugin-vue                  ^5.0.4
+    autoprefixer                        ^10.4.19
+    vite                                ^5.1.4

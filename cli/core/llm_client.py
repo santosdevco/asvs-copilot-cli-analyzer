@@ -3,7 +3,7 @@ llm_client.py
 ─────────────
 Thin abstraction over LLM providers.  Configure via environment variables:
 
-  LLM_PROVIDER      = copilot (default) | openai | anthropic
+  LLM_PROVIDER      = copilot (default) | openai | anthropic | claude
   LLM_MODEL         = claude-sonnet-4.6 (default) | gpt-4o | o4-mini | ...
   LLM_MAX_TOKENS    = 8192 (default)
 
@@ -11,6 +11,13 @@ Thin abstraction over LLM providers.  Configure via environment variables:
   Uses the official `github-copilot-sdk` (pip install github-copilot-sdk).
   Auth: set GITHUB_TOKEN (or GH_TOKEN / COPILOT_GITHUB_TOKEN) env var.
   The Copilot CLI is bundled with the SDK -- no separate install needed.
+
+  -- Claude provider (claude-agent-sdk-python) ---------------------------------
+  LLM_PROVIDER=claude
+  Uses `claude-agent-sdk` (pip install claude-agent-sdk).
+  Auth: the bundled Claude Code CLI reads ~/.claude/ automatically.
+  Override the model with LLM_MODEL (e.g. "sonnet", "opus", or a full ID).
+  No extra env vars needed -- credentials are loaded from ~/.claude/settings.json.
 
   -- Alternative providers -----------------------------------------------------
   OPENAI_API_KEY    = sk-...    (LLM_PROVIDER=openai)
@@ -27,12 +34,89 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from .app_logger import log_event, log_output, log_prompt
+from .usage_tracker import (
+    get_usage_tracker,
+    init_usage_tracker,
+    finalize_usage_tracker,
+)
 
 load_dotenv()
 
 _PROVIDER   = os.getenv("LLM_PROVIDER", "copilot").lower()
-_MODEL      = os.getenv("LLM_MODEL", "gpt-4.1")  # valid: gpt-4.1, gpt-5-mini, claude-sonnet-4.6, auto …
 _MAX_TOKENS = int(os.getenv("LLM_MAX_TOKENS", "8192"))
+
+# -- ~/.claude/settings.json loader -------------------------------------------
+
+_CLAUDE_SETTINGS_PATH = Path.home() / ".claude" / "settings.json"
+
+_CLAUDE_SONNET_ENV_KEY = "ANTHROPIC_DEFAULT_SONNET_MODEL"
+_CLAUDE_OPUS_ENV_KEY   = "ANTHROPIC_DEFAULT_OPUS_MODEL"
+_CLAUDE_HAIKU_ENV_KEY  = "ANTHROPIC_DEFAULT_HAIKU_MODEL"
+
+# Friendly alias → env key inside settings.json["env"]
+_CLAUDE_MODEL_ALIASES: dict[str, str] = {
+    "sonnet": _CLAUDE_SONNET_ENV_KEY,
+    "opus":   _CLAUDE_OPUS_ENV_KEY,
+    "haiku":  _CLAUDE_HAIKU_ENV_KEY,
+}
+
+
+def _load_claude_settings() -> dict:
+    """
+    Parse ~/.claude/settings.json and return its contents.
+    Also injects the 'env' block into os.environ so that
+    AnthropicBedrock picks up AWS_* and CLAUDE_CODE_USE_BEDROCK automatically.
+    Returns {} if the file does not exist or cannot be parsed.
+    """
+    if not _CLAUDE_SETTINGS_PATH.exists():
+        return {}
+    try:
+        with _CLAUDE_SETTINGS_PATH.open() as fh:
+            settings: dict = json.load(fh)
+    except (json.JSONDecodeError, OSError):
+        return {}
+
+    # Inject every key from settings["env"] into os.environ (non-destructive:
+    # existing env vars take priority so the user can still override them).
+    for key, value in (settings.get("env") or {}).items():
+        os.environ.setdefault(key, str(value))
+
+    return settings
+
+
+def _resolve_claude_model(settings: dict) -> str:
+    """
+    Resolve the Bedrock model ID to use, in priority order:
+      1. LLM_MODEL env var (explicit override)
+      2. LLM_MODEL alias: "sonnet" | "opus" | "haiku"  → look up in settings.env
+      3. settings["model"] alias → look up in settings.env
+      4. ANTHROPIC_DEFAULT_SONNET_MODEL from settings.env (safe fallback)
+    """
+    explicit = os.getenv("LLM_MODEL", "").strip()
+    if explicit:
+        # If it's a known alias, resolve it; otherwise use as-is (full model ID).
+        env_key = _CLAUDE_MODEL_ALIASES.get(explicit.lower())
+        if env_key:
+            resolved = (settings.get("env") or {}).get(env_key) or os.getenv(env_key)
+            if resolved:
+                return resolved
+        return explicit
+
+    # Fall back to the alias stored in settings["model"]
+    alias = (settings.get("model") or "sonnet").lower()
+    env_key = _CLAUDE_MODEL_ALIASES.get(alias, _CLAUDE_SONNET_ENV_KEY)
+    resolved = (settings.get("env") or {}).get(env_key) or os.getenv(env_key)
+    if resolved:
+        return resolved
+
+    # Last resort: the Sonnet env var or a hardcoded stable ID
+    return os.getenv(_CLAUDE_SONNET_ENV_KEY, "us.anthropic.claude-sonnet-4-5-20250929-v1:0")
+
+
+# Resolve model at import time (after dotenv is loaded).
+# For the 'claude' provider the model is resolved lazily inside _complete_claude_bedrock
+# because _load_claude_settings() must run first.
+_MODEL = os.getenv("LLM_MODEL", "gpt-4.1")  # valid: gpt-4.1, gpt-5-mini, claude-sonnet-4.6, auto …
 
 _SYSTEM_PROMPT = "You are an expert application security auditor specialized in OWASP ASVS v5.0."
 
@@ -361,6 +445,131 @@ def _complete_anthropic(prompt: str) -> str:
     return message.content[0].text
 
 
+_CLAUDE_AGENT_ALLOWED_TOOLS = [
+    "Read", "Write", "Edit", "Bash", "Grep", "Glob", "LS",
+    "WebSearch", "WebFetch",
+]
+
+
+def _complete_claude_agent(prompt: str, streaming: bool = False) -> str:
+    """
+    Claude Agent SDK (claude-agent-sdk-python) — mirrors the Copilot provider pattern.
+    Uses the bundled Claude Code CLI; auth is read from ~/.claude/ automatically.
+    All tools in _CLAUDE_AGENT_ALLOWED_TOOLS are auto-approved; file edits are
+    accepted automatically via permission_mode='acceptEdits'.
+
+    Requires:  pip install claude-agent-sdk
+    """
+    import anyio
+    from claude_agent_sdk import (
+        query, ClaudeAgentOptions,
+        AssistantMessage, UserMessage, ResultMessage,
+        TextBlock, ToolUseBlock, ToolResultBlock,
+    )
+    import sys
+    from rich.console import Console
+
+    settings = _load_claude_settings()
+    model = _resolve_claude_model(settings)
+
+    options = ClaudeAgentOptions(
+        system_prompt=_SYSTEM_PROMPT,
+        model=model,
+        max_turns=20,
+        allowed_tools=_CLAUDE_AGENT_ALLOWED_TOOLS,
+        permission_mode="acceptEdits",
+    )
+
+    console = Console()
+    result: list[str] = []
+    global _LAST_USAGE_SUMMARY
+
+    async def _run() -> None:
+        async for message in query(prompt=prompt, options=options):
+            if isinstance(message, AssistantMessage):
+                for block in message.content:
+                    if isinstance(block, TextBlock):
+                        if streaming:
+                            sys.stdout.write(block.text)
+                            sys.stdout.flush()
+                        result.append(block.text)
+                    elif isinstance(block, ToolUseBlock):
+                        tool_name = getattr(block, "name", "unknown")
+                        tool_input = getattr(block, "input", {}) or {}
+
+                        # Track tool use
+                        tracker = get_usage_tracker()
+                        if tracker:
+                            tracker.record_tool_use(tool_name=tool_name, tool_input=tool_input)
+
+                        if streaming:
+                            summary, details = _summarize_tool_args(tool_input)
+                            console.print(f"\n🔧 [bold cyan]AI is using tool:[/bold cyan] {tool_name}{summary}")
+                            if details:
+                                console.print(f"   [dim]args: {details}[/dim]")
+
+            elif isinstance(message, UserMessage):
+                # UserMessage wraps ToolResultBlock responses from the agent loop
+                if streaming:
+                    for block in getattr(message, "content", []):
+                        if isinstance(block, ToolResultBlock):
+                            is_error = getattr(block, "is_error", False)
+                            if is_error:
+                                console.print("❌ [red]Tool returned an error[/red]")
+                            else:
+                                console.print("✅ [green]Tool completed successfully[/green]")
+
+            elif isinstance(message, ResultMessage):
+                usage = getattr(message, "usage", None)
+                total_cost = getattr(message, "total_cost_usd", None)
+                num_turns = getattr(message, "num_turns", 0)
+                duration_api_ms = getattr(message, "duration_api_ms", 0)
+
+                if usage:
+                    input_tokens = float(getattr(usage, "input_tokens", 0) or 0)
+                    output_tokens = float(getattr(usage, "output_tokens", 0) or 0)
+                    cache_read = float(getattr(usage, "cache_read_tokens", 0) or 0)
+                    cache_write = float(getattr(usage, "cache_write_tokens", 0) or 0)
+
+                    _LAST_USAGE_SUMMARY = {
+                        "provider": "claude",
+                        "model": model,
+                        "input_tokens": input_tokens,
+                        "output_tokens": output_tokens,
+                        "cache_read_tokens": cache_read,
+                        "cache_write_tokens": cache_write,
+                        "total_tokens": input_tokens + output_tokens,
+                        "total_cost_usd": total_cost or 0.0,
+                        "num_turns": num_turns,
+                        "usage_event_count": 1,
+                    }
+
+                    # Track usage
+                    tracker = get_usage_tracker()
+                    if tracker:
+                        tracker.record_llm_call(
+                            provider="claude",
+                            model=model,
+                            prompt_chars=len(prompt),
+                            response_chars=len("".join(result)),
+                            usage=_LAST_USAGE_SUMMARY,
+                            api_duration_ms=duration_api_ms,
+                        )
+
+        if streaming:
+            print()  # trailing newline
+
+    try:
+        anyio.run(_run)
+    except RuntimeError:
+        # Already inside an event loop — run in a thread
+        import concurrent.futures
+        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
+            pool.submit(anyio.run, _run).result()
+
+    return "".join(result)
+
+
 # -- Public API ----------------------------------------------------------------
 
 def complete(prompt: str, streaming: bool = False) -> str:
@@ -378,6 +587,8 @@ def complete(prompt: str, streaming: bool = False) -> str:
 
     if _PROVIDER == "anthropic":
         response = _complete_anthropic(prompt)
+    elif _PROVIDER == "claude":
+        response = _complete_claude_agent(prompt, streaming)
     elif _PROVIDER == "openai":
         response = _complete_openai(prompt)
     else:
@@ -406,3 +617,13 @@ def get_last_usage_summary() -> dict[str, Any] | None:
 def get_provider_and_model() -> tuple[str, str]:
     """Expose provider/model for usage reporting metadata."""
     return _PROVIDER, _MODEL
+
+
+def init_llm_session(app_name: str, command_name: str) -> None:
+    """Initialize LLM session with usage tracking (call at command start)."""
+    init_usage_tracker(app_name, command_name)
+
+
+def finalize_llm_session() -> Path | None:
+    """Finalize LLM session and save usage JSON (call at command end)."""
+    return finalize_usage_tracker()

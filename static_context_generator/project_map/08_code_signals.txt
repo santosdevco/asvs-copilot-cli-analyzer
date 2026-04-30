@@ -1,0 +1,107 @@
+====================================================================
+  CODE SIGNALS — SECURITY HEATMAP
+  Project : /home/santosdev/tbbc/sonarqube-reports/static_context_generator
+  Generated: 2026-04-26T19:08:04.908063
+====================================================================
+
+Total functions : 73  classes: 2  TODOs: 16
+Files with signals: 10
+
+Score legend: sinks×3  sqli×4  authz_gap×3  err_leak×2  source×1  crypto×1  todo×1
+
+────────────────────────────────────────────────────────────────────
+[SECURITY HEATMAP — top files by risk score]
+────────────────────────────────────────────────────────────────────
+  SCORE  FILE                                              SIGNALS PRESENT
+  ──────────────────────────────────────────────────────────────────────────────────────────
+     36  mapper/rules/python_rules.py                      sinks, sources, crypto, parameterized_queries, error_leaks
+      7  mapper/cli.py                                     sources, missing_input_validation
+      6  mapper/analyzers/middlewares.py                   sources, missing_input_validation
+      5  mapper/core/fs.py                                 sources, missing_input_validation
+      4  run_mapper.py                                     sources, missing_input_validation
+      4  mapper/analyzers/architecture.py                  sources, missing_input_validation
+      4  mapper/formatters/base.py                         sources, missing_input_validation
+      4  mapper/formatters/sections/database.py            sources, missing_input_validation
+      3  mapper/analyzers/git.py                           sinks
+      1  mapper/rules/javascript_broken.py                 crypto
+
+────────────────────────────────────────────────────────────────────
+[PER-FILE SIGNAL DETAIL]
+────────────────────────────────────────────────────────────────────
+
+File  : mapper/rules/python_rules.py
+Meta  : 113 lines  complexity=1  score=36
+  [DANGEROUS SINKS]  yaml.load (unsafe)
+  [INPUT SOURCES]    request.form×1, request.args×1, request.values×1, request.data×1, request.headers×1, request.files×1, Body()×1, Depends()×1, Query()×1, Path()×1, Form()×1, File()×1, UploadFile×1, request.POST×1, request.GET×1, request.META×1, request.COOKIES×1, request.session×1, sys.argv×1, input()×1, raw_input()×1
+  [CRYPTO]           hashlib.md5 (weak), hashlib.sha1 (weak)
+  [ERROR LEAKAGE]
+    → return str(e)
+    → logging.error(e
+    → print(traceback
+    → jsonify(error
+    → raise from e
+
+File  : mapper/cli.py
+Meta  : 118 lines  complexity=18  score=7
+  [INPUT SOURCES]    Path()×4
+
+File  : mapper/analyzers/middlewares.py
+Meta  : 179 lines  complexity=29  score=6
+  [INPUT SOURCES]    Depends()×2, Path()×1
+
+File  : mapper/core/fs.py
+Meta  : 75 lines  complexity=24  score=5
+  [INPUT SOURCES]    Path()×2
+
+File  : run_mapper.py
+Meta  : 20 lines  complexity=2  score=4
+  [INPUT SOURCES]    Path()×1
+
+File  : mapper/analyzers/architecture.py
+Meta  : 73 lines  complexity=38  score=4
+  [INPUT SOURCES]    Path()×1
+
+File  : mapper/formatters/base.py
+Meta  : 51 lines  complexity=13  score=4
+  [INPUT SOURCES]    Path()×1
+
+File  : mapper/formatters/sections/database.py
+Meta  : 94 lines  complexity=20  score=4
+  [INPUT SOURCES]    Path()×1
+
+File  : mapper/analyzers/git.py
+Meta  : 83 lines  complexity=18  score=3
+  [DANGEROUS SINKS]  subprocess
+
+File  : mapper/rules/javascript_broken.py
+Meta  : 122 lines  complexity=2  score=1
+  [CRYPTO]           jwt.decode
+
+────────────────────────────────────────────────────────────────────
+[LARGEST FILES]
+────────────────────────────────────────────────────────────────────
+    513 lines  mapper/analyzers/database.py
+    395 lines  mapper/orchestrator.py
+    284 lines  mapper/analyzers/frontend.py
+    282 lines  mapper/core/config.py
+    236 lines  mapper/analyzers/imports.py
+    226 lines  mapper/rules/base.py
+    210 lines  mapper/analyzers/dependencies.py
+    194 lines  mapper/formatters/sections/imports.py
+    186 lines  mapper/formatters/md_fmt.py
+    179 lines  mapper/analyzers/middlewares.py
+
+────────────────────────────────────────────────────────────────────
+[MOST COMPLEX FILES]
+────────────────────────────────────────────────────────────────────
+   FNS    CX  FILE
+     9    68  mapper/analyzers/dependencies.py
+     7    24  mapper/core/fs.py
+     6    64  mapper/rules/base.py
+     5    52  mapper/orchestrator.py
+     4    89  mapper/analyzers/imports.py
+     4    49  mapper/formatters/sections/imports.py
+     3    34  mapper/analyzers/frontend.py
+     3    13  mapper/formatters/base.py
+     3     6  mapper/formatters/json_fmt.py
+     2    18  mapper/cli.py

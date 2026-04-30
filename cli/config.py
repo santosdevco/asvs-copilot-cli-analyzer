@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 # ── Root paths ──────────────────────────────────────────────────────────────
@@ -21,6 +22,7 @@ AUDIT_OUTPUT_XML_FORMAT_FILE    = FORMAT_OUTPUTS_DIR / "audit_output.xml"
 COMPONENT_INDEX_FORMAT_FILE     = FORMAT_OUTPUTS_DIR / "component-output.json"
 COMPONENT_CTX_FORMAT_FILE       = FORMAT_OUTPUTS_DIR / "component_context.md"  # kept for backward compat
 COMPONENT_CTX_XML_FORMAT_FILE   = FORMAT_OUTPUTS_DIR / "component_context.xml"
+COMPONENT_CTX_YML_FORMAT_FILE   = FORMAT_OUTPUTS_DIR / "component_context.yml"
 
 # ── Prompt templates ─────────────────────────────────────────────────────────
 PROMPTS_DIR                  = FORMATS_DIR / "prompts"
@@ -36,3 +38,7 @@ MAPPER_SCRIPT = BASE_DIR / "static_context_generator" / "run_mapper.py"
 # ── Static context report names (match file suffix *_{name}.txt) ─────────────
 # These come from context_choose.json; listed here for discoverability only.
 CORE_REPORT_NAMES = ["identity", "structure", "imports", "database"]
+
+# ── Environment configuration ────────────────────────────────────────────────
+# Accepted values: auto | xml | md | yml
+CONTEXT_FORMAT = os.getenv("CONTEXT_FORMAT", "auto").strip().lower()

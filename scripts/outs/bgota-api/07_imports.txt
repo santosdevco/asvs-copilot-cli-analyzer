@@ -1,0 +1,152 @@
+====================================================================
+  IMPORT GRAPH
+  Project : /home/santosdev/tbbc/sonarqube-reports/analysis-repos/watshelp-bancodebogota-api
+  Generated: 2026-04-24T09:53:57.191896
+====================================================================
+
+Files: 71   Internal edges: 211   External packages: 26
+
+────────────────────────────────────────────────────────────────────
+[BLAST RADIUS — fan-in sorted, top 14]
+────────────────────────────────────────────────────────────────────
+  FILE                                 BR  IMPORTED BY (grouped by role)
+  ────────────────────────────────────────────────────────────────────────────────────────────
+  SVC:postgresql                       31  CTRL:alertCtrl  LGC:Agent,Alert,Area,AssistantLogic,Auth,ClosureReason,ErrorModel,Ext…
+  HLP:jwt                               8  CTRL:agentCtrl,authCtrl,messageCtrl,mfaCtrl  SVC:token_axede  LGC:Socket  MW:valid-jw…
+  LGC:Message                           8  CTRL:alertCtrl,assistantCtrl,messageCtrl,teamsCtrl,whatsappCtrl  HLP:queue  CRN:queue…
+  LGC:Agent                             7  CTRL:agentCtrl,assistantCtrl,roomCtrl,teamsCtrl,whatsappCtrl  LGC:Auth  HLP:queue
+  LGC:Room                              7  CTRL:alertCtrl,roomCtrl,teamsCtrl,whatsappCtrl  LGC:Socket  HLP:queue  CRN:rooms
+  SVC:axedeapi                          6  CTRL:alertCtrl,messageCtrl,roomCtrl,whatsappCtrl  CRN:queue,rooms
+  HLP:queue                             5  CTRL:roomCtrl,teamsCtrl,whatsappCtrl  LGC:Socket  ROOT:app
+  LGC:ExternalRoom                      5  CTRL:alertCtrl,messageCtrl,whatsappCtrl  CRN:queue,rooms
+  SVC:storage                           5  CTRL:assistantCtrl,massAlertCtrl,messageCtrl  SVC:massive-image  CRN:room_files
+  LGC:Auth                              4  CTRL:authCtrl,teamsCtrl,whatsappCtrl  MW:valid-jwt
+  LGC:User                              4  CTRL:roomCtrl,userCtrl  LGC:Auth  CRN:rooms
+  HLP:hash                              3  LGC:Agent,Auth,User
+  LGC:Alert                             3  CTRL:alertCtrl  HLP:queue,tokenRefreshNotifier
+  LGC:AssistantLogic                    3  CTRL:assistantCtrl,teamsCtrl,whatsappCtrl
+
+────────────────────────────────────────────────────────────────────
+[ADJACENCY LIST  (→internal  +external)]
+────────────────────────────────────────────────────────────────────
+  app                                → config,queue,room_files,rooms,queue,Socket,errors,api,postgresql,token_axede  +compression,cors,express,http,morgan,node-cron,socket.io
+  CTRL:agentCtrl                     → jwt,Agent
+  CTRL:alertCtrl                     → config,Alert,ExternalRoom,Message,Room,axedeapi,postgresql  +web-push
+  CTRL:areaCtrl                      → Area
+  CTRL:assistantCtrl                 → Agent,Area,AssistantLogic,Intention,Message,storage,assistant  +path
+  CTRL:authCtrl                      → jwt,Auth  +jsonwebtoken
+  CTRL:closureReasonsCtrl            → ClosureReason
+  CTRL:generalSurveyCtrl             → GeneralSurvey
+  CTRL:manualCtrl                    → Manual
+  CTRL:massAlertCtrl                 → MassAlert,massive-image,storage  +read-excel-file
+  CTRL:messageCtrl                   → config,jwt,ExternalRoom,Message,axedeapi,storage  +path
+  CTRL:metricsCtrl                   → Metrics
+  CTRL:mfaCtrl                       → jwt,Mfa
+  CTRL:notificationCtrl              → Notification  +axios,file-type
+  CTRL:pmessageCtrl                  → ProtocolMessage
+  CTRL:queueCtrl                     → Queue
+  CTRL:roomCtrl                      → queue,Agent,GeneralSurvey,Room,User,axedeapi
+  CTRL:surveyCtrl                    → Survey
+  CTRL:teamsCtrl                     → index,parseTeams,queue,Agent,AssistantLogic,Auth,Message,Room,Teams,TeamsConversationLogic,WatsonSessionId,assistant
+  CTRL:userCtrl                      → User
+  CTRL:webhookCtrl                   → WebhookMindx  +crypto
+  CTRL:whatsappCtrl                  → config,queue,Agent,AssistantLogic,Auth,ErrorModel,ExternalRoom,GeneralSurvey,Intention,Message,Room,WatsonSessionId,axedeapi,assistant
+  CRN:queue                          → config,ExternalRoom,MassAlert,Message,axedeapi,postgresql
+  CRN:report                         → Report
+  CRN:room_files                     → config,postgresql,storage
+  CRN:rooms                          → config,ExternalRoom,Message,Room,User,axedeapi,postgresql
+  HLP:hash                           → +bcryptjs
+  HLP:jwt                            → config  +axios,jsonwebtoken
+  HLP:queue                          → Agent,Alert,Message,Queue,Room  +web-push
+  HLP:tokenRefreshNotifier           → Alert,jwt  +web-push
+  LGC:Agent                          → config,hash,postgresql
+  LGC:Alert                          → config,postgresql
+  LGC:Area                           → config,postgresql
+  LGC:AssistantLogic                 → config,postgresql
+  LGC:Auth                           → config,hash,postgresql,Agent,User
+  LGC:ClosureReason                  → config,postgresql
+  LGC:ErrorModel                     → config,postgresql
+  LGC:ExternalRoom                   → config,postgresql
+  LGC:GeneralSurvey                  → config,postgresql
+  LGC:Intention                      → config,postgresql  +axios,pg-format
+  LGC:Manual                         → config,postgresql
+  LGC:MassAlert                      → config,postgresql
+  LGC:Message                        → config,postgresql  +pg-format
+  LGC:Metrics                        → config,postgresql
+  LGC:Mfa                            → config,postgresql  +bcryptjs,crypto-js,otplib,qrcode
+  LGC:Notification                   → config,postgresql
+  LGC:ProtocolMessage                → config,postgresql
+  LGC:Queue                          → config,postgresql
+  LGC:Report                         → config,postgresql
+  LGC:Room                           → config,postgresql  +pg-format
+  LGC:Socket                         → jwt,queue,tokenRefreshNotifier,Room
+  LGC:Survey                         → config,postgresql
+  LGC:Teams                          → config,parseTeams  +axios
+  LGC:TeamsConversationLogic         → config,postgresql  +pg-format
+  LGC:User                           → config,hash,postgresql
+  LGC:WatsonSessionId                → config,postgresql
+  LGC:WebhookMindx                   → config,postgresql
+  MW:errors                          → ErrorModel
+  MW:valid-files                     → +file-type
+  MW:valid-jwt                       → config,jwt,Auth  +jsonwebtoken
+  MW:valid-mfa-token                 → config,postgresql  +jsonwebtoken
+  MW:valid-request                   → +express-validator
+  RT:api                             → agentCtrl,alertCtrl,areaCtrl,assistantCtrl,authCtrl,closureReasonsCtrl,generalSurveyCtrl,manualCtrl,massAlertCtrl,messageCtrl,metricsCtrl,mfaCtrl,notificationCtrl,pmessageCtrl,queueCtrl,roomCtrl,surveyCtrl,teamsCtrl,userCtrl,webhookCtrl,whatsappCtrl,valid-agent,valid-files,valid-jwt,valid-mfa-token,valid-request,validPermission  +express,express-validator,multer,web-push
+  SVC:axedeapi                       → config,ErrorModel,token_axede  +axios
+  SVC:generate-keys                  → +fs,web-push
+  SVC:massive-image                  → MassAlert,storage
+  SVC:postgresql                     → config  +fs,path,pg
+  SVC:storage                        → config  +ibm-cos-sdk
+  SVC:token_axede                    → jwt
+  SVC:assistant                      → config  +ibm-watson
+  index                              → app  +dotenv
+
+────────────────────────────────────────────────────────────────────
+[DATA FLOW PATHS — controller → … → service  (≥3 nodes)]
+────────────────────────────────────────────────────────────────────
+  Notation: {A|B|C} = parallel middle nodes  ×N = N merged paths
+
+  [4 nodes / 3 edges]
+    roomCtrl → queue → {Agent|Alert|Message|Queue|Room} → postgresql   ×5
+    teamsCtrl → queue → {Agent|Alert|Message|Queue|Room} → postgresql   ×5
+    whatsappCtrl → queue → {Agent|Alert|Message|Queue|Room} → postgresql   ×5
+    authCtrl → Auth → {Agent|User} → postgresql   ×2
+    teamsCtrl → Auth → {Agent|User} → postgresql   ×2
+    whatsappCtrl → Auth → {Agent|User} → postgresql   ×2
+    alertCtrl → axedeapi → ErrorModel → postgresql
+    massAlertCtrl → massive-image → MassAlert → postgresql
+    messageCtrl → axedeapi → ErrorModel → postgresql
+    roomCtrl → axedeapi → ErrorModel → postgresql
+    whatsappCtrl → axedeapi → ErrorModel → postgresql
+
+  [3 nodes / 2 edges]
+    assistantCtrl → {Agent|Area|AssistantLogic|Intention|Message} → postgresql   ×5
+    alertCtrl → {Alert|ExternalRoom|Message|Room} → postgresql   ×4
+    roomCtrl → {Agent|GeneralSurvey|Room|User} → postgresql   ×4
+    messageCtrl → {ExternalRoom|Message} → postgresql   ×2
+    teamsCtrl → {Agent|AssistantLogic} → postgresql   ×2
+    agentCtrl → Agent → postgresql
+    alertCtrl → axedeapi → token_axede
+    areaCtrl → Area → postgresql
+    authCtrl → Auth → postgresql
+    closureReasonsCtrl → ClosureReason → postgresql
+    generalSurveyCtrl → GeneralSurvey → postgresql
+    manualCtrl → Manual → postgresql
+    massAlertCtrl → MassAlert → postgresql
+    massAlertCtrl → massive-image → storage
+    messageCtrl → axedeapi → token_axede
+    metricsCtrl → Metrics → postgresql
+    mfaCtrl → Mfa → postgresql
+    notificationCtrl → Notification → postgresql
+    pmessageCtrl → ProtocolMessage → postgresql
+    queueCtrl → Queue → postgresql
+    roomCtrl → axedeapi → token_axede
+    surveyCtrl → Survey → postgresql
+
+────────────────────────────────────────────────────────────────────
+[EXTERNAL PACKAGES]
+────────────────────────────────────────────────────────────────────
+  STDLIB   : http
+  SECURITY : bcryptjs, cors, crypto-js, express-validator, jsonwebtoken, otplib, qrcode
+  HTTP/EXT : axios, ibm-cos-sdk, ibm-watson, web-push
+  INFRA    : compression, crypto, dotenv, express, file-type, fs, morgan, multer, node-cron, path, pg, pg-format, read-excel-file, socket.io

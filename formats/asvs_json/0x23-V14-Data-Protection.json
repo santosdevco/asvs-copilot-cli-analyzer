@@ -5,12 +5,10 @@
     "file": "0x23-V14-Data-Protection.md",
     "id": "V14",
     "title": "Data Protection",
-    "control_objective": "Applications cannot account for all usage patterns and user behaviors, and should therefore implement controls to limit unauthorized access to sensitive data on client devices. This chapter includes requirements related to defining what data needs to be protected, how it should be protected, and specific mechanisms to implement or pitfalls to avoid. Another consideration for data protection is bulk extraction, modification, or excessive usage. Each system's requirements are likely to be very different, so determining what is \"abnormal\" must consider the threat model and business risk. From an ASVS perspective, detecting these issues is handled in the \"Security Logging and Error Handling\" chapter, and setting limits is handled in the \"Validation and Business Logic\" chapter.",
     "sections": [
       {
         "id": "V14.1",
         "title": "Data Protection Documentation",
-        "description": "A key prerequisite for being able to protect data is to categorize what data should be considered sensitive. There are likely to be several different levels of sensitivity, and for each level, the controls required to protect data at that level will be different. There are various privacy regulations and laws that affect how applications must approach the storage, use, and transmission of sensitive personal information. This section no longer tries to duplicate these types of data protection or privacy legislation, but rather focuses on key technical considerations for protecting sensitive data. Please consult local laws and regulations, and consult a qualified privacy specialist or lawyer as required.",
         "requirements": [
           {
             "id": "14.1.1",
@@ -27,7 +25,6 @@
       {
         "id": "V14.2",
         "title": "General Data Protection",
-        "description": "This section contains various practical requirements related to the protection of data. Most are specific to particular issues such as unintended data leakage, but there is also a general requirement to implement protection controls based on the protection level required for each data item.",
         "requirements": [
           {
             "id": "14.2.1",
@@ -56,7 +53,7 @@
           },
           {
             "id": "14.2.6",
-            "description": "Verify that the application only returns the minimum required sensitive data for the application's functionality. For example, only returning some of the digits of a credit card number and not the full number. If the complete data is required, it should be masked in the user interface unless the user specifically views it.",
+            "description": "Verify that the application only returns the minimum required sensitive data for the application's functionality.",
             "level": 3
           },
           {
@@ -74,7 +71,6 @@
       {
         "id": "V14.3",
         "title": "Client-side Data Protection",
-        "description": "This section contains requirements preventing data from leaking in specific ways at the client or user agent side of an application.",
         "requirements": [
           {
             "id": "14.3.1",

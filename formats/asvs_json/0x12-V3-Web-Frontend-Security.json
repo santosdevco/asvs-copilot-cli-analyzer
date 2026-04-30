@@ -5,12 +5,10 @@
     "file": "0x12-V3-Web-Frontend-Security.md",
     "id": "V3",
     "title": "Web Frontend Security",
-    "control_objective": "This category focuses on requirements designed to protect against attacks executed via a web frontend. These requirements do not apply to machine-to-machine solutions.",
     "sections": [
       {
         "id": "V3.1",
         "title": "Web Frontend Security Documentation",
-        "description": "This section outlines the browser security features that should be specified in the application's documentation.",
         "requirements": [
           {
             "id": "3.1.1",
@@ -22,7 +20,6 @@
       {
         "id": "V3.2",
         "title": "Unintended Content Interpretation",
-        "description": "Rendering content or functionality in an incorrect context can result in malicious content being executed or displayed.",
         "requirements": [
           {
             "id": "3.2.1",
@@ -44,7 +41,6 @@
       {
         "id": "V3.3",
         "title": "Cookie Setup",
-        "description": "This section outlines requirements for securely configuring sensitive cookies to provide a higher level of assurance that they were created by the application itself and to prevent their contents from leaking or being inappropriately modified.",
         "requirements": [
           {
             "id": "3.3.1",
@@ -76,7 +72,6 @@
       {
         "id": "V3.4",
         "title": "Browser Security Mechanism Headers",
-        "description": "This section describes which security headers should be set on HTTP responses to enable browser security features and restrictions when handling responses from the application.",
         "requirements": [
           {
             "id": "3.4.1",
@@ -95,7 +90,7 @@
           },
           {
             "id": "3.4.4",
-            "description": "Verify that all HTTP responses contain an 'X-Content-Type-Options: nosniff' header field. This instructs browsers not to use content sniffing and MIME type guessing for the given response, and to require the response's Content-Type header field value to match the destination resource. For example, the response to a request for a style is only accepted if the response's Content-Type is 'text/css'. This also enables the use of the Cross-Origin Read Blocking (CORB) functionality by the browser.",
+            "description": "Verify that all HTTP responses contain an 'X-Content-Type-Options: nosniff' header field. This instructs browsers not to use content sniffing and MIME type guessing for the given response, and to require the response's Content-Type header field value to match the destination resource.",
             "level": 2
           },
           {
@@ -123,7 +118,6 @@
       {
         "id": "V3.5",
         "title": "Browser Origin Separation",
-        "description": "When accepting a request to sensitive functionality on the server side, the application needs to ensure the request is initiated by the application itself or by a trusted party and has not been forged by an attacker. Sensitive functionality in this context could include accepting form posts for authenticated and non-authenticated users (such as an authentication request), state-changing operations, or resource-demanding functionality (such as data export). The key protections here are browser security policies like Same Origin Policy for JavaScript and also SameSite logic for cookies. Another common protection is the CORS preflight mechanism. This mechanism will be critical for endpoints designed to be called from a different origin, but it can also be a useful request forgery prevention mechanism for endpoints which are not designed to be called from a different origin.",
         "requirements": [
           {
             "id": "3.5.1",
@@ -170,7 +164,6 @@
       {
         "id": "V3.6",
         "title": "External Resource Integrity",
-        "description": "This section provides guidance for the safe hosting of content on third-party sites.",
         "requirements": [
           {
             "id": "3.6.1",
@@ -182,7 +175,6 @@
       {
         "id": "V3.7",
         "title": "Other Browser Security Considerations",
-        "description": "This section includes various other security controls and modern browser security features required for client-side browser security.",
         "requirements": [
           {
             "id": "3.7.1",

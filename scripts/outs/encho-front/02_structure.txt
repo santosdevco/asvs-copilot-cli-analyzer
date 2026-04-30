@@ -1,0 +1,1 @@
+ENTRY_POINTS: src/main.js, src/router/index.ts\nLAYERS: config, services, types, utils, views\nFILES: 157total/157src/0test(ratio:0%)\nINFRA: netlify.toml\nTREE: vue-order-app/ [157files|1488KB|44,408lines]\nDIRS: docs(5) scripts(1) src(139)\n

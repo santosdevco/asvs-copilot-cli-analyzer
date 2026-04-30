@@ -1,0 +1,15 @@
+PROJECT: vue-order-app | TYPE: frontend | LANG: Vue | FRAMEWORKS: Vite, Vue
+USAGE: Load sections as needed based on task requirements
+
+FILES:
+  01_identity.txt: Project identity [primary_language:Vue|frameworks:2|production_deps:28]
+  02_structure.txt: Directory structure & architecture [total_files:157|entry_points:2]
+  03_endpoints.txt: HTTP API endpoints [no data]
+  04_env_vars.txt: Environment variables [unique_vars:6|total_references:6]
+  05_database.txt: Database schema and SQL usage [no data]
+  06_middlewares.txt: Middleware chains in routes [no data]
+  07_imports.txt: Internal import graph [internal_edges:61|external_packages:18]
+  08_code_signals.txt: Code signals (complexity, TODOs) [functions:137|classes:2]
+  09_security.txt: Security findings [total_findings:3|exposed_env_files:2]
+  10_git.txt: Git activity [no data]
+  11_frontend.txt: Frontend security (XSS, DOM leaks, client routes) [no data]

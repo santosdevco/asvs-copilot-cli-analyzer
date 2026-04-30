@@ -1,0 +1,55 @@
+====================================================================
+  PROJECT IDENTITY
+  Project : /home/santosdev/tbbc/sonarqube-reports/analysis-repos/watshelp-bancodebogota-api
+  Generated: 2026-04-24T09:53:57.191896
+====================================================================
+
+Project name     : watshelp-bancodebogota-api
+Project type     : web_api
+Primary language : JavaScript
+Frameworks       : Express
+
+────────────────────────────────────────────────────────────────────
+[LANGUAGE DISTRIBUTION]
+────────────────────────────────────────────────────────────────────
+  JSON                52.6%    14144 lines    16 files     390.9 KB
+  JavaScript          39.3%    10561 lines    77 files     508.0 KB
+  SQL                  4.1%     1101 lines     1 files      37.0 KB
+  Other                4.0%     1064 lines     9 files      52.8 KB
+  Dockerfile           0.1%       22 lines     1 files       0.5 KB
+  Markdown             0.0%        0 lines     1 files       0.0 KB
+  TOTAL                      26892 lines
+
+────────────────────────────────────────────────────────────────────
+[DEPENDENCIES]
+────────────────────────────────────────────────────────────────────
+  Manifest files : package.json
+  Run scripts    : start, dev, nodemon
+
+  Production (22):
+    axios                               ^1.13.5
+    bcryptjs                            ^3.0.3
+    compression                         ^1.8.1
+    cors                                ^2.8.6
+    crypto-js                           ^4.1.1
+    dotenv                              ^17.2.4
+    express                             ^4.22.1
+    express-validator                   ^6.15.0
+    file-type                           ^22.0.1
+    ibm-cos-sdk                         ^1.14.2
+    ibm-watson                          ^12.2.0
+    jsonwebtoken                        ^9.0.2
+    morgan                              ^1.10.1
+    multer                              ^2.0.2
+    node-cron                           ^4.2.1
+    otplib                              ^12.0.1
+    pg                                  ^8.5.1
+    pg-format                           ^1.0.4
+    qrcode                              ^1.5.4
+    read-excel-file                     ^6.0.1
+    socket.io                           ^4.5.2
+    web-push                            ^3.6.7
+
+  Development (2):
+    husky                               ^9.1.7
+    nodemon                             ^3.1.10

@@ -1,0 +1,14 @@
+====================================================================
+  DATABASE CONTEXT
+  Project : /home/santosdev/devme/accountant_software/order_manager
+  Generated: 2026-04-24T09:32:37.830741
+====================================================================
+
+Schema files used as map : 
+Declared tables          : 0
+Tables referenced in code: 0
+Undeclared tables        : 0
+ORM/ODM detected         : none
+
+[DECLARED TABLES]
+────────────────────────────────────────────────────────────────────

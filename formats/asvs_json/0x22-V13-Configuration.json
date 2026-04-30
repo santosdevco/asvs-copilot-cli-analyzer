@@ -5,12 +5,10 @@
     "file": "0x22-V13-Configuration.md",
     "id": "V13",
     "title": "Configuration",
-    "control_objective": "The application's default configuration must be secure for use on the Internet. This chapter provides guidance on the various configurations necessary to achieve this, including those applied during development, build, and deployment. Topics covered include preventing data leakage, securely managing communication between components, and protecting secrets.",
     "sections": [
       {
         "id": "V13.1",
         "title": "Configuration Documentation",
-        "description": "This section outlines documentation requirements for how the application communicates with internal and external services, as well as techniques to prevent loss of availability due to service inaccessibility. It also addresses documentation related to secrets.",
         "requirements": [
           {
             "id": "13.1.1",
@@ -37,7 +35,6 @@
       {
         "id": "V13.2",
         "title": "Backend Communication Configuration",
-        "description": "Applications interact with multiple services, including APIs, databases, or other components. These may be considered internal to the application but not included in the application's standard access control mechanisms, or they may be entirely external. In either case, it is necessary to configure the application to interact securely with these components and, if required, protect that configuration. Note: The \"Secure Communication\" chapter provides guidance for encryption in transit.",
         "requirements": [
           {
             "id": "13.2.1",
@@ -74,7 +71,6 @@
       {
         "id": "V13.3",
         "title": "Secret Management",
-        "description": "Secret management is an essential configuration task to ensure the protection of data used in the application. Specific requirements for cryptography can be found in the \"Cryptography\" chapter, but this section focuses on the management and handling aspects of secrets.",
         "requirements": [
           {
             "id": "13.3.1",
@@ -101,7 +97,6 @@
       {
         "id": "V13.4",
         "title": "Unintended Information Leakage",
-        "description": "Production configurations should be hardened to avoid disclosing unnecessary data. Many of these issues are rarely rated as significant risks but are often chained with other vulnerabilities. If these issues are not present by default, it raises the bar for attacking an application. For example, hiding the version of server-side components does not eliminate the need to patch all components, and disabling folder listing does not remove the need to use authorization controls or keep files away from the public folder, but it raises the bar.",
         "requirements": [
           {
             "id": "13.4.1",

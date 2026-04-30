@@ -35,6 +35,17 @@ def _analysis_dir(app_name: str, component_id: str) -> Path:
     return _component_dir(app_name, component_id) / "analysis"
 
 
+def _current_llm_model() -> str | None:
+    """Best-effort resolve of the currently configured LLM model."""
+    try:
+        from cli.core.llm_client import get_provider_and_model
+
+        _, model = get_provider_and_model()
+        return model
+    except Exception:
+        return None
+
+
 def _usage_dir(app_name: str) -> Path:
     return OUTPUTS_DIR / app_name / "usage"
 
@@ -150,12 +161,22 @@ def write_audit_result(
 
     # e.g. V6_Authentication → V6
     chapter_id = asvs_key.split("_")[0]
-    dest = analysis_dir / f"{chapter_id}.xml"
-    dest.write_text(
+    dest_xml = analysis_dir / f"{chapter_id}.xml"
+    dest_xml.write_text(
         _audit_output_to_xml(result, component_id, chapter_id),
         encoding="utf-8",
     )
-    return dest
+
+    # Keep a JSON sibling alongside XML so downstream tooling can aggregate audits.
+    json_payload = result.model_dump(mode="json", exclude_none=True)
+    llm_model = _current_llm_model()
+    if llm_model:
+        json_payload["llm_model"] = llm_model
+
+    dest_json = analysis_dir / f"{chapter_id}.json"
+    dest_json.write_text(json.dumps(json_payload, indent=2, ensure_ascii=False), encoding="utf-8")
+
+    return dest_xml
 
 
 def write_usage_report(

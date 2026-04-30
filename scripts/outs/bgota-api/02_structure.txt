@@ -1,0 +1,1 @@
+ENTRY_POINTS: index.js, app/app.js, app/config/index.js\nLAYERS: config, controllers, helpers, middlewares, routes, services\nFILES: 105total/105src/0test(ratio:0%)\nINFRA: Dockerfile, .dockerignore\nTREE: watshelp-bancodebogota-api/ [105files|989KB|26,892lines]\nDIRS: app(76) security_analysis(12) security_analysis1(7)\n

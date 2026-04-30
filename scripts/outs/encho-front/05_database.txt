@@ -1,0 +1,14 @@
+====================================================================
+  DATABASE CONTEXT
+  Project : /home/santosdev/devme/accountant_software/vue-order-app
+  Generated: 2026-04-24T11:38:17.231527
+====================================================================
+
+Schema files used as map : —
+Declared tables          : 0
+Tables referenced in code: 0
+Undeclared tables        : 0
+ORM/ODM detected         : none
+
+[DECLARED TABLES]
+────────────────────────────────────────────────────────────────────

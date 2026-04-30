@@ -5,12 +5,10 @@
     "file": "0x24-V15-Secure-Coding-and-Architecture.md",
     "id": "V15",
     "title": "Secure Coding and Architecture",
-    "control_objective": "Many ASVS requirements either relate to a particular area of security, such as authentication or authorization, or pertain to a particular type of application functionality, such as logging or file handling. This chapter provides general security requirements to consider when designing and developing applications. These requirements focus not only on clean architecture and code quality but also on specific architecture and coding practices necessary for application security.",
     "sections": [
       {
         "id": "V15.1",
         "title": "Secure Coding and Architecture Documentation",
-        "description": "Many requirements for establishing a secure and defensible architecture depend on clear documentation of decisions made regarding the implementation of specific security controls and the components used within the application. This section outlines the documentation requirements, including identifying components considered to contain \"dangerous functionality\" or to be \"risky components.\" A component with \"dangerous functionality\" may be an internally developed or third-party component that performs operations such as deserialization of untrusted data, raw file or binary data parsing, dynamic code execution, or direct memory manipulation. Vulnerabilities in these types of operations pose a high risk of compromising the application and potentially exposing its underlying infrastructure. A \"risky component\" is a 3rd party library (i.e., not internally developed) with missing or poorly implemented security controls around its development processes or functionality. Examples include components that are poorly maintained, unsupported, at the end-of-life stage, or have a history of significant vulnerabilities. This section also emphasizes the importance of defining appropriate timeframes for addressing vulnerabilities in third-party components.",
         "requirements": [
           {
             "id": "15.1.1",
@@ -42,7 +40,6 @@
       {
         "id": "V15.2",
         "title": "Security Architecture and Dependencies",
-        "description": "This section includes requirements for handling risky, outdated, or insecure dependencies and components through dependency management. It also includes using architectural-level techniques such as sandboxing, encapsulation, containerization, and network isolation to reduce the impact of using \"dangerous operations\" or \"risky components\" (as defined in the previous section) and prevent loss of availability due to overusing resource-demanding functionality.",
         "requirements": [
           {
             "id": "15.2.1",
@@ -74,11 +71,10 @@
       {
         "id": "V15.3",
         "title": "Defensive Coding",
-        "description": "This section covers vulnerability types, including type juggling, prototype pollution, and others, which result from using insecure coding patterns in a particular language. Some may not be relevant to all languages, whereas others will have language-specific fixes or may relate to how a particular language or framework handles a feature such as HTTP parameters. It also considers the risk of not cryptographically validating application updates. It also considers the risks associated with using objects to represent data items and accepting and returning these via external APIs. In this case, the application must ensure that data fields that should not be writable are not modified by user input (mass assignment) and that the API is selective about what data fields get returned. Where field access depends on a user's permissions, this should be considered in the context of the field-level access control requirement in the Authorization chapter.",
         "requirements": [
           {
             "id": "15.3.1",
-            "description": "Verify that the application only returns the required subset of fields from a data object. For example, it should not return an entire data object, as some individual fields should not be accessible to users.",
+            "description": "Verify that the application only returns the required subset of fields from a data object.",
             "level": 1
           },
           {
@@ -103,7 +99,7 @@
           },
           {
             "id": "15.3.6",
-            "description": "Verify that JavaScript code is written in a way that prevents prototype pollution, for example, by using Set() or Map() instead of object literals.",
+            "description": "Verify that JavaScript code is written in a way that prevents prototype pollution.",
             "level": 2
           },
           {
@@ -116,7 +112,6 @@
       {
         "id": "V15.4",
         "title": "Safe Concurrency",
-        "description": "Concurrency issues such as race conditions, time-of-check to time-of-use (TOCTOU) vulnerabilities, deadlocks, livelocks, thread starvation, and improper synchronization can lead to unpredictable behavior and security risks. This section includes various techniques and strategies to help mitigate these risks.",
         "requirements": [
           {
             "id": "15.4.1",
@@ -125,7 +120,7 @@
           },
           {
             "id": "15.4.2",
-            "description": "Verify that checks on a resource's state, such as its existence or permissions, and the actions that depend on them are performed as a single atomic operation to prevent time-of-check to time-of-use (TOCTOU) race conditions. For example, checking if a file exists before opening it, or verifying a user’s access before granting it.",
+            "description": "Verify that checks on a resource's state, such as its existence or permissions, and the actions that depend on them are performed as a single atomic operation to prevent time-of-check to time-of-use (TOCTOU) race conditions.",
             "level": 3
           },
           {

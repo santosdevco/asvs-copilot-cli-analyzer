@@ -5,12 +5,10 @@
     "file": "0x17-V8-Authorization.md",
     "id": "V8",
     "title": "Authorization",
-    "control_objective": "Authorization ensures that access is granted only to permitted consumers (users, servers, and other clients). To enforce the Principle of Least Privilege (POLP), verified applications must meet the following high-level requirements: Document authorization rules, including decision-making factors and environmental contexts. Consumers should have access only to resources permitted by their defined entitlements.",
     "sections": [
       {
         "id": "V8.1",
         "title": "Authorization Documentation",
-        "description": "Comprehensive authorization documentation is essential to ensure that security decisions are consistently applied, auditable, and aligned with organizational policies. This reduces the risk of unauthorized access by making security requirements clear and actionable for developers, administrators, and testers.",
         "requirements": [
           {
             "id": "8.1.1",
@@ -37,7 +35,6 @@
       {
         "id": "V8.2",
         "title": "General Authorization Design",
-        "description": "Implementing granular authorization controls at the function, data, and field levels ensures that consumers can access only what has been explicitly granted to them.",
         "requirements": [
           {
             "id": "8.2.1",
@@ -64,7 +61,6 @@
       {
         "id": "V8.3",
         "title": "Operation Level Authorization",
-        "description": "The immediate application of authorization changes in the appropriate tier of an application's architecture is crucial to preventing unauthorized actions, especially in dynamic environments.",
         "requirements": [
           {
             "id": "8.3.1",
@@ -78,7 +74,7 @@
           },
           {
             "id": "8.3.3",
-            "description": "Verify that access to an object is based on the originating subject's (e.g. consumer's) permissions, not on the permissions of any intermediary or service acting on their behalf. For example, if a consumer calls a web service using a self-contained token for authentication, and the service then requests data from a different service, the second service will use the consumer's token, rather than a machine-to-machine token from the first service, to make permission decisions.",
+            "description": "Verify that access to an object is based on the originating subject's (e.g. consumer's) permissions, not on the permissions of any intermediary or service acting on their behalf.",
             "level": 3
           }
         ]
@@ -86,7 +82,6 @@
       {
         "id": "V8.4",
         "title": "Other Authorization Considerations",
-        "description": "Additional considerations for authorization, particularly for administrative interfaces and multi-tenant environments, help prevent unauthorized access.",
         "requirements": [
           {
             "id": "8.4.1",

@@ -15,7 +15,7 @@
 
 	<strict_instructions>
 		<item id="1">Analiza el componente contra cada capítulo ASVS listado en &lt;chapters&gt; por separado.</item>
-		<item id="2">Usa el contexto arquitectónico del componente y el contexto estático táctico para encontrar evidencias.</item>
+		<item id="2">Usa el contexto arquitectónico del componente y el contexto estático táctico y el codigo fuente para encontrar evidencias. En &lt;files_to_audit&gt; los paths vienen agrupados en &lt;component_paths component_id="..."&gt;; para este modo solo debes usar el grupo del componente auditado.</item>
 		<item id="3">Evalúa internamente cada control del capítulo, pero en el array audit_results REPORTA ÚNICAMENTE los controles que resulten en status FAIL. Si un componente cumple con todo el capítulo o los controles no aplican, devuelve el array audit_results vacío []</item>
 		<item id="4">
 			CRÍTICO: en context_update_notes incluye solo descubrimientos técnicos nuevos por capítulo
@@ -31,6 +31,9 @@
 		</item>
 		<item id="7">No coloques nada en la salida del chat; solo genera los archivos de salida requeridos.</item>
 	</strict_instructions>
+	<files_to_audit>
+	{{files_to_audit}}
+	</files_to_audit>
 
 	<outputs>
 {{outputs_xml}}

@@ -1,0 +1,64 @@
+====================================================================
+  CODE SIGNALS — SECURITY HEATMAP
+  Project : /home/santosdev/tbbc/sonarqube-reports/analysis-repos/watshelp-bancodebogota-agent
+  Generated: 2026-04-24T10:10:03.778546
+====================================================================
+
+Total functions : 115  classes: 2  TODOs: 0
+Files with signals: 3
+
+Score legend: sinks×3  sqli×4  authz_gap×3  err_leak×2  source×1  crypto×1  todo×1
+
+────────────────────────────────────────────────────────────────────
+[SECURITY HEATMAP — top files by risk score]
+────────────────────────────────────────────────────────────────────
+  SCORE  FILE                                              SIGNALS PRESENT
+  ──────────────────────────────────────────────────────────────────────────────────────────
+      5  src/storage.js                                    sources, missing_input_validation
+      4  src/app/SSO/W3.js                                 sources, missing_input_validation
+      3  src/index.js                                      sinks
+
+────────────────────────────────────────────────────────────────────
+[PER-FILE SIGNAL DETAIL]
+────────────────────────────────────────────────────────────────────
+
+File  : src/storage.js
+Meta  : 55 lines  complexity=4  score=5
+  [INPUT SOURCES]    localStorage×2
+
+File  : src/app/SSO/W3.js
+Meta  : 28 lines  complexity=0  score=4
+  [INPUT SOURCES]    location.href×1
+
+File  : src/index.js
+Meta  : 12 lines  complexity=0  score=3
+  [DANGEROUS SINKS]  ReactDOM.render
+
+────────────────────────────────────────────────────────────────────
+[LARGEST FILES]
+────────────────────────────────────────────────────────────────────
+    411 lines  src/app/utils/TokenManager.js
+    370 lines  src/index.scss
+    237 lines  src/app/MfaSetup/index.js
+    232 lines  src/app/context/SocketContext.js
+    230 lines  src/app/Api.js
+    226 lines  src/app/Login/Login.js
+    183 lines  src/app/Home/Home.js
+    171 lines  src/app/Chat/Chat.js
+    166 lines  src/app/Contact/Header.js
+    157 lines  src/app/context/ChatContext/chatReducer.js
+
+────────────────────────────────────────────────────────────────────
+[MOST COMPLEX FILES]
+────────────────────────────────────────────────────────────────────
+   FNS    CX  FILE
+     8    13  src/app/Home/Home.js
+     6     4  src/storage.js
+     6     7  src/app/Contact/Header.js
+     6     2  src/app/context/ChatContext/index.js
+     5    14  src/app/Login/Login.js
+     4     9  src/app/Chat/Chat.js
+     4     3  src/app/Chat/Footer.js
+     4     2  src/app/Chat/Messages/components/Type/Video.js
+     3     2  src/app/Chat/components/InputFile.js
+     3     6  src/app/Chat/components/ModalAreas.js

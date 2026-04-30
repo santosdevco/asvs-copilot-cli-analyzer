@@ -1,0 +1,1 @@
+MIDDLEWARES: 30 routes with middleware | 7 unique middleware types\nTOP_MW: validRequest(24routes) onlyRoom(2routes) onlyUser(2routes) validJWTForRefresh(1routes) onlyRoomMessage(1routes)\nMETHODS: POST:18/GET:3/PUT:9\nEXAMPLES: POST /auth/agent/login[validRequest] | POST /auth/agent/mfa/setup[validRequest] | POST /auth/admin/login[validRequest]\n

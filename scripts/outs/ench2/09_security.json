@@ -1,0 +1,67 @@
+{
+  "_meta": {
+    "generated_at": "2026-04-24T08:45:43.144010",
+    "root": "/home/santosdev/devme/accountant_software/order_manager",
+    "scanner_version": "3.0.0",
+    "section": "security"
+  },
+  "security": {
+    "exposed_env_files": [
+      ".env",
+      ".env.dev",
+      ".env.qq"
+    ],
+    "potential_secrets": [
+      {
+        "file": ".env",
+        "line": 4,
+        "type": "database_url_with_credentials",
+        "snippet": "MONGO_CONNECTION=mongodb://admin:DVID9f9eX3IL6F8E5BnisSf5C63@146.190.115.243:27010/admin?connectTimeoutMS=10000&authSource=admin&authMechanism=SCRAM-S"
+      },
+      {
+        "file": ".env.dev",
+        "line": 2,
+        "type": "database_url_with_credentials",
+        "snippet": "MONGO_CONNECTION=\"[REDACTED]\""
+      },
+      {
+        "file": ".env.qq",
+        "line": 2,
+        "type": "database_url_with_credentials",
+        "snippet": "MONGO_CONNECTION=\"[REDACTED]\""
+      },
+      {
+        "file": "rename_collections.py",
+        "line": 6,
+        "type": "database_url_with_credentials",
+        "snippet": "MONGO_URI = \"[REDACTED]\""
+      },
+      {
+        "file": "bills/67007dbbb120ce72319e252e/Instrumentos y equipos _Instrumento de cocina_637af411b1654546b670cf09fbaa2a41.dng",
+        "line": 82,
+        "type": "uuid_as_secret",
+        "snippet": "\"[REDACTED]\"�\u0000\u0000\u0000\u0013\u0010\u0000\u0000L\u0000\u0000\u0000\u0000\u00100\u0014�\u0000\u0001�\u0007\u0000\u0000"
+      },
+      {
+        "file": "bills/67007dbbb120ce72319e252e/Instrumentos y equipos _Instrumento de cocina_637af411b1654546b670cf09fbaa2a41.dng",
+        "line": 83,
+        "type": "uuid_as_secret",
+        "snippet": "�A0A9B455-28DF-4175-A0DB-FB7A8CD21A1E\u0000\u0000\u0000\b�\u0000\u0007ӟ\u0000(�?\u0000\u0000�\u0000\u0000ڽ\u0000�\u0012�\u0000`�?\u0000@P�\u0000\u0000$=\u0000@ݾ\u00000�?bplist00�\u0001\u0002\u0003\u0004\u0005\u0006\u0006\u0007Q3Q1Q2Q0\u0010\u0000\"[REDACTED]\"\u0000\u00034\u0011\u0000\u0000\u0013�bplist00�\u0001\u0002\u0003\u0004Q1Q2\u0010\u0001�\u0005"
+      },
+      {
+        "file": "bills_old/67007dbbb120ce72319e252e/Instrumentos y equipos _Instrumento de cocina_637af411b1654546b670cf09fbaa2a41.dng",
+        "line": 82,
+        "type": "uuid_as_secret",
+        "snippet": "\"[REDACTED]\"�\u0000\u0000\u0000\u0013\u0010\u0000\u0000L\u0000\u0000\u0000\u0000\u00100\u0014�\u0000\u0001�\u0007\u0000\u0000"
+      },
+      {
+        "file": "bills_old/67007dbbb120ce72319e252e/Instrumentos y equipos _Instrumento de cocina_637af411b1654546b670cf09fbaa2a41.dng",
+        "line": 83,
+        "type": "uuid_as_secret",
+        "snippet": "�A0A9B455-28DF-4175-A0DB-FB7A8CD21A1E\u0000\u0000\u0000\b�\u0000\u0007ӟ\u0000(�?\u0000\u0000�\u0000\u0000ڽ\u0000�\u0012�\u0000`�?\u0000@P�\u0000\u0000$=\u0000@ݾ\u00000�?bplist00�\u0001\u0002\u0003\u0004\u0005\u0006\u0006\u0007Q3Q1Q2Q0\u0010\u0000\"[REDACTED]\"\u0000\u00034\u0011\u0000\u0000\u0013�bplist00�\u0001\u0002\u0003\u0004Q1Q2\u0010\u0001�\u0005"
+      }
+    ],
+    "total_findings": 11,
+    "available": true
+  }
+}

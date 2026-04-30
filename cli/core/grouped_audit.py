@@ -18,6 +18,7 @@ so callers can accumulate them into usage_calls without changes.
 """
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 from typing import List
@@ -37,6 +38,7 @@ from cli.core import (
     complete_interactive,
     get_applicable_asvs_keys,
     get_last_usage_summary,
+    get_provider_and_model,
     load_component_index,
     missing_keys,
     render,
@@ -75,7 +77,36 @@ def _path_changed(snapshot: dict[Path, tuple[bool, int | None]], path: Path) -> 
 
 
 def _analysis_path(app_name: str, component_id: str, chapter_id: str) -> Path:
+    return OUTPUTS_DIR / app_name / "components" / component_id / "analysis" / f"{chapter_id}.json"
+
+
+def _analysis_xml_path(app_name: str, component_id: str, chapter_id: str) -> Path:
     return OUTPUTS_DIR / app_name / "components" / component_id / "analysis" / f"{chapter_id}.xml"
+
+
+def _inject_llm_model_in_json(path: Path) -> None:
+    """Ensure a direct-write audit JSON includes llm_model metadata."""
+    if not path.exists() or path.suffix.lower() != ".json":
+        return
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        _, model = get_provider_and_model()
+        if isinstance(data, dict):
+            data["llm_model"] = model
+            path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+            return
+
+        if isinstance(data, list):
+            changed = False
+            for item in data:
+                if isinstance(item, dict):
+                    item["llm_model"] = model
+                    changed = True
+            if changed:
+                path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+    except Exception:
+        # Ignore metadata injection errors: audit content must remain primary.
+        return
 
 # ── helpers ───────────────────────────────────────────────────────────────────
 
@@ -84,7 +115,10 @@ def _chapter_id(asvs_key: str) -> str:
 
 
 def _analysis_exists(app_name: str, component_id: str, chapter_id: str) -> bool:
-    return _analysis_path(app_name, component_id, chapter_id).exists()
+    return (
+        _analysis_path(app_name, component_id, chapter_id).exists()
+        or _analysis_xml_path(app_name, component_id, chapter_id).exists()
+    )
 
 
 def _all_analyses_exist(app_name: str, components: list[ComponentItem], chapter_id: str) -> bool:
@@ -412,6 +446,7 @@ def run_grouped_by_chapter_job(
             if cid not in changed_paths:
                 console.print(f"  [yellow]⚠ {cid} → {ch} was not updated[/yellow]")
                 continue
+            _inject_llm_model_in_json(changed_paths[cid])
             console.print(f"  [green]✓ {cid} → {ch}[/green]")
             results.append({
                 "operation": "grouped_audit",
@@ -540,6 +575,7 @@ def run_grouped_by_component_job(
             if ch not in changed_paths:
                 console.print(f"  [yellow]⚠ {component_id} → {ch} was not updated[/yellow]")
                 continue
+            _inject_llm_model_in_json(changed_paths[ch])
             console.print(f"  [green]✓ {component_id} → {ch}[/green]")
             results.append({
                 "operation": "grouped_audit",

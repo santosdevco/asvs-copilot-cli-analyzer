@@ -1,0 +1,47 @@
+====================================================================
+  FRONTEND SECURITY ANALYSIS
+  Project : /home/santosdev/tbbc/sonarqube-reports/analysis-repos/watshelp-bancodebogota-agent
+  Generated: 2026-04-24T10:10:03.778546
+====================================================================
+
+Frameworks detected : react
+XSS sink hits       : 4
+CSP meta tag        : MISSING — no Content-Security-Policy meta tag found
+Client routes       : 4
+
+────────────────────────────────────────────────────────────────────
+[CRITICAL FILES — high-severity XSS sinks]
+────────────────────────────────────────────────────────────────────
+  src/app/Chat/Messages/components/Type/Html.js
+
+────────────────────────────────────────────────────────────────────
+[XSS SINKS BY FILE]
+────────────────────────────────────────────────────────────────────
+  src/app/Chat/Messages/components/Type/File.js  (1 hit)
+    L  24  [createObjectURL]  URL.createObjectURL(new Blob([response.data]));         const link = document.cr
+  src/app/Chat/Messages/components/Type/Html.js  (1 hit)
+    L   4  [dangerouslySetInnerHTML]  dangerouslySetInnerHTML={{ __html: message.body }} />; };  export default Html;
+  src/app/Chat/Messages/components/Type/PDFFile.js  (1 hit)
+    L  19  [createObjectURL]  URL.createObjectURL(blob);        // 3. Creamos un elemento <a> invisible para f
+  src/app/SSO/W3.js  (1 hit)
+    L  12  [open redirect]  window.location.href = "/";   }, [token, login]);    return (     <div className
+
+────────────────────────────────────────────────────────────────────
+[SENSITIVE DATA IN localStorage / sessionStorage]
+────────────────────────────────────────────────────────────────────
+  No sensitive storage writes detected.
+
+────────────────────────────────────────────────────────────────────
+[postMessage LISTENERS WITHOUT event.origin CHECK]
+────────────────────────────────────────────────────────────────────
+  None found.
+
+────────────────────────────────────────────────────────────────────
+[CLIENT-SIDE ROUTES]
+────────────────────────────────────────────────────────────────────
+  PATH                                     FILE
+  ────────────────────────────────────────────────────────────────────────────────
+  *                                        src/app/router/AppRouter.js:58
+  /callback/:token                         src/app/router/AppRouter.js:42
+  /mfa/setup                               src/app/router/AppRouter.js:52
+  /mfa/verify                              src/app/router/AppRouter.js:55

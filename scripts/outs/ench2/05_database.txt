@@ -1,0 +1,31 @@
+====================================================================
+  DATABASE CONTEXT
+  Project : /home/santosdev/devme/accountant_software/order_manager
+  Generated: 2026-04-24T08:45:43.144010
+====================================================================
+
+Schema files used as map : 
+Declared tables          : 0
+Tables referenced in code: 0
+Undeclared tables        : 0
+ORM/ODM detected         : Peewee, SQLAlchemy, Tortoise ORM
+
+[DECLARED TABLES]
+────────────────────────────────────────────────────────────────────
+────────────────────────────────────────────────────────────────────
+[ORM / ODM DETECTED]
+────────────────────────────────────────────────────────────────────
+ORM: Peewee
+  Operations : DELETE, INSERT, INSERT/UPDATE, SELECT, UPDATE
+  Models     : AppVersionStatusResponse, AttendanceRecord, BaseCashItem, BatchInDB, BatchModel, BillInput, BillModel, BiweeklyPayment, CalculateRequest, CalculateResponse, CalculatedIngredient, CashClosingModel … (+130 more)
+  Files (25) : daily_control.py, repository.py, schemas.py, consumption.py, models.py, repository.py … (+19 more — 25 total)
+
+ORM: SQLAlchemy
+  Operations : DELETE, SELECT
+  Models     : AppVersionStatusResponse, AttendanceRecord, BaseCashItem, BatchInDB, BatchModel, BillInput, BillModel, BiweeklyPayment, CalculateRequest, CalculateResponse, CalculatedIngredient, CashClosingModel … (+131 more)
+  Files (24) : daily_control.py, schemas.py, consumption.py, models.py, schemas.py, pipeline_builder.py … (+18 more — 24 total)
+
+ORM: Tortoise ORM
+  Operations : DELETE, INSERT, SELECT, UPDATE
+  Models     : AppVersionStatusResponse, AttendanceRecord, BaseCashItem, BatchInDB, BatchModel, BillInput, BillModel, BiweeklyPayment, CalculateRequest, CalculateResponse, CalculatedIngredient, CashClosingModel … (+127 more)
+  Files (19) : daily_control.py, schemas.py, consumption.py, models.py, schemas.py, service.py … (+13 more — 19 total)

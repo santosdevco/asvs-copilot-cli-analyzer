@@ -1,0 +1,151 @@
+====================================================================
+  CODE SIGNALS — SECURITY HEATMAP
+  Project : /home/santosdev/tbbc/sonarqube-reports/analysis-repos/watshelp-bancodebogota-api
+  Generated: 2026-04-24T09:53:57.191896
+====================================================================
+
+Total functions : 152  classes: 32  TODOs: 15
+Files with signals: 20
+
+Score legend: sinks×3  sqli×4  authz_gap×3  err_leak×2  source×1  crypto×1  todo×1
+
+────────────────────────────────────────────────────────────────────
+[SECURITY HEATMAP — top files by risk score]
+────────────────────────────────────────────────────────────────────
+  SCORE  FILE                                              SIGNALS PRESENT
+  ──────────────────────────────────────────────────────────────────────────────────────────
+     18  app/controllers/agentController.js                sources, missing_input_validation
+     16  app/controllers/alertController.js                sources, missing_input_validation
+     14  app/controllers/whatsappController.js             todos, sources, missing_input_validation
+     12  app/controllers/webhookController.js              sources, missing_input_validation
+     11  app/controllers/roomController.js                 sources, missing_input_validation
+     10  app/controllers/authController.js                 sources, missing_input_validation
+     10  app/controllers/closureReasonsController.js       sources, missing_input_validation
+     10  app/controllers/massAlertController.js            sources, missing_input_validation
+     10  app/controllers/messageController.js              sources, missing_input_validation
+     10  app/controllers/pmessageController.js             sources, missing_input_validation
+     10  app/controllers/userController.js                 sources, missing_input_validation
+      9  app/controllers/areaController.js                 sources, missing_input_validation
+      8  app/middlewares/validPermission.js                sources, missing_input_validation
+      7  app/middlewares/valid-jwt.js                      sources, missing_input_validation
+      6  app/controllers/assistantController.js            sources, missing_input_validation
+      6  app/controllers/metricsController.js              sources, missing_input_validation
+      6  app/controllers/notificationController.js         sources, missing_input_validation
+      6  app/controllers/teamsController.js                sources, missing_input_validation
+      5  app/controllers/mfaController.js                  sources, missing_input_validation
+      5  app/middlewares/valid-files.js                    sources, missing_input_validation
+
+────────────────────────────────────────────────────────────────────
+[PER-FILE SIGNAL DETAIL]
+────────────────────────────────────────────────────────────────────
+
+File  : app/controllers/agentController.js
+Meta  : 266 lines  complexity=13  score=18
+  [INPUT SOURCES]    req.body×6, req.query×4, req.params×5
+
+File  : app/controllers/alertController.js
+Meta  : 205 lines  complexity=16  score=16
+  [INPUT SOURCES]    req.body×5, req.query×5, req.params×3
+
+File  : app/controllers/whatsappController.js
+Meta  : 641 lines  complexity=74  score=14
+  [TODOS/FIXMEs]
+    TODO: Revisar esta lógica
+  [INPUT SOURCES]    req.body×10
+
+File  : app/controllers/webhookController.js
+Meta  : 51 lines  complexity=6  score=12
+  [INPUT SOURCES]    req.body×4, req.headers×5
+
+File  : app/controllers/roomController.js
+Meta  : 201 lines  complexity=17  score=11
+  [INPUT SOURCES]    req.body×4, req.query×1, req.params×3
+
+File  : app/controllers/authController.js
+Meta  : 216 lines  complexity=28  score=10
+  [INPUT SOURCES]    req.body×5, req.params×1, req.headers×1
+
+File  : app/controllers/closureReasonsController.js
+Meta  : 65 lines  complexity=4  score=10
+  [INPUT SOURCES]    req.body×3, req.query×2, req.params×2
+
+File  : app/controllers/massAlertController.js
+Meta  : 136 lines  complexity=11  score=10
+  [INPUT SOURCES]    req.body×2, req.query×1, req.params×3, req.files×1
+
+File  : app/controllers/messageController.js
+Meta  : 151 lines  complexity=19  score=10
+  [INPUT SOURCES]    req.body×2, req.query×1, req.params×3, req.files×1
+
+File  : app/controllers/pmessageController.js
+Meta  : 62 lines  complexity=4  score=10
+  [INPUT SOURCES]    req.body×3, req.query×2, req.params×2
+
+File  : app/controllers/userController.js
+Meta  : 124 lines  complexity=7  score=10
+  [INPUT SOURCES]    req.body×3, req.params×4
+
+File  : app/controllers/areaController.js
+Meta  : 95 lines  complexity=6  score=9
+  [INPUT SOURCES]    req.body×2, req.query×1, req.params×3
+
+File  : app/middlewares/validPermission.js
+Meta  : 113 lines  complexity=18  score=8
+  [INPUT SOURCES]    req.body×3, req.params×2
+
+File  : app/middlewares/valid-jwt.js
+Meta  : 132 lines  complexity=15  score=7
+  [INPUT SOURCES]    req.headers×4
+
+File  : app/controllers/assistantController.js
+Meta  : 207 lines  complexity=16  score=6
+  [INPUT SOURCES]    req.body×2, req.files×1
+
+File  : app/controllers/metricsController.js
+Meta  : 105 lines  complexity=7  score=6
+  [INPUT SOURCES]    req.body×1, req.query×2
+
+File  : app/controllers/notificationController.js
+Meta  : 82 lines  complexity=4  score=6
+  [INPUT SOURCES]    req.body×1, req.query×1, req.params×1
+
+File  : app/controllers/teamsController.js
+Meta  : 223 lines  complexity=12  score=6
+  [INPUT SOURCES]    req.body×3
+
+File  : app/controllers/mfaController.js
+Meta  : 72 lines  complexity=6  score=5
+  [INPUT SOURCES]    req.body×2
+
+File  : app/middlewares/valid-files.js
+Meta  : 68 lines  complexity=11  score=5
+  [INPUT SOURCES]    req.files×2
+
+────────────────────────────────────────────────────────────────────
+[LARGEST FILES]
+────────────────────────────────────────────────────────────────────
+   1101 lines  db.sql
+    714 lines  app/logic/Room.js
+    641 lines  app/controllers/whatsappController.js
+    631 lines  app/logic/Agent.js
+    578 lines  app/routes/api.js
+    417 lines  app/cron/rooms.js
+    366 lines  app/logic/GeneralSurvey.js
+    294 lines  app/logic/User.js
+    266 lines  app/controllers/agentController.js
+    245 lines  app/logic/Manual.js
+
+────────────────────────────────────────────────────────────────────
+[MOST COMPLEX FILES]
+────────────────────────────────────────────────────────────────────
+   FNS    CX  FILE
+    13    13  app/controllers/agentController.js
+     9    17  app/controllers/roomController.js
+     9    74  app/controllers/whatsappController.js
+     8    16  app/controllers/alertController.js
+     8    11  app/controllers/massAlertController.js
+     8    24  app/helpers/jwt.js
+     7     7  app/controllers/userController.js
+     6     6  app/controllers/areaController.js
+     6    28  app/controllers/authController.js
+     6     7  app/controllers/metricsController.js

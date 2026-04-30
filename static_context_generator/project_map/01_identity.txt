@@ -1,0 +1,22 @@
+====================================================================
+  PROJECT IDENTITY
+  Project : /home/santosdev/tbbc/sonarqube-reports/static_context_generator
+  Generated: 2026-04-26T19:08:04.908063
+====================================================================
+
+Project name     : static_context_generator
+Project type     : cli
+Primary language : Python
+Frameworks       : none detected
+
+────────────────────────────────────────────────────────────────────
+[LANGUAGE DISTRIBUTION]
+────────────────────────────────────────────────────────────────────
+  Python             100.0%     5074 lines    45 files     204.5 KB
+  TOTAL                       5074 lines
+
+────────────────────────────────────────────────────────────────────
+[DEPENDENCIES]
+────────────────────────────────────────────────────────────────────
+  Manifest files : —
+  Run scripts    : —

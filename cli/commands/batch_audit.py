@@ -16,6 +16,7 @@ Usage:
 """
 from __future__ import annotations
 
+import os
 import sys
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -39,6 +40,7 @@ from cli.core import (
     write_usage_report,
     append_context_notes,
 )
+from cli.core.llm_client import init_llm_session, finalize_llm_session
 from cli.core.grouped_audit import (
     build_grouped_worklist,
     run_grouped_by_chapter_job,
@@ -464,6 +466,7 @@ def batch_audit_cmd(
             "include_auditor_diary": include_auditor_diary,
         },
     )
+    init_llm_session(app_name=app_name, command_name="batch-audit")
 
     console.print(
         f"[bold cyan]batch-audit[/bold cyan] {app_name}  "
@@ -606,3 +609,4 @@ def batch_audit_cmd(
         "failed": failed,
         "skipped": skipped,
     })
+    finalize_llm_session()

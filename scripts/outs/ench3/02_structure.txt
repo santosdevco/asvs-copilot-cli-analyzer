@@ -1,0 +1,1 @@
+ENTRY_POINTS: main.py\nLAYERS: core, domain, migrations, templates, tests\nFILES: 266total/244src/22test(ratio:8%)\nINFRA: docker-compose.yaml\nTREE: order_manager/ [266files|118566KB|76,376lines]\nDIRS: bills(17) bills_old(68) core(6) domain(64) logs(1) migrations(29) queries(15)\n

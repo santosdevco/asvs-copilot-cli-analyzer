@@ -1,0 +1,2521 @@
+{
+  "_meta": {
+    "generated_at": "2026-04-24T08:45:43.144010",
+    "root": "/home/santosdev/devme/accountant_software/order_manager",
+    "scanner_version": "3.0.0",
+    "section": "endpoints"
+  },
+  "endpoints": {
+    "total": 162,
+    "routes_per_file": {
+      "auth.py": 6,
+      "daily_control.py": 14,
+      "gmail.py": 3,
+      "inventory.py": 19,
+      "main.py": 1,
+      "orders.py": 11,
+      "password_policy.py": 4,
+      "production.py": 12,
+      "rest.py": 13,
+      "transactions.py": 10,
+      "users.py": 11,
+      "wallet.py": 8,
+      "core/security.py": 4,
+      "domain/app_version/router.py": 2,
+      "domain/catalog/router.py": 17,
+      "domain/dashboard/router.py": 19,
+      "domain/orders/router.py": 2,
+      "domain/shortlinks/router.py": 6
+    },
+    "domain_map": {
+      "/": [
+        "GET"
+      ],
+      "analytics": [
+        "GET"
+      ],
+      "audit": [
+        "GET"
+      ],
+      "auth": [
+        "GET"
+      ],
+      "batches": [
+        "GET",
+        "POST",
+        "PUT"
+      ],
+      "calculate": [
+        "POST"
+      ],
+      "cash": [
+        "POST"
+      ],
+      "cash-closing": [
+        "PUT"
+      ],
+      "catalog-performance": [
+        "GET"
+      ],
+      "chargev1": [
+        "POST"
+      ],
+      "create": [
+        "POST"
+      ],
+      "daily-attendance": [
+        "GET",
+        "PUT"
+      ],
+      "daily-delivery-orders": [
+        "POST"
+      ],
+      "employees": [
+        "DELETE",
+        "GET",
+        "POST",
+        "PUT"
+      ],
+      "expense_categories": [
+        "GET",
+        "PATCH",
+        "POST"
+      ],
+      "filter_financial-record": [
+        "GET"
+      ],
+      "financial-record": [
+        "GET",
+        "PUT"
+      ],
+      "forgot-password": [
+        "POST"
+      ],
+      "internal": [
+        "GET",
+        "POST"
+      ],
+      "item": [
+        "PUT"
+      ],
+      "items": [
+        "GET"
+      ],
+      "items_without_code": [
+        "GET"
+      ],
+      "list_duplicated": [
+        "GET"
+      ],
+      "login": [
+        "POST"
+      ],
+      "logout": [
+        "POST"
+      ],
+      "logs": [
+        "DELETE",
+        "GET",
+        "POST",
+        "PUT"
+      ],
+      "margins": [
+        "GET"
+      ],
+      "mark_as_charged": [
+        "POST"
+      ],
+      "me": [
+        "GET"
+      ],
+      "movements": [
+        "GET",
+        "POST"
+      ],
+      "orders": [
+        "GET",
+        "POST",
+        "PUT"
+      ],
+      "products": [
+        "DELETE",
+        "GET",
+        "POST",
+        "PUT"
+      ],
+      "profile": [
+        "GET",
+        "PATCH",
+        "POST"
+      ],
+      "recipes": [
+        "DELETE",
+        "GET",
+        "POST",
+        "PUT"
+      ],
+      "refresh": [
+        "POST"
+      ],
+      "register": [
+        "POST"
+      ],
+      "removeduplicated": [
+        "POST"
+      ],
+      "sales": [
+        "GET"
+      ],
+      "seed": [
+        "POST"
+      ],
+      "set-password": [
+        "POST"
+      ],
+      "settings": [
+        "GET",
+        "POST",
+        "PUT"
+      ],
+      "stations": [
+        "GET"
+      ],
+      "stats": [
+        "GET"
+      ],
+      "status": [
+        "GET"
+      ],
+      "supplies": [
+        "DELETE",
+        "GET",
+        "POST",
+        "PUT"
+      ],
+      "supply": [
+        "GET"
+      ],
+      "test-listeng-active-orders": [
+        "GET"
+      ],
+      "test-websocket": [
+        "GET"
+      ],
+      "token": [
+        "GET"
+      ],
+      "transactions": [
+        "GET",
+        "POST"
+      ],
+      "update": [
+        "POST"
+      ],
+      "users": [
+        "DELETE",
+        "GET",
+        "PATCH",
+        "POST"
+      ],
+      "waiter-orders-report": [
+        "POST"
+      ],
+      "wallets": [
+        "GET",
+        "POST"
+      ],
+      "walletss": [
+        "GET"
+      ],
+      "warehouses": [
+        "GET",
+        "POST",
+        "PUT"
+      ],
+      "weekly-pattern": [
+        "GET"
+      ],
+      "{link_id}": [
+        "DELETE",
+        "GET",
+        "PUT"
+      ],
+      "{order_id}": [
+        "PATCH"
+      ]
+    },
+    "endpoints": [
+      {
+        "method": "POST",
+        "path": "/register",
+        "file": "auth.py",
+        "line": 113,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/set-password",
+        "file": "auth.py",
+        "line": 182,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/forgot-password",
+        "file": "auth.py",
+        "line": 233,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/login",
+        "file": "auth.py",
+        "line": 295,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/logout",
+        "file": "auth.py",
+        "line": 470,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/refresh",
+        "file": "auth.py",
+        "line": 495,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "PUT",
+        "path": "/cash-closing",
+        "file": "daily_control.py",
+        "line": 38,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/employees",
+        "file": "daily_control.py",
+        "line": 110,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/employees",
+        "file": "daily_control.py",
+        "line": 138,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/employees/{employee_id}",
+        "file": "daily_control.py",
+        "line": 149,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "PUT",
+        "path": "/employees/{employee_id}",
+        "file": "daily_control.py",
+        "line": 161,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "DELETE",
+        "path": "/employees/{employee_id}",
+        "file": "daily_control.py",
+        "line": 205,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "PUT",
+        "path": "/daily-attendance",
+        "file": "daily_control.py",
+        "line": 241,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/daily-attendance/{year}/{month}/{day}",
+        "file": "daily_control.py",
+        "line": 305,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "PUT",
+        "path": "/financial-record",
+        "file": "daily_control.py",
+        "line": 330,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/filter_financial-record",
+        "file": "daily_control.py",
+        "line": 420,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/financial-record",
+        "file": "daily_control.py",
+        "line": 458,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/cash/mark_as_collected/{record_id}",
+        "file": "daily_control.py",
+        "line": 481,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/waiter-orders-report",
+        "file": "daily_control.py",
+        "line": 583,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/daily-delivery-orders",
+        "file": "daily_control.py",
+        "line": 765,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/auth",
+        "file": "gmail.py",
+        "line": 28,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/token",
+        "file": "gmail.py",
+        "line": 42,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/status",
+        "file": "gmail.py",
+        "line": 64,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/products",
+        "file": "inventory.py",
+        "line": 22,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/products",
+        "file": "inventory.py",
+        "line": 40,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/products/{product_id}",
+        "file": "inventory.py",
+        "line": 54,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "PUT",
+        "path": "/products/{product_id}",
+        "file": "inventory.py",
+        "line": 67,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/warehouses",
+        "file": "inventory.py",
+        "line": 91,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/warehouses",
+        "file": "inventory.py",
+        "line": 107,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/warehouses/{warehouse_id}",
+        "file": "inventory.py",
+        "line": 120,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "PUT",
+        "path": "/warehouses/{warehouse_id}",
+        "file": "inventory.py",
+        "line": 133,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/batches",
+        "file": "inventory.py",
+        "line": 157,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/batches",
+        "file": "inventory.py",
+        "line": 177,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/batches/{batch_id}",
+        "file": "inventory.py",
+        "line": 187,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "PUT",
+        "path": "/batches/{batch_id}",
+        "file": "inventory.py",
+        "line": 196,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/batches",
+        "file": "inventory.py",
+        "line": 215,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/batches",
+        "file": "inventory.py",
+        "line": 231,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/batches/{batch_id}",
+        "file": "inventory.py",
+        "line": 243,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "PUT",
+        "path": "/batches/{batch_id}",
+        "file": "inventory.py",
+        "line": 254,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/movements",
+        "file": "inventory.py",
+        "line": 288,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/movements",
+        "file": "inventory.py",
+        "line": 340,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/movements/{movement_id}",
+        "file": "inventory.py",
+        "line": 352,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/",
+        "file": "main.py",
+        "line": 75,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/mark_as_charged/",
+        "file": "orders.py",
+        "line": 61,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/chargev1/",
+        "file": "orders.py",
+        "line": 111,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "PUT",
+        "path": "/item/",
+        "file": "orders.py",
+        "line": 150,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "PUT",
+        "path": "/orders/{order_id}",
+        "file": "orders.py",
+        "line": 207,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/orders/get",
+        "file": "orders.py",
+        "line": 260,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/employees/payroll",
+        "file": "orders.py",
+        "line": 289,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/orders/daily_orders",
+        "file": "orders.py",
+        "line": 293,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/orders/daily_orders_range",
+        "file": "orders.py",
+        "line": 328,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/items/",
+        "file": "orders.py",
+        "line": 360,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/orders/",
+        "file": "orders.py",
+        "line": 401,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/items_without_code",
+        "file": "orders.py",
+        "line": 439,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/settings/password-policy",
+        "file": "password_policy.py",
+        "line": 61,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/settings/password-policy/public",
+        "file": "password_policy.py",
+        "line": 70,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "PUT",
+        "path": "/settings/password-policy",
+        "file": "password_policy.py",
+        "line": 95,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/settings/password-policy/invalidate-all",
+        "file": "password_policy.py",
+        "line": 149,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/recipes",
+        "file": "production.py",
+        "line": 75,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/recipes/{product_id}",
+        "file": "production.py",
+        "line": 89,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/recipes",
+        "file": "production.py",
+        "line": 103,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "PUT",
+        "path": "/recipes/{product_id}",
+        "file": "production.py",
+        "line": 145,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "DELETE",
+        "path": "/recipes/{product_id}",
+        "file": "production.py",
+        "line": 206,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/calculate",
+        "file": "production.py",
+        "line": 250,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/logs",
+        "file": "production.py",
+        "line": 283,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "PUT",
+        "path": "/logs/{log_id}",
+        "file": "production.py",
+        "line": 351,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "DELETE",
+        "path": "/logs/{log_id}",
+        "file": "production.py",
+        "line": 470,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/stats",
+        "file": "production.py",
+        "line": 507,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/logs",
+        "file": "production.py",
+        "line": 602,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/seed",
+        "file": "production.py",
+        "line": 626,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/list_duplicated/",
+        "file": "rest.py",
+        "line": 33,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/removeduplicated/",
+        "file": "rest.py",
+        "line": 62,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/sales/total-per-day",
+        "file": "rest.py",
+        "line": 112,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/sales/total-per-day-range",
+        "file": "rest.py",
+        "line": 135,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/sales/sales-by-category-general",
+        "file": "rest.py",
+        "line": 173,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/sales/sales-by-category/{category}",
+        "file": "rest.py",
+        "line": 206,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/sales/daily-sales",
+        "file": "rest.py",
+        "line": 242,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/sales/total-per-month",
+        "file": "rest.py",
+        "line": 283,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/sales/stats-per-hour/{year}/{month}",
+        "file": "rest.py",
+        "line": 308,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/orders/stats-per-hour/{year}/{month}",
+        "file": "rest.py",
+        "line": 333,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/sales/top-products",
+        "file": "rest.py",
+        "line": 358,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/test-websocket",
+        "file": "rest.py",
+        "line": 430,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/test-listeng-active-orders",
+        "file": "rest.py",
+        "line": 434,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/transactions/purchases",
+        "file": "transactions.py",
+        "line": 26,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/transactions/transfer",
+        "file": "transactions.py",
+        "line": 102,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/transactions/list",
+        "file": "transactions.py",
+        "line": 198,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/transactions/expenses",
+        "file": "transactions.py",
+        "line": 318,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/transactions/expenses_summary",
+        "file": "transactions.py",
+        "line": 375,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/orders/transactions/uploadReceipt",
+        "file": "transactions.py",
+        "line": 422,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/transactions/export/csv",
+        "file": "transactions.py",
+        "line": 519,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/transactions/export/receipts-zip",
+        "file": "transactions.py",
+        "line": 605,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/transactions/export/receipts-zip/status/{job_id}",
+        "file": "transactions.py",
+        "line": 693,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/transactions/export/receipts-zip/download/{job_id}",
+        "file": "transactions.py",
+        "line": 704,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/me",
+        "file": "users.py",
+        "line": 63,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/profile",
+        "file": "users.py",
+        "line": 91,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "PATCH",
+        "path": "/profile",
+        "file": "users.py",
+        "line": 109,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/profile/request-password-change",
+        "file": "users.py",
+        "line": 136,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/users",
+        "file": "users.py",
+        "line": 178,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/users/{user_id}",
+        "file": "users.py",
+        "line": 204,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/users/{user_id}/revoke-password",
+        "file": "users.py",
+        "line": 236,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "PATCH",
+        "path": "/users/{user_id}/role",
+        "file": "users.py",
+        "line": 277,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "PATCH",
+        "path": "/users/{user_id}/permissions",
+        "file": "users.py",
+        "line": 319,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "PATCH",
+        "path": "/users/{user_id}/status",
+        "file": "users.py",
+        "line": 380,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "DELETE",
+        "path": "/users/{user_id}",
+        "file": "users.py",
+        "line": 434,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/wallets",
+        "file": "wallet.py",
+        "line": 29,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/wallets/{name}",
+        "file": "wallet.py",
+        "line": 59,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/walletss/list",
+        "file": "wallet.py",
+        "line": 71,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/walletss/screenshot/list",
+        "file": "wallet.py",
+        "line": 100,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/wallets/screenshot/{wallet_id}",
+        "file": "wallet.py",
+        "line": 111,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/expense_categories",
+        "file": "wallet.py",
+        "line": 179,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "PATCH",
+        "path": "/expense_categories/{category_id}",
+        "file": "wallet.py",
+        "line": 214,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/expense_categories/list",
+        "file": "wallet.py",
+        "line": 273,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/orders/",
+        "file": "core/security.py",
+        "line": 348,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/orders/",
+        "file": "core/security.py",
+        "line": 468,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/orders/charge/",
+        "file": "core/security.py",
+        "line": 602,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/orders/",
+        "file": "core/security.py",
+        "line": 639,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/status",
+        "file": "domain/app_version/router.py",
+        "line": 23,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/update",
+        "file": "domain/app_version/router.py",
+        "line": 32,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/supplies",
+        "file": "domain/catalog/router.py",
+        "line": 41,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/supplies",
+        "file": "domain/catalog/router.py",
+        "line": 49,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "PUT",
+        "path": "/supplies/{supply_id}",
+        "file": "domain/catalog/router.py",
+        "line": 58,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "DELETE",
+        "path": "/supplies/{supply_id}",
+        "file": "domain/catalog/router.py",
+        "line": 68,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/products",
+        "file": "domain/catalog/router.py",
+        "line": 79,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/products",
+        "file": "domain/catalog/router.py",
+        "line": 97,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "PUT",
+        "path": "/products/{product_id}",
+        "file": "domain/catalog/router.py",
+        "line": 106,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "DELETE",
+        "path": "/products/{product_id}",
+        "file": "domain/catalog/router.py",
+        "line": 116,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/products/recalculate-costs",
+        "file": "domain/catalog/router.py",
+        "line": 125,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/products/catalog-menu",
+        "file": "domain/catalog/router.py",
+        "line": 134,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/products/menu-inventory",
+        "file": "domain/catalog/router.py",
+        "line": 146,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/products",
+        "file": "domain/catalog/router.py",
+        "line": 155,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/products",
+        "file": "domain/catalog/router.py",
+        "line": 168,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/products/{product_id}",
+        "file": "domain/catalog/router.py",
+        "line": 177,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "PUT",
+        "path": "/products/{product_id}",
+        "file": "domain/catalog/router.py",
+        "line": 186,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "DELETE",
+        "path": "/products/{product_id}",
+        "file": "domain/catalog/router.py",
+        "line": 196,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/products/recalculate-costs",
+        "file": "domain/catalog/router.py",
+        "line": 205,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/sales/daily",
+        "file": "domain/dashboard/router.py",
+        "line": 61,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/sales/monthly",
+        "file": "domain/dashboard/router.py",
+        "line": 82,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/sales/date-range",
+        "file": "domain/dashboard/router.py",
+        "line": 104,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/sales/hourly",
+        "file": "domain/dashboard/router.py",
+        "line": 124,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/sales/by-category",
+        "file": "domain/dashboard/router.py",
+        "line": 158,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/orders/hourly",
+        "file": "domain/dashboard/router.py",
+        "line": 176,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/orders/items/list",
+        "file": "domain/dashboard/router.py",
+        "line": 192,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/products/top",
+        "file": "domain/dashboard/router.py",
+        "line": 217,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/products/top-daily",
+        "file": "domain/dashboard/router.py",
+        "line": 227,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/products/sections",
+        "file": "domain/dashboard/router.py",
+        "line": 241,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/audit/items-without-code",
+        "file": "domain/dashboard/router.py",
+        "line": 253,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/audit/duplicate-orders",
+        "file": "domain/dashboard/router.py",
+        "line": 263,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/margins",
+        "file": "domain/dashboard/router.py",
+        "line": 274,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/stations",
+        "file": "domain/dashboard/router.py",
+        "line": 290,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/catalog-performance",
+        "file": "domain/dashboard/router.py",
+        "line": 305,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/supply/daily",
+        "file": "domain/dashboard/router.py",
+        "line": 348,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/supply/monthly",
+        "file": "domain/dashboard/router.py",
+        "line": 371,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/supply/date-range",
+        "file": "domain/dashboard/router.py",
+        "line": 394,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/weekly-pattern",
+        "file": "domain/dashboard/router.py",
+        "line": 419,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "PATCH",
+        "path": "/{order_id}/status",
+        "file": "domain/orders/router.py",
+        "line": 36,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/create/",
+        "file": "domain/orders/router.py",
+        "line": 59,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/analytics/{slug}",
+        "file": "domain/shortlinks/router.py",
+        "line": 106,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/{link_id}",
+        "file": "domain/shortlinks/router.py",
+        "line": 117,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "PUT",
+        "path": "/{link_id}",
+        "file": "domain/shortlinks/router.py",
+        "line": 127,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "DELETE",
+        "path": "/{link_id}",
+        "file": "domain/shortlinks/router.py",
+        "line": 138,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "GET",
+        "path": "/internal/active-links",
+        "file": "domain/shortlinks/router.py",
+        "line": 150,
+        "middlewares": [],
+        "handler": ""
+      },
+      {
+        "method": "POST",
+        "path": "/internal/click-logs/batch",
+        "file": "domain/shortlinks/router.py",
+        "line": 168,
+        "middlewares": [],
+        "handler": ""
+      }
+    ],
+    "unprotected_routes": [
+      {
+        "method": "POST",
+        "path": "/register",
+        "file": "auth.py",
+        "line": 113
+      },
+      {
+        "method": "POST",
+        "path": "/set-password",
+        "file": "auth.py",
+        "line": 182
+      },
+      {
+        "method": "POST",
+        "path": "/forgot-password",
+        "file": "auth.py",
+        "line": 233
+      },
+      {
+        "method": "POST",
+        "path": "/login",
+        "file": "auth.py",
+        "line": 295
+      },
+      {
+        "method": "POST",
+        "path": "/logout",
+        "file": "auth.py",
+        "line": 470
+      },
+      {
+        "method": "POST",
+        "path": "/refresh",
+        "file": "auth.py",
+        "line": 495
+      },
+      {
+        "method": "PUT",
+        "path": "/cash-closing",
+        "file": "daily_control.py",
+        "line": 38
+      },
+      {
+        "method": "POST",
+        "path": "/employees",
+        "file": "daily_control.py",
+        "line": 110
+      },
+      {
+        "method": "GET",
+        "path": "/employees",
+        "file": "daily_control.py",
+        "line": 138
+      },
+      {
+        "method": "GET",
+        "path": "/employees/{employee_id}",
+        "file": "daily_control.py",
+        "line": 149
+      },
+      {
+        "method": "PUT",
+        "path": "/employees/{employee_id}",
+        "file": "daily_control.py",
+        "line": 161
+      },
+      {
+        "method": "DELETE",
+        "path": "/employees/{employee_id}",
+        "file": "daily_control.py",
+        "line": 205
+      },
+      {
+        "method": "PUT",
+        "path": "/daily-attendance",
+        "file": "daily_control.py",
+        "line": 241
+      },
+      {
+        "method": "GET",
+        "path": "/daily-attendance/{year}/{month}/{day}",
+        "file": "daily_control.py",
+        "line": 305
+      },
+      {
+        "method": "PUT",
+        "path": "/financial-record",
+        "file": "daily_control.py",
+        "line": 330
+      },
+      {
+        "method": "GET",
+        "path": "/filter_financial-record",
+        "file": "daily_control.py",
+        "line": 420
+      },
+      {
+        "method": "GET",
+        "path": "/financial-record",
+        "file": "daily_control.py",
+        "line": 458
+      },
+      {
+        "method": "POST",
+        "path": "/cash/mark_as_collected/{record_id}",
+        "file": "daily_control.py",
+        "line": 481
+      },
+      {
+        "method": "POST",
+        "path": "/waiter-orders-report",
+        "file": "daily_control.py",
+        "line": 583
+      },
+      {
+        "method": "POST",
+        "path": "/daily-delivery-orders",
+        "file": "daily_control.py",
+        "line": 765
+      },
+      {
+        "method": "GET",
+        "path": "/auth",
+        "file": "gmail.py",
+        "line": 28
+      },
+      {
+        "method": "GET",
+        "path": "/token",
+        "file": "gmail.py",
+        "line": 42
+      },
+      {
+        "method": "GET",
+        "path": "/status",
+        "file": "gmail.py",
+        "line": 64
+      },
+      {
+        "method": "POST",
+        "path": "/products",
+        "file": "inventory.py",
+        "line": 22
+      },
+      {
+        "method": "GET",
+        "path": "/products",
+        "file": "inventory.py",
+        "line": 40
+      },
+      {
+        "method": "GET",
+        "path": "/products/{product_id}",
+        "file": "inventory.py",
+        "line": 54
+      },
+      {
+        "method": "PUT",
+        "path": "/products/{product_id}",
+        "file": "inventory.py",
+        "line": 67
+      },
+      {
+        "method": "POST",
+        "path": "/warehouses",
+        "file": "inventory.py",
+        "line": 91
+      },
+      {
+        "method": "GET",
+        "path": "/warehouses",
+        "file": "inventory.py",
+        "line": 107
+      },
+      {
+        "method": "GET",
+        "path": "/warehouses/{warehouse_id}",
+        "file": "inventory.py",
+        "line": 120
+      },
+      {
+        "method": "PUT",
+        "path": "/warehouses/{warehouse_id}",
+        "file": "inventory.py",
+        "line": 133
+      },
+      {
+        "method": "POST",
+        "path": "/batches",
+        "file": "inventory.py",
+        "line": 157
+      },
+      {
+        "method": "GET",
+        "path": "/batches",
+        "file": "inventory.py",
+        "line": 177
+      },
+      {
+        "method": "GET",
+        "path": "/batches/{batch_id}",
+        "file": "inventory.py",
+        "line": 187
+      },
+      {
+        "method": "PUT",
+        "path": "/batches/{batch_id}",
+        "file": "inventory.py",
+        "line": 196
+      },
+      {
+        "method": "POST",
+        "path": "/batches",
+        "file": "inventory.py",
+        "line": 215
+      },
+      {
+        "method": "GET",
+        "path": "/batches",
+        "file": "inventory.py",
+        "line": 231
+      },
+      {
+        "method": "GET",
+        "path": "/batches/{batch_id}",
+        "file": "inventory.py",
+        "line": 243
+      },
+      {
+        "method": "PUT",
+        "path": "/batches/{batch_id}",
+        "file": "inventory.py",
+        "line": 254
+      },
+      {
+        "method": "POST",
+        "path": "/movements",
+        "file": "inventory.py",
+        "line": 288
+      },
+      {
+        "method": "GET",
+        "path": "/movements",
+        "file": "inventory.py",
+        "line": 340
+      },
+      {
+        "method": "GET",
+        "path": "/movements/{movement_id}",
+        "file": "inventory.py",
+        "line": 352
+      },
+      {
+        "method": "GET",
+        "path": "/",
+        "file": "main.py",
+        "line": 75
+      },
+      {
+        "method": "POST",
+        "path": "/mark_as_charged/",
+        "file": "orders.py",
+        "line": 61
+      },
+      {
+        "method": "POST",
+        "path": "/chargev1/",
+        "file": "orders.py",
+        "line": 111
+      },
+      {
+        "method": "PUT",
+        "path": "/item/",
+        "file": "orders.py",
+        "line": 150
+      },
+      {
+        "method": "PUT",
+        "path": "/orders/{order_id}",
+        "file": "orders.py",
+        "line": 207
+      },
+      {
+        "method": "GET",
+        "path": "/orders/get",
+        "file": "orders.py",
+        "line": 260
+      },
+      {
+        "method": "GET",
+        "path": "/employees/payroll",
+        "file": "orders.py",
+        "line": 289
+      },
+      {
+        "method": "GET",
+        "path": "/orders/daily_orders",
+        "file": "orders.py",
+        "line": 293
+      },
+      {
+        "method": "GET",
+        "path": "/orders/daily_orders_range",
+        "file": "orders.py",
+        "line": 328
+      },
+      {
+        "method": "GET",
+        "path": "/items/",
+        "file": "orders.py",
+        "line": 360
+      },
+      {
+        "method": "GET",
+        "path": "/orders/",
+        "file": "orders.py",
+        "line": 401
+      },
+      {
+        "method": "GET",
+        "path": "/items_without_code",
+        "file": "orders.py",
+        "line": 439
+      },
+      {
+        "method": "GET",
+        "path": "/settings/password-policy",
+        "file": "password_policy.py",
+        "line": 61
+      },
+      {
+        "method": "GET",
+        "path": "/settings/password-policy/public",
+        "file": "password_policy.py",
+        "line": 70
+      },
+      {
+        "method": "PUT",
+        "path": "/settings/password-policy",
+        "file": "password_policy.py",
+        "line": 95
+      },
+      {
+        "method": "POST",
+        "path": "/settings/password-policy/invalidate-all",
+        "file": "password_policy.py",
+        "line": 149
+      },
+      {
+        "method": "GET",
+        "path": "/recipes",
+        "file": "production.py",
+        "line": 75
+      },
+      {
+        "method": "GET",
+        "path": "/recipes/{product_id}",
+        "file": "production.py",
+        "line": 89
+      },
+      {
+        "method": "POST",
+        "path": "/recipes",
+        "file": "production.py",
+        "line": 103
+      },
+      {
+        "method": "PUT",
+        "path": "/recipes/{product_id}",
+        "file": "production.py",
+        "line": 145
+      },
+      {
+        "method": "DELETE",
+        "path": "/recipes/{product_id}",
+        "file": "production.py",
+        "line": 206
+      },
+      {
+        "method": "POST",
+        "path": "/calculate",
+        "file": "production.py",
+        "line": 250
+      },
+      {
+        "method": "POST",
+        "path": "/logs",
+        "file": "production.py",
+        "line": 283
+      },
+      {
+        "method": "PUT",
+        "path": "/logs/{log_id}",
+        "file": "production.py",
+        "line": 351
+      },
+      {
+        "method": "DELETE",
+        "path": "/logs/{log_id}",
+        "file": "production.py",
+        "line": 470
+      },
+      {
+        "method": "GET",
+        "path": "/stats",
+        "file": "production.py",
+        "line": 507
+      },
+      {
+        "method": "GET",
+        "path": "/logs",
+        "file": "production.py",
+        "line": 602
+      },
+      {
+        "method": "POST",
+        "path": "/seed",
+        "file": "production.py",
+        "line": 626
+      },
+      {
+        "method": "GET",
+        "path": "/list_duplicated/",
+        "file": "rest.py",
+        "line": 33
+      },
+      {
+        "method": "POST",
+        "path": "/removeduplicated/",
+        "file": "rest.py",
+        "line": 62
+      },
+      {
+        "method": "GET",
+        "path": "/sales/total-per-day",
+        "file": "rest.py",
+        "line": 112
+      },
+      {
+        "method": "GET",
+        "path": "/sales/total-per-day-range",
+        "file": "rest.py",
+        "line": 135
+      },
+      {
+        "method": "GET",
+        "path": "/sales/sales-by-category-general",
+        "file": "rest.py",
+        "line": 173
+      },
+      {
+        "method": "GET",
+        "path": "/sales/sales-by-category/{category}",
+        "file": "rest.py",
+        "line": 206
+      },
+      {
+        "method": "GET",
+        "path": "/sales/daily-sales",
+        "file": "rest.py",
+        "line": 242
+      },
+      {
+        "method": "GET",
+        "path": "/sales/total-per-month",
+        "file": "rest.py",
+        "line": 283
+      },
+      {
+        "method": "GET",
+        "path": "/sales/stats-per-hour/{year}/{month}",
+        "file": "rest.py",
+        "line": 308
+      },
+      {
+        "method": "GET",
+        "path": "/orders/stats-per-hour/{year}/{month}",
+        "file": "rest.py",
+        "line": 333
+      },
+      {
+        "method": "GET",
+        "path": "/sales/top-products",
+        "file": "rest.py",
+        "line": 358
+      },
+      {
+        "method": "GET",
+        "path": "/test-websocket",
+        "file": "rest.py",
+        "line": 430
+      },
+      {
+        "method": "GET",
+        "path": "/test-listeng-active-orders",
+        "file": "rest.py",
+        "line": 434
+      },
+      {
+        "method": "POST",
+        "path": "/transactions/purchases",
+        "file": "transactions.py",
+        "line": 26
+      },
+      {
+        "method": "POST",
+        "path": "/transactions/transfer",
+        "file": "transactions.py",
+        "line": 102
+      },
+      {
+        "method": "GET",
+        "path": "/transactions/list",
+        "file": "transactions.py",
+        "line": 198
+      },
+      {
+        "method": "GET",
+        "path": "/transactions/expenses",
+        "file": "transactions.py",
+        "line": 318
+      },
+      {
+        "method": "GET",
+        "path": "/transactions/expenses_summary",
+        "file": "transactions.py",
+        "line": 375
+      },
+      {
+        "method": "POST",
+        "path": "/orders/transactions/uploadReceipt",
+        "file": "transactions.py",
+        "line": 422
+      },
+      {
+        "method": "GET",
+        "path": "/transactions/export/csv",
+        "file": "transactions.py",
+        "line": 519
+      },
+      {
+        "method": "POST",
+        "path": "/transactions/export/receipts-zip",
+        "file": "transactions.py",
+        "line": 605
+      },
+      {
+        "method": "GET",
+        "path": "/transactions/export/receipts-zip/status/{job_id}",
+        "file": "transactions.py",
+        "line": 693
+      },
+      {
+        "method": "GET",
+        "path": "/transactions/export/receipts-zip/download/{job_id}",
+        "file": "transactions.py",
+        "line": 704
+      },
+      {
+        "method": "GET",
+        "path": "/me",
+        "file": "users.py",
+        "line": 63
+      },
+      {
+        "method": "GET",
+        "path": "/profile",
+        "file": "users.py",
+        "line": 91
+      },
+      {
+        "method": "PATCH",
+        "path": "/profile",
+        "file": "users.py",
+        "line": 109
+      },
+      {
+        "method": "POST",
+        "path": "/profile/request-password-change",
+        "file": "users.py",
+        "line": 136
+      },
+      {
+        "method": "GET",
+        "path": "/users",
+        "file": "users.py",
+        "line": 178
+      },
+      {
+        "method": "GET",
+        "path": "/users/{user_id}",
+        "file": "users.py",
+        "line": 204
+      },
+      {
+        "method": "POST",
+        "path": "/users/{user_id}/revoke-password",
+        "file": "users.py",
+        "line": 236
+      },
+      {
+        "method": "PATCH",
+        "path": "/users/{user_id}/role",
+        "file": "users.py",
+        "line": 277
+      },
+      {
+        "method": "PATCH",
+        "path": "/users/{user_id}/permissions",
+        "file": "users.py",
+        "line": 319
+      },
+      {
+        "method": "PATCH",
+        "path": "/users/{user_id}/status",
+        "file": "users.py",
+        "line": 380
+      },
+      {
+        "method": "DELETE",
+        "path": "/users/{user_id}",
+        "file": "users.py",
+        "line": 434
+      },
+      {
+        "method": "POST",
+        "path": "/wallets",
+        "file": "wallet.py",
+        "line": 29
+      },
+      {
+        "method": "GET",
+        "path": "/wallets/{name}",
+        "file": "wallet.py",
+        "line": 59
+      },
+      {
+        "method": "GET",
+        "path": "/walletss/list",
+        "file": "wallet.py",
+        "line": 71
+      },
+      {
+        "method": "GET",
+        "path": "/walletss/screenshot/list",
+        "file": "wallet.py",
+        "line": 100
+      },
+      {
+        "method": "POST",
+        "path": "/wallets/screenshot/{wallet_id}",
+        "file": "wallet.py",
+        "line": 111
+      },
+      {
+        "method": "POST",
+        "path": "/expense_categories",
+        "file": "wallet.py",
+        "line": 179
+      },
+      {
+        "method": "PATCH",
+        "path": "/expense_categories/{category_id}",
+        "file": "wallet.py",
+        "line": 214
+      },
+      {
+        "method": "GET",
+        "path": "/expense_categories/list",
+        "file": "wallet.py",
+        "line": 273
+      },
+      {
+        "method": "POST",
+        "path": "/orders/",
+        "file": "core/security.py",
+        "line": 348
+      },
+      {
+        "method": "GET",
+        "path": "/orders/",
+        "file": "core/security.py",
+        "line": 468
+      },
+      {
+        "method": "POST",
+        "path": "/orders/charge/",
+        "file": "core/security.py",
+        "line": 602
+      },
+      {
+        "method": "GET",
+        "path": "/orders/",
+        "file": "core/security.py",
+        "line": 639
+      },
+      {
+        "method": "GET",
+        "path": "/status",
+        "file": "domain/app_version/router.py",
+        "line": 23
+      },
+      {
+        "method": "POST",
+        "path": "/update",
+        "file": "domain/app_version/router.py",
+        "line": 32
+      },
+      {
+        "method": "GET",
+        "path": "/supplies",
+        "file": "domain/catalog/router.py",
+        "line": 41
+      },
+      {
+        "method": "POST",
+        "path": "/supplies",
+        "file": "domain/catalog/router.py",
+        "line": 49
+      },
+      {
+        "method": "PUT",
+        "path": "/supplies/{supply_id}",
+        "file": "domain/catalog/router.py",
+        "line": 58
+      },
+      {
+        "method": "DELETE",
+        "path": "/supplies/{supply_id}",
+        "file": "domain/catalog/router.py",
+        "line": 68
+      },
+      {
+        "method": "GET",
+        "path": "/products",
+        "file": "domain/catalog/router.py",
+        "line": 79
+      },
+      {
+        "method": "POST",
+        "path": "/products",
+        "file": "domain/catalog/router.py",
+        "line": 97
+      },
+      {
+        "method": "PUT",
+        "path": "/products/{product_id}",
+        "file": "domain/catalog/router.py",
+        "line": 106
+      },
+      {
+        "method": "DELETE",
+        "path": "/products/{product_id}",
+        "file": "domain/catalog/router.py",
+        "line": 116
+      },
+      {
+        "method": "POST",
+        "path": "/products/recalculate-costs",
+        "file": "domain/catalog/router.py",
+        "line": 125
+      },
+      {
+        "method": "GET",
+        "path": "/products/catalog-menu",
+        "file": "domain/catalog/router.py",
+        "line": 134
+      },
+      {
+        "method": "GET",
+        "path": "/products/menu-inventory",
+        "file": "domain/catalog/router.py",
+        "line": 146
+      },
+      {
+        "method": "GET",
+        "path": "/products",
+        "file": "domain/catalog/router.py",
+        "line": 155
+      },
+      {
+        "method": "POST",
+        "path": "/products",
+        "file": "domain/catalog/router.py",
+        "line": 168
+      },
+      {
+        "method": "GET",
+        "path": "/products/{product_id}",
+        "file": "domain/catalog/router.py",
+        "line": 177
+      },
+      {
+        "method": "PUT",
+        "path": "/products/{product_id}",
+        "file": "domain/catalog/router.py",
+        "line": 186
+      },
+      {
+        "method": "DELETE",
+        "path": "/products/{product_id}",
+        "file": "domain/catalog/router.py",
+        "line": 196
+      },
+      {
+        "method": "POST",
+        "path": "/products/recalculate-costs",
+        "file": "domain/catalog/router.py",
+        "line": 205
+      },
+      {
+        "method": "GET",
+        "path": "/sales/daily",
+        "file": "domain/dashboard/router.py",
+        "line": 61
+      },
+      {
+        "method": "GET",
+        "path": "/sales/monthly",
+        "file": "domain/dashboard/router.py",
+        "line": 82
+      },
+      {
+        "method": "GET",
+        "path": "/sales/date-range",
+        "file": "domain/dashboard/router.py",
+        "line": 104
+      },
+      {
+        "method": "GET",
+        "path": "/sales/hourly",
+        "file": "domain/dashboard/router.py",
+        "line": 124
+      },
+      {
+        "method": "GET",
+        "path": "/sales/by-category",
+        "file": "domain/dashboard/router.py",
+        "line": 158
+      },
+      {
+        "method": "GET",
+        "path": "/orders/hourly",
+        "file": "domain/dashboard/router.py",
+        "line": 176
+      },
+      {
+        "method": "GET",
+        "path": "/orders/items/list",
+        "file": "domain/dashboard/router.py",
+        "line": 192
+      },
+      {
+        "method": "GET",
+        "path": "/products/top",
+        "file": "domain/dashboard/router.py",
+        "line": 217
+      },
+      {
+        "method": "GET",
+        "path": "/products/top-daily",
+        "file": "domain/dashboard/router.py",
+        "line": 227
+      },
+      {
+        "method": "GET",
+        "path": "/products/sections",
+        "file": "domain/dashboard/router.py",
+        "line": 241
+      },
+      {
+        "method": "GET",
+        "path": "/audit/items-without-code",
+        "file": "domain/dashboard/router.py",
+        "line": 253
+      },
+      {
+        "method": "GET",
+        "path": "/audit/duplicate-orders",
+        "file": "domain/dashboard/router.py",
+        "line": 263
+      },
+      {
+        "method": "GET",
+        "path": "/margins",
+        "file": "domain/dashboard/router.py",
+        "line": 274
+      },
+      {
+        "method": "GET",
+        "path": "/stations",
+        "file": "domain/dashboard/router.py",
+        "line": 290
+      },
+      {
+        "method": "GET",
+        "path": "/catalog-performance",
+        "file": "domain/dashboard/router.py",
+        "line": 305
+      },
+      {
+        "method": "GET",
+        "path": "/supply/daily",
+        "file": "domain/dashboard/router.py",
+        "line": 348
+      },
+      {
+        "method": "GET",
+        "path": "/supply/monthly",
+        "file": "domain/dashboard/router.py",
+        "line": 371
+      },
+      {
+        "method": "GET",
+        "path": "/supply/date-range",
+        "file": "domain/dashboard/router.py",
+        "line": 394
+      },
+      {
+        "method": "GET",
+        "path": "/weekly-pattern",
+        "file": "domain/dashboard/router.py",
+        "line": 419
+      },
+      {
+        "method": "PATCH",
+        "path": "/{order_id}/status",
+        "file": "domain/orders/router.py",
+        "line": 36
+      },
+      {
+        "method": "POST",
+        "path": "/create/",
+        "file": "domain/orders/router.py",
+        "line": 59
+      },
+      {
+        "method": "GET",
+        "path": "/analytics/{slug}",
+        "file": "domain/shortlinks/router.py",
+        "line": 106
+      },
+      {
+        "method": "GET",
+        "path": "/{link_id}",
+        "file": "domain/shortlinks/router.py",
+        "line": 117
+      },
+      {
+        "method": "PUT",
+        "path": "/{link_id}",
+        "file": "domain/shortlinks/router.py",
+        "line": 127
+      },
+      {
+        "method": "DELETE",
+        "path": "/{link_id}",
+        "file": "domain/shortlinks/router.py",
+        "line": 138
+      },
+      {
+        "method": "GET",
+        "path": "/internal/active-links",
+        "file": "domain/shortlinks/router.py",
+        "line": 150
+      },
+      {
+        "method": "POST",
+        "path": "/internal/click-logs/batch",
+        "file": "domain/shortlinks/router.py",
+        "line": 168
+      }
+    ],
+    "total_unprotected": 162
+  }
+}

@@ -10,5 +10,8 @@
         "core/*"
       ]
     }
+  ],
+    "core_paths":[
+    "src/index.js"
   ]
 }

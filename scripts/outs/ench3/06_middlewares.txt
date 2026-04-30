@@ -1,0 +1,8 @@
+====================================================================
+  MIDDLEWARE CONTEXT
+  Project : /home/santosdev/devme/accountant_software/order_manager
+  Generated: 2026-04-24T08:53:08.957468
+====================================================================
+
+Middleware source files  : 0
+Routes with middleware   : 0

@@ -1,0 +1,69 @@
+====================================================================
+  CODE SIGNALS — SECURITY HEATMAP
+  Project : /home/santosdev/devme/accountant_software/vue-order-app
+  Generated: 2026-04-24T11:38:17.231527
+====================================================================
+
+Total functions : 137  classes: 2  TODOs: 0
+Files with signals: 4
+
+Score legend: sinks×3  sqli×4  authz_gap×3  err_leak×2  source×1  crypto×1  todo×1
+
+────────────────────────────────────────────────────────────────────
+[SECURITY HEATMAP — top files by risk score]
+────────────────────────────────────────────────────────────────────
+  SCORE  FILE                                              SIGNALS PRESENT
+  ──────────────────────────────────────────────────────────────────────────────────────────
+      8  src/services/axiosConfig.js                       sources, missing_input_validation
+      7  src/services/authService.js                       sources, missing_input_validation
+      7  src/services/errorHandlerService.js               sources, missing_input_validation
+      5  src/router.js                                     sources, missing_input_validation
+
+────────────────────────────────────────────────────────────────────
+[PER-FILE SIGNAL DETAIL]
+────────────────────────────────────────────────────────────────────
+
+File  : src/services/axiosConfig.js
+Meta  : 121 lines  complexity=13  score=8
+  [INPUT SOURCES]    location.search×1, location.href×1, document.cookie×2, URLSearchParams×1
+
+File  : src/services/authService.js
+Meta  : 221 lines  complexity=11  score=7
+  [INPUT SOURCES]    location.href×1, document.cookie×1, localStorage×2
+
+File  : src/services/errorHandlerService.js
+Meta  : 675 lines  complexity=38  score=7
+  [INPUT SOURCES]    location.href×4
+
+File  : src/router.js
+Meta  : 356 lines  complexity=9  score=5
+  [INPUT SOURCES]    document.cookie×1, localStorage×1
+
+────────────────────────────────────────────────────────────────────
+[LARGEST FILES]
+────────────────────────────────────────────────────────────────────
+   2446 lines  src/views/orders/OrderForm.vue
+   2439 lines  src/components/orders/ProductModalProductCategory.vue
+   2097 lines  src/components/orders/ProductModalPlaceCategory.vue
+   1349 lines  src/views/DailyFinanctial.vue
+   1148 lines  src/views/admin/wallet/CashDiary.vue
+   1116 lines  src/components/dashboard/FilterPanel.vue
+    997 lines  src/views/admin/production/ProductionRegister.vue
+    891 lines  src/views/admin/wallet/FullTransactions.vue
+    758 lines  src/views/admin/sales/ListSales.vue
+    688 lines  src/views/DashboardView.vue
+
+────────────────────────────────────────────────────────────────────
+[MOST COMPLEX FILES]
+────────────────────────────────────────────────────────────────────
+   FNS    CX  FILE
+    17     2  src/services/walletService.js
+    12    11  src/services/authService.js
+    11     0  src/services/productionService.js
+     9     0  src/services/catalogService.js
+     9     3  src/services/salesService.js
+     8     9  src/composables/useFormProtection.js
+     8     3  src/stores/dashboard.ts
+     7    11  src/composables/useAppVersion.ts
+     7     8  src/utils/shortlinks.ts
+     6     0  src/composables/useShortlinks.ts

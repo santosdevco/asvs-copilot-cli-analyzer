@@ -1,0 +1,1 @@
+SECURITY: 1 total findings\nEXPOSED_ENV: .env\n

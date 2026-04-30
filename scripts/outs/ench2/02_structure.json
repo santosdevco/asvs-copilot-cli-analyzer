@@ -1,0 +1,2184 @@
+{
+  "_meta": {
+    "generated_at": "2026-04-24T08:45:43.144010",
+    "root": "/home/santosdev/devme/accountant_software/order_manager",
+    "scanner_version": "3.0.0",
+    "section": "structure"
+  },
+  "structure": {
+    "tree": {
+      "name": "order_manager",
+      "type": "directory",
+      "children": [
+        {
+          "name": "bills",
+          "type": "directory",
+          "children": [
+            {
+              "name": "67007dbbb120ce72319e252e",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "Instrumentos y equipos _Instrumento de cocina_637af411b1654546b670cf09fbaa2a41.dng",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 57157781,
+                  "lines": 5191
+                }
+              ],
+              "summary": {
+                "files": 1,
+                "bytes": 57157781,
+                "lines": 5191
+              }
+            },
+            {
+              "name": "67007f1426ef0a0cb14fd86e",
+              "type": "directory",
+              "children": [],
+              "summary": {
+                "files": 0,
+                "bytes": 0,
+                "lines": 0
+              }
+            },
+            {
+              "name": "chicken-2.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 7560,
+              "lines": 76
+            },
+            {
+              "name": "chicken-mini.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 7564,
+              "lines": 76
+            },
+            {
+              "name": "chicken-small.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 7560,
+              "lines": 76
+            },
+            {
+              "name": "chicken-tiny.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 7562,
+              "lines": 76
+            },
+            {
+              "name": "chicken-v2-square.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 7487,
+              "lines": 76
+            },
+            {
+              "name": "chicken-v2.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 7562,
+              "lines": 76
+            },
+            {
+              "name": "fish-mini.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 4822,
+              "lines": 50
+            },
+            {
+              "name": "fish-small.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 4818,
+              "lines": 50
+            },
+            {
+              "name": "fish-v2-square.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 4771,
+              "lines": 50
+            },
+            {
+              "name": "fish-v2.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 4820,
+              "lines": 50
+            },
+            {
+              "name": "fish.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 4818,
+              "lines": 50
+            },
+            {
+              "name": "process-svgrepo-com-square.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 2316,
+              "lines": 2
+            },
+            {
+              "name": "process-svgrepo-com.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 2316,
+              "lines": 2
+            },
+            {
+              "name": "scaffle-square.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 1051,
+              "lines": 21
+            },
+            {
+              "name": "scaffle.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 1051,
+              "lines": 21
+            },
+            {
+              "name": "trituracion-plumas.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 1586,
+              "lines": 31
+            }
+          ],
+          "summary": {
+            "files": 17,
+            "bytes": 57235445,
+            "lines": 5974
+          }
+        },
+        {
+          "name": "bills_old",
+          "type": "directory",
+          "children": [
+            {
+              "name": "67007dbbb120ce72319e252e",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "Instrumentos y equipos _Instrumento de cocina_637af411b1654546b670cf09fbaa2a41.dng",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 57157781,
+                  "lines": 5191
+                }
+              ],
+              "summary": {
+                "files": 1,
+                "bytes": 57157781,
+                "lines": 5191
+              }
+            },
+            {
+              "name": "67007f1426ef0a0cb14fd86e",
+              "type": "directory",
+              "children": [],
+              "summary": {
+                "files": 0,
+                "bytes": 0,
+                "lines": 0
+              }
+            },
+            {
+              "name": "stage1",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "addiction-cocain-drug-2-square.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 2692,
+                  "lines": 76
+                },
+                {
+                  "name": "addiction-cocain-drug-2.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 2692,
+                  "lines": 39
+                },
+                {
+                  "name": "centrifuge-device-biomedical-centrifuge-square.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 2752,
+                  "lines": 36
+                },
+                {
+                  "name": "centrifuge-device-biomedical-centrifuge.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 2752,
+                  "lines": 36
+                },
+                {
+                  "name": "feather-square.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 1326,
+                  "lines": 20
+                },
+                {
+                  "name": "feather.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 1345,
+                  "lines": 20
+                },
+                {
+                  "name": "snowflake-square.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 941,
+                  "lines": 6
+                },
+                {
+                  "name": "snowflake.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 946,
+                  "lines": 6
+                },
+                {
+                  "name": "test-tube-empty-square.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 746,
+                  "lines": 15
+                },
+                {
+                  "name": "test-tube-empty.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 755,
+                  "lines": 13
+                },
+                {
+                  "name": "test-tube-transfer.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 1089,
+                  "lines": 2
+                },
+                {
+                  "name": "trituracion-plumas-square.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 1586,
+                  "lines": 31
+                },
+                {
+                  "name": "trituracion-plumas.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 1586,
+                  "lines": 31
+                },
+                {
+                  "name": "water-drop-square.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 3296,
+                  "lines": 3
+                },
+                {
+                  "name": "water-drop.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 3298,
+                  "lines": 3
+                }
+              ],
+              "summary": {
+                "files": 15,
+                "bytes": 27802,
+                "lines": 337
+              }
+            },
+            {
+              "name": "stage2",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "fire-square.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 1102,
+                  "lines": 5
+                },
+                {
+                  "name": "fire.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 1102,
+                  "lines": 5
+                },
+                {
+                  "name": "fish-bone-square.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 917,
+                  "lines": 10
+                },
+                {
+                  "name": "fish-bone.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 917,
+                  "lines": 10
+                },
+                {
+                  "name": "hot-surface-square.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 895,
+                  "lines": 6
+                },
+                {
+                  "name": "hot-surface.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 895,
+                  "lines": 6
+                },
+                {
+                  "name": "mortar-square.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 642,
+                  "lines": 7
+                },
+                {
+                  "name": "mortar.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 642,
+                  "lines": 7
+                },
+                {
+                  "name": "powder-square.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 2424,
+                  "lines": 23
+                },
+                {
+                  "name": "powder.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 2424,
+                  "lines": 23
+                },
+                {
+                  "name": "trituracion-huesos-square.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 1837,
+                  "lines": 36
+                },
+                {
+                  "name": "trituracion-plumas-square.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 1620,
+                  "lines": 31
+                },
+                {
+                  "name": "trituracion-plumas.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 1620,
+                  "lines": 31
+                },
+                {
+                  "name": "water-drop-square.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 3840,
+                  "lines": 3
+                },
+                {
+                  "name": "water-drop.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 3840,
+                  "lines": 3
+                }
+              ],
+              "summary": {
+                "files": 15,
+                "bytes": 24717,
+                "lines": 206
+              }
+            },
+            {
+              "name": "stage3",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "beaker-square.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 9198,
+                  "lines": 30
+                },
+                {
+                  "name": "beaker.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 9198,
+                  "lines": 30
+                },
+                {
+                  "name": "ice-cube-square.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 1836,
+                  "lines": 5
+                },
+                {
+                  "name": "ice-cube-tray-square.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 3128,
+                  "lines": 38
+                },
+                {
+                  "name": "ice-cube-tray.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 3128,
+                  "lines": 38
+                },
+                {
+                  "name": "ice-cube.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 1836,
+                  "lines": 5
+                },
+                {
+                  "name": "jelly-v2-square.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 4201,
+                  "lines": 31
+                },
+                {
+                  "name": "jelly-v2.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 4201,
+                  "lines": 31
+                },
+                {
+                  "name": "jelly.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 4201,
+                  "lines": 31
+                },
+                {
+                  "name": "nitrogen-square.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 4662,
+                  "lines": 23
+                },
+                {
+                  "name": "nitrogen.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 4662,
+                  "lines": 23
+                },
+                {
+                  "name": "pipette-square.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 6537,
+                  "lines": 4
+                },
+                {
+                  "name": "pipette.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 6537,
+                  "lines": 4
+                },
+                {
+                  "name": "propeller-square.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 2866,
+                  "lines": 7
+                },
+                {
+                  "name": "propeller.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 2866,
+                  "lines": 7
+                },
+                {
+                  "name": "scaffle-square.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 1836,
+                  "lines": 22
+                },
+                {
+                  "name": "scaffle.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 1836,
+                  "lines": 22
+                },
+                {
+                  "name": "sine-wave-square.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 1181,
+                  "lines": 24
+                },
+                {
+                  "name": "sine-wave.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 1181,
+                  "lines": 24
+                },
+                {
+                  "name": "vortex-square.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 2350,
+                  "lines": 2
+                },
+                {
+                  "name": "vortex.svg",
+                  "type": "file",
+                  "lang": null,
+                  "bytes": 2350,
+                  "lines": 2
+                }
+              ],
+              "summary": {
+                "files": 21,
+                "bytes": 79791,
+                "lines": 403
+              }
+            },
+            {
+              "name": "chicken-2.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 7560,
+              "lines": 76
+            },
+            {
+              "name": "chicken-mini.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 7564,
+              "lines": 76
+            },
+            {
+              "name": "chicken-small.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 7560,
+              "lines": 76
+            },
+            {
+              "name": "chicken-tiny.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 7562,
+              "lines": 76
+            },
+            {
+              "name": "chicken-v2-square.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 7487,
+              "lines": 76
+            },
+            {
+              "name": "chicken-v2.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 7562,
+              "lines": 76
+            },
+            {
+              "name": "fish-mini.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 4822,
+              "lines": 50
+            },
+            {
+              "name": "fish-small.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 4818,
+              "lines": 50
+            },
+            {
+              "name": "fish-v2-square.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 4771,
+              "lines": 50
+            },
+            {
+              "name": "fish-v2.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 4820,
+              "lines": 50
+            },
+            {
+              "name": "fish.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 4818,
+              "lines": 50
+            },
+            {
+              "name": "process-svgrepo-com-square.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 2316,
+              "lines": 2
+            },
+            {
+              "name": "process-svgrepo-com.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 2316,
+              "lines": 2
+            },
+            {
+              "name": "scaffle-square.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 1051,
+              "lines": 21
+            },
+            {
+              "name": "scaffle.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 1051,
+              "lines": 21
+            },
+            {
+              "name": "trituracion-plumas.svg",
+              "type": "file",
+              "lang": null,
+              "bytes": 1586,
+              "lines": 31
+            }
+          ],
+          "summary": {
+            "files": 68,
+            "bytes": 57367755,
+            "lines": 6920
+          }
+        },
+        {
+          "name": "core",
+          "type": "directory",
+          "children": [
+            {
+              "name": "__init__.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 39,
+              "lines": 1
+            },
+            {
+              "name": "audit.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 3734,
+              "lines": 103
+            },
+            {
+              "name": "database.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 2590,
+              "lines": 71
+            },
+            {
+              "name": "security.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 23648,
+              "lines": 677
+            },
+            {
+              "name": "tenant_registry.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 5782,
+              "lines": 157
+            },
+            {
+              "name": "types.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 1878,
+              "lines": 55
+            }
+          ],
+          "summary": {
+            "files": 6,
+            "bytes": 37671,
+            "lines": 1064
+          }
+        },
+        {
+          "name": "domain",
+          "type": "directory",
+          "children": [
+            {
+              "name": "app_version",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "__init__.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 0,
+                  "lines": 0
+                },
+                {
+                  "name": "models.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 403,
+                  "lines": 15
+                },
+                {
+                  "name": "repository.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 1018,
+                  "lines": 34
+                },
+                {
+                  "name": "router.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 1712,
+                  "lines": 47
+                },
+                {
+                  "name": "schemas.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 383,
+                  "lines": 16
+                },
+                {
+                  "name": "service.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 1951,
+                  "lines": 58
+                }
+              ],
+              "summary": {
+                "files": 6,
+                "bytes": 5467,
+                "lines": 170
+              }
+            },
+            {
+              "name": "catalog",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "__init__.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 0,
+                  "lines": 0
+                },
+                {
+                  "name": "consumption.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 4546,
+                  "lines": 129
+                },
+                {
+                  "name": "models.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 4868,
+                  "lines": 142
+                },
+                {
+                  "name": "repository.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 3240,
+                  "lines": 95
+                },
+                {
+                  "name": "router.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 7262,
+                  "lines": 212
+                },
+                {
+                  "name": "schemas.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 3075,
+                  "lines": 80
+                },
+                {
+                  "name": "service.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 15444,
+                  "lines": 366
+                }
+              ],
+              "summary": {
+                "files": 7,
+                "bytes": 38435,
+                "lines": 1024
+              }
+            },
+            {
+              "name": "dashboard",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "base",
+                  "type": "directory",
+                  "children": [
+                    {
+                      "name": "__init__.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 129,
+                      "lines": 7
+                    },
+                    {
+                      "name": "pipeline_builder.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 6301,
+                      "lines": 174
+                    }
+                  ],
+                  "summary": {
+                    "files": 2,
+                    "bytes": 6430,
+                    "lines": 181
+                  }
+                },
+                {
+                  "name": "mixins",
+                  "type": "directory",
+                  "children": [
+                    {
+                      "name": "__init__.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 511,
+                      "lines": 19
+                    },
+                    {
+                      "name": "items_processing_mixin.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 5556,
+                      "lines": 164
+                    },
+                    {
+                      "name": "ranking_mixin.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 4430,
+                      "lines": 132
+                    },
+                    {
+                      "name": "sales_pipeline_mixin.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 6659,
+                      "lines": 193
+                    },
+                    {
+                      "name": "temporal_grouping_mixin.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 5652,
+                      "lines": 178
+                    },
+                    {
+                      "name": "timezone_mixin.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 3422,
+                      "lines": 103
+                    }
+                  ],
+                  "summary": {
+                    "files": 6,
+                    "bytes": 26230,
+                    "lines": 789
+                  }
+                },
+                {
+                  "name": "pipelines",
+                  "type": "directory",
+                  "children": [
+                    {
+                      "name": "__init__.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 1984,
+                      "lines": 46
+                    },
+                    {
+                      "name": "catalog_performance.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 3451,
+                      "lines": 106
+                    },
+                    {
+                      "name": "category_sales.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 4753,
+                      "lines": 138
+                    },
+                    {
+                      "name": "daily_sales.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 1658,
+                      "lines": 48
+                    },
+                    {
+                      "name": "daily_top_products.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 7640,
+                      "lines": 217
+                    },
+                    {
+                      "name": "date_range_sales.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 1947,
+                      "lines": 53
+                    },
+                    {
+                      "name": "duplicate_orders.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 5390,
+                      "lines": 148
+                    },
+                    {
+                      "name": "hourly_orders.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 7881,
+                      "lines": 206
+                    },
+                    {
+                      "name": "hourly_sales.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 9132,
+                      "lines": 224
+                    },
+                    {
+                      "name": "items_without_code.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 5192,
+                      "lines": 140
+                    },
+                    {
+                      "name": "margin_by_product.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 3859,
+                      "lines": 113
+                    },
+                    {
+                      "name": "monthly_sales.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 1730,
+                      "lines": 50
+                    },
+                    {
+                      "name": "order_items_list.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 7783,
+                      "lines": 202
+                    },
+                    {
+                      "name": "relate_product_sections.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 4807,
+                      "lines": 135
+                    },
+                    {
+                      "name": "station_performance.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 3418,
+                      "lines": 106
+                    },
+                    {
+                      "name": "supply_consumption.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 5331,
+                      "lines": 153
+                    },
+                    {
+                      "name": "supply_date_range.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 4111,
+                      "lines": 116
+                    },
+                    {
+                      "name": "top_products.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 8295,
+                      "lines": 236
+                    },
+                    {
+                      "name": "validate_monthly_sales.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 3331,
+                      "lines": 103
+                    },
+                    {
+                      "name": "weekly_pattern.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 6874,
+                      "lines": 203
+                    }
+                  ],
+                  "summary": {
+                    "files": 20,
+                    "bytes": 98567,
+                    "lines": 2743
+                  }
+                },
+                {
+                  "name": "__init__.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 507,
+                  "lines": 14
+                },
+                {
+                  "name": "router.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 19002,
+                  "lines": 444
+                },
+                {
+                  "name": "schemas.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 8111,
+                  "lines": 262
+                },
+                {
+                  "name": "service.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 18736,
+                  "lines": 435
+                }
+              ],
+              "summary": {
+                "files": 32,
+                "bytes": 177583,
+                "lines": 4868
+              }
+            },
+            {
+              "name": "orders",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "__init__.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 0,
+                  "lines": 0
+                },
+                {
+                  "name": "models.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 2644,
+                  "lines": 93
+                },
+                {
+                  "name": "repository.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 1861,
+                  "lines": 55
+                },
+                {
+                  "name": "router.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 2544,
+                  "lines": 79
+                },
+                {
+                  "name": "schemas.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 2751,
+                  "lines": 79
+                },
+                {
+                  "name": "service.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 12744,
+                  "lines": 296
+                },
+                {
+                  "name": "TODO.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 881,
+                  "lines": 19
+                }
+              ],
+              "summary": {
+                "files": 7,
+                "bytes": 23425,
+                "lines": 621
+              }
+            },
+            {
+              "name": "shortlinks",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "pipelines",
+                  "type": "directory",
+                  "children": [
+                    {
+                      "name": "__init__.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 0,
+                      "lines": 0
+                    },
+                    {
+                      "name": "clicks_timeseries.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 2214,
+                      "lines": 77
+                    },
+                    {
+                      "name": "clicks_total.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 1037,
+                      "lines": 43
+                    },
+                    {
+                      "name": "device_distribution.py",
+                      "type": "file",
+                      "lang": "Python",
+                      "bytes": 1969,
+                      "lines": 66
+                    }
+                  ],
+                  "summary": {
+                    "files": 4,
+                    "bytes": 5220,
+                    "lines": 186
+                  }
+                },
+                {
+                  "name": "__init__.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 0,
+                  "lines": 0
+                },
+                {
+                  "name": "analytics_service.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 2884,
+                  "lines": 85
+                },
+                {
+                  "name": "models.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 3701,
+                  "lines": 98
+                },
+                {
+                  "name": "repository.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 3411,
+                  "lines": 96
+                },
+                {
+                  "name": "router.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 6820,
+                  "lines": 198
+                },
+                {
+                  "name": "schemas.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 2378,
+                  "lines": 72
+                },
+                {
+                  "name": "service.py",
+                  "type": "file",
+                  "lang": "Python",
+                  "bytes": 2260,
+                  "lines": 63
+                }
+              ],
+              "summary": {
+                "files": 11,
+                "bytes": 26674,
+                "lines": 798
+              }
+            },
+            {
+              "name": "__init__.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 0,
+              "lines": 0
+            }
+          ],
+          "summary": {
+            "files": 64,
+            "bytes": 271584,
+            "lines": 7481
+          }
+        },
+        {
+          "name": "logs",
+          "type": "directory",
+          "children": [
+            {
+              "name": "app.log",
+              "type": "file",
+              "lang": null,
+              "bytes": 5293387,
+              "lines": 16912
+            }
+          ],
+          "summary": {
+            "files": 1,
+            "bytes": 5293387,
+            "lines": 16912
+          }
+        },
+        {
+          "name": "migrations",
+          "type": "directory",
+          "children": [
+            {
+              "name": "001_add_session_tokens_and_roles.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 4950,
+              "lines": 132
+            },
+            {
+              "name": "analyze_recipes_products.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 4936,
+              "lines": 157
+            },
+            {
+              "name": "backfill_consumption_snapshots.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 15371,
+              "lines": 381
+            },
+            {
+              "name": "backfill_order_catalog_category.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 8489,
+              "lines": 235
+            },
+            {
+              "name": "check_esquite.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 954,
+              "lines": 30
+            },
+            {
+              "name": "compress_bills.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 11143,
+              "lines": 318
+            },
+            {
+              "name": "create_audit_indexes.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 2123,
+              "lines": 60
+            },
+            {
+              "name": "create_catalog_indexes.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 2853,
+              "lines": 70
+            },
+            {
+              "name": "fix_papa_config.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 3826,
+              "lines": 72
+            },
+            {
+              "name": "fix_supply_ids.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 1196,
+              "lines": 39
+            },
+            {
+              "name": "insert_from_json.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 3094,
+              "lines": 90
+            },
+            {
+              "name": "inventory.json",
+              "type": "file",
+              "lang": "JSON",
+              "bytes": 48860,
+              "lines": 2164
+            },
+            {
+              "name": "map_extras_to_supplies_old.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 9702,
+              "lines": 274
+            },
+            {
+              "name": "migrate_database.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 10130,
+              "lines": 233
+            },
+            {
+              "name": "migrate_orders_catalog_categoryy.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 5783,
+              "lines": 156
+            },
+            {
+              "name": "migrate_user_references.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 15871,
+              "lines": 411
+            },
+            {
+              "name": "migrate_user_refs_simple.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 17850,
+              "lines": 501
+            },
+            {
+              "name": "product-catalog copy.json",
+              "type": "file",
+              "lang": "JSON",
+              "bytes": 16780,
+              "lines": 643
+            },
+            {
+              "name": "product-catalog.json",
+              "type": "file",
+              "lang": "JSON",
+              "bytes": 16780,
+              "lines": 643
+            },
+            {
+              "name": "recetas.json",
+              "type": "file",
+              "lang": "JSON",
+              "bytes": 66788,
+              "lines": 2517
+            },
+            {
+              "name": "recipe_product_mapping.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 6769,
+              "lines": 182
+            },
+            {
+              "name": "seed_all_recipe_variations.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 20202,
+              "lines": 491
+            },
+            {
+              "name": "seed_catalog.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 27510,
+              "lines": 673
+            },
+            {
+              "name": "seed_catalog_old.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 19833,
+              "lines": 526
+            },
+            {
+              "name": "seed_catalog_v2.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 28404,
+              "lines": 724
+            },
+            {
+              "name": "seed_catalog_v3.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 19184,
+              "lines": 541
+            },
+            {
+              "name": "seed_simple.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 20959,
+              "lines": 552
+            },
+            {
+              "name": "set_catalog_categories.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 3611,
+              "lines": 108
+            },
+            {
+              "name": "validation_products_v3.json",
+              "type": "file",
+              "lang": "JSON",
+              "bytes": 234281,
+              "lines": 9398
+            }
+          ],
+          "summary": {
+            "files": 29,
+            "bytes": 648232,
+            "lines": 22321
+          }
+        },
+        {
+          "name": "production",
+          "type": "directory",
+          "children": [],
+          "summary": {
+            "files": 0,
+            "bytes": 0,
+            "lines": 0
+          }
+        },
+        {
+          "name": "queries",
+          "type": "directory",
+          "children": [
+            {
+              "name": "duplcated_orders.json",
+              "type": "file",
+              "lang": "JSON",
+              "bytes": 1733,
+              "lines": 83
+            },
+            {
+              "name": "list_items_without_code.json",
+              "type": "file",
+              "lang": "JSON",
+              "bytes": 811,
+              "lines": 46
+            },
+            {
+              "name": "list_order_items.json",
+              "type": "file",
+              "lang": "JSON",
+              "bytes": 1351,
+              "lines": 60
+            },
+            {
+              "name": "orders_per_hour.json",
+              "type": "file",
+              "lang": "JSON",
+              "bytes": 2048,
+              "lines": 71
+            },
+            {
+              "name": "relate_product_sections.json",
+              "type": "file",
+              "lang": "JSON",
+              "bytes": 961,
+              "lines": 44
+            },
+            {
+              "name": "sales_by_category.json",
+              "type": "file",
+              "lang": "JSON",
+              "bytes": 670,
+              "lines": 46
+            },
+            {
+              "name": "sales_by_category_general.json",
+              "type": "file",
+              "lang": "JSON",
+              "bytes": 1495,
+              "lines": 65
+            },
+            {
+              "name": "sales_per_day.json",
+              "type": "file",
+              "lang": "JSON",
+              "bytes": 1251,
+              "lines": 56
+            },
+            {
+              "name": "sales_per_day_no_category.json",
+              "type": "file",
+              "lang": "JSON",
+              "bytes": 734,
+              "lines": 42
+            },
+            {
+              "name": "sales_per_day_range.json",
+              "type": "file",
+              "lang": "JSON",
+              "bytes": 1397,
+              "lines": 64
+            },
+            {
+              "name": "sales_per_hour.json",
+              "type": "file",
+              "lang": "JSON",
+              "bytes": 1703,
+              "lines": 63
+            },
+            {
+              "name": "sales_per_month.json",
+              "type": "file",
+              "lang": "JSON",
+              "bytes": 1098,
+              "lines": 52
+            },
+            {
+              "name": "second.json",
+              "type": "file",
+              "lang": "JSON",
+              "bytes": 1658,
+              "lines": 62
+            },
+            {
+              "name": "top_products.json",
+              "type": "file",
+              "lang": "JSON",
+              "bytes": 1016,
+              "lines": 55
+            },
+            {
+              "name": "top_products_daily.json",
+              "type": "file",
+              "lang": "JSON",
+              "bytes": 1788,
+              "lines": 87
+            }
+          ],
+          "summary": {
+            "files": 15,
+            "bytes": 19714,
+            "lines": 896
+          }
+        },
+        {
+          "name": "templates",
+          "type": "directory",
+          "children": [
+            {
+              "name": "test_websocket.html",
+              "type": "file",
+              "lang": "HTML",
+              "bytes": 2451,
+              "lines": 59
+            },
+            {
+              "name": "ws_form.html",
+              "type": "file",
+              "lang": "HTML",
+              "bytes": 2303,
+              "lines": 63
+            }
+          ],
+          "summary": {
+            "files": 2,
+            "bytes": 4754,
+            "lines": 122
+          }
+        },
+        {
+          "name": "tests",
+          "type": "directory",
+          "children": [
+            {
+              "name": "conftest.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 7285,
+              "lines": 247
+            },
+            {
+              "name": "test_auth_current.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 14223,
+              "lines": 368
+            },
+            {
+              "name": "test_daily_control.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 40043,
+              "lines": 1231
+            },
+            {
+              "name": "test_daily_control_current.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 15476,
+              "lines": 408
+            },
+            {
+              "name": "test_dashboard_filters.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 9722,
+              "lines": 240
+            },
+            {
+              "name": "test_domain_orders_service.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 4559,
+              "lines": 153
+            },
+            {
+              "name": "test_orders_current.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 12624,
+              "lines": 290
+            },
+            {
+              "name": "test_orders_integration_simple.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 8356,
+              "lines": 199
+            },
+            {
+              "name": "test_production.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 29205,
+              "lines": 748
+            },
+            {
+              "name": "test_production_current.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 13342,
+              "lines": 332
+            },
+            {
+              "name": "test_transactions_current.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 13157,
+              "lines": 344
+            },
+            {
+              "name": "tests.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 1955,
+              "lines": 58
+            },
+            {
+              "name": "week_day_test.py",
+              "type": "file",
+              "lang": "Python",
+              "bytes": 8101,
+              "lines": 198
+            }
+          ],
+          "summary": {
+            "files": 13,
+            "bytes": 178048,
+            "lines": 4816
+          }
+        },
+        {
+          "name": ".env",
+          "type": "file",
+          "lang": null,
+          "bytes": 1584,
+          "lines": 36
+        },
+        {
+          "name": ".env.dev",
+          "type": "file",
+          "lang": null,
+          "bytes": 1447,
+          "lines": 32
+        },
+        {
+          "name": ".env.qq",
+          "type": "file",
+          "lang": null,
+          "bytes": 1388,
+          "lines": 31
+        },
+        {
+          "name": ".gitignore",
+          "type": "file",
+          "lang": null,
+          "bytes": 286,
+          "lines": 29
+        },
+        {
+          "name": "accountant_software.code-workspace",
+          "type": "file",
+          "lang": null,
+          "bytes": 210,
+          "lines": 14
+        },
+        {
+          "name": "auth.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 24411,
+          "lines": 629
+        },
+        {
+          "name": "BEANIE_MIGRATION.md",
+          "type": "file",
+          "lang": "Markdown",
+          "bytes": 6284,
+          "lines": 193
+        },
+        {
+          "name": "broadcast.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 660,
+          "lines": 24
+        },
+        {
+          "name": "client_secret_98201597806-u7is3ihlin4o332c1ras4n6p91v1iav7.apps.googleusercontent.com.json",
+          "type": "file",
+          "lang": "JSON",
+          "bytes": 648,
+          "lines": 17
+        },
+        {
+          "name": "client_secret_enchoclate.rest.json",
+          "type": "file",
+          "lang": "JSON",
+          "bytes": 733,
+          "lines": 18
+        },
+        {
+          "name": "create_indexes.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 12549,
+          "lines": 290
+        },
+        {
+          "name": "daily_control.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 29836,
+          "lines": 878
+        },
+        {
+          "name": "DDD_BEANIE_STRATEGY.md",
+          "type": "file",
+          "lang": "Markdown",
+          "bytes": 22177,
+          "lines": 613
+        },
+        {
+          "name": "docker-compose.test.yml",
+          "type": "file",
+          "lang": "YAML",
+          "bytes": 907,
+          "lines": 36
+        },
+        {
+          "name": "docker-compose.yaml",
+          "type": "file",
+          "lang": "YAML",
+          "bytes": 933,
+          "lines": 44
+        },
+        {
+          "name": "Dockerfile.dev",
+          "type": "file",
+          "lang": null,
+          "bytes": 975,
+          "lines": 30
+        },
+        {
+          "name": "Dockerfile.test",
+          "type": "file",
+          "lang": null,
+          "bytes": 665,
+          "lines": 30
+        },
+        {
+          "name": "employees_payroll.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 765,
+          "lines": 16
+        },
+        {
+          "name": "formatters.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 3329,
+          "lines": 105
+        },
+        {
+          "name": "gmail.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 3079,
+          "lines": 69
+        },
+        {
+          "name": "gmail_pkce_state.json",
+          "type": "file",
+          "lang": "JSON",
+          "bytes": 205,
+          "lines": 1
+        },
+        {
+          "name": "gmail_service.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 5248,
+          "lines": 159
+        },
+        {
+          "name": "gmail_token.json",
+          "type": "file",
+          "lang": "JSON",
+          "bytes": 645,
+          "lines": 1
+        },
+        {
+          "name": "google_sheets.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 1317,
+          "lines": 37
+        },
+        {
+          "name": "html_formatters.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 5529,
+          "lines": 121
+        },
+        {
+          "name": "inventory.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 13229,
+          "lines": 365
+        },
+        {
+          "name": "invetory_models.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 3838,
+          "lines": 133
+        },
+        {
+          "name": "log.txt",
+          "type": "file",
+          "lang": null,
+          "bytes": 0,
+          "lines": 0
+        },
+        {
+          "name": "main.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 3480,
+          "lines": 84
+        },
+        {
+          "name": "managers.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 0,
+          "lines": 0
+        },
+        {
+          "name": "models.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 13155,
+          "lines": 415
+        },
+        {
+          "name": "orders.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 15180,
+          "lines": 462
+        },
+        {
+          "name": "password_policy.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 6074,
+          "lines": 179
+        },
+        {
+          "name": "production.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 28750,
+          "lines": 777
+        },
+        {
+          "name": "production_models.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 5001,
+          "lines": 166
+        },
+        {
+          "name": "pytest.ini",
+          "type": "file",
+          "lang": null,
+          "bytes": 807,
+          "lines": 29
+        },
+        {
+          "name": "README.MD",
+          "type": "file",
+          "lang": "Markdown",
+          "bytes": 237,
+          "lines": 6
+        },
+        {
+          "name": "rename_collections.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 4275,
+          "lines": 120
+        },
+        {
+          "name": "requirements.txt",
+          "type": "file",
+          "lang": null,
+          "bytes": 481,
+          "lines": 25
+        },
+        {
+          "name": "rest.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 16031,
+          "lines": 438
+        },
+        {
+          "name": "schemas.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 1593,
+          "lines": 57
+        },
+        {
+          "name": "seed_catalog.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 28718,
+          "lines": 701
+        },
+        {
+          "name": "settings.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 5283,
+          "lines": 129
+        },
+        {
+          "name": "settings_logger.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 1633,
+          "lines": 38
+        },
+        {
+          "name": "test_requirements.txt",
+          "type": "file",
+          "lang": null,
+          "bytes": 106,
+          "lines": 6
+        },
+        {
+          "name": "test_runner.sh",
+          "type": "file",
+          "lang": "Shell",
+          "bytes": 8280,
+          "lines": 266
+        },
+        {
+          "name": "transactions.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 28719,
+          "lines": 730
+        },
+        {
+          "name": "users.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 15479,
+          "lines": 479
+        },
+        {
+          "name": "utils.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 9303,
+          "lines": 275
+        },
+        {
+          "name": "wallet.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 8903,
+          "lines": 280
+        },
+        {
+          "name": "websockets_router.py",
+          "type": "file",
+          "lang": "Python",
+          "bytes": 11541,
+          "lines": 257
+        }
+      ],
+      "summary": {
+        "files": 266,
+        "bytes": 121412496,
+        "lines": 76376
+      },
+      "path": "/home/santosdev/devme/accountant_software/order_manager"
+    },
+    "entry_points": [
+      "main.py"
+    ],
+    "semantic_folders": [
+      "core",
+      "domain",
+      "migrations",
+      "templates",
+      "tests"
+    ],
+    "infrastructure_files": [
+      "docker-compose.yaml"
+    ],
+    "total_files": 266,
+    "test_files_count": 22,
+    "source_files_count": 244,
+    "test_ratio": 0.08
+  }
+}

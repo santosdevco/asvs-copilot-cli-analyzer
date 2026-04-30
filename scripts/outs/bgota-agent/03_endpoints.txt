@@ -1,0 +1,1 @@
+ENDPOINTS: 4 total\nDOMAINS: *, callback, mfa\n

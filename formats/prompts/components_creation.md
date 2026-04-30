@@ -10,8 +10,8 @@
 
 	<strict_instructions>
 		<item id="1">
-			Analiza el CONTEXTO ESTÁTICO DE LA APLICACIÓN y, cuando sea necesario, revisa rutas de código
-			referenciadas en el static context. Agrupa archivos en componentes lógicos de alto nivel
+			Analiza el CONTEXTO ESTÁTICO DE LA APLICACIÓN y complementa leyendo rutas de código
+			referenciadas en el static context. Confirma que estas leyendo las rutas correctas. Agrupa archivos en componentes lógicos de alto nivel
 			(ej. Módulo de Autenticación, Procesamiento de Pagos, Frontend UI).
 		</item>
 		<item id="2">
@@ -46,6 +46,9 @@
 		<item id="10">
 			Sigue estrictamente los contratos de salida provistos.
 		</item>
+		<item id="11">
+			core_paths, es la lista de archivos generales que siempre deben tenerse en cuenta para cualquier componente.
+		</item>
 	</strict_instructions>
 
 	<allowed_asset_tags><![CDATA[
@@ -54,16 +57,16 @@
 
 	<outputs>
 		<file required="true">outputs/{{app_name}}/components/index.json</file>
-		<file required="true" repeat="for_each_component" condition="new_or_correction_needed">outputs/{{app_name}}/components/{component_key}/context.xml</file>
+		<file required="true" repeat="for_each_component" condition="new_or_correction_needed">outputs/{{app_name}}/components/{component_key}/context.yml</file>
 	</outputs>
 
 	<output_contracts>
 		<index_json><![CDATA[
 {{component_json_format}}
 		]]></index_json>
-		<component_context_xml description="Factual architectural context only — NO vulnerability judgments"><![CDATA[
+		<component_context_yml description="Factual architectural context only — NO vulnerability judgments"><![CDATA[
 {{component_context_format}}
-		]]></component_context_xml>
+		]]></component_context_yml>
 	</output_contracts>
 
 	<application_static_context>
