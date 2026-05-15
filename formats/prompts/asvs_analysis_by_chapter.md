@@ -39,11 +39,7 @@
 	<files_to_audit>
 	{{files_to_audit}}
 	</files_to_audit>
-	<outputs>
-{{outputs_xml}}
-	</outputs>
-
-	<output_contract><![CDATA[{{audit_output_grouped.json}}]]></output_contract>
+	
 
 	<asvs_rules><![CDATA[{{asvs_i_rules_txt}}]]></asvs_rules>
 
@@ -52,4 +48,13 @@
 	<components>
 {{components_xml}}
 	</components>
+	<file_contents>
+		{{file_contents}}
+	</file_contents>
+
+	<outputs>
+{{outputs_xml}}
+	</outputs>
+
+	<output_contract><![CDATA[{{audit_output_grouped.json}}]]></output_contract>
 </prompt>

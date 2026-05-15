@@ -19,6 +19,7 @@ ASVS_JSON_DIR = FORMATS_DIR / "asvs_json"
 FORMAT_OUTPUTS_DIR              = FORMATS_DIR / "outputs"
 AUDIT_OUTPUT_FORMAT_FILE        = FORMAT_OUTPUTS_DIR / "audit_output.json"   # kept for backward compat
 AUDIT_OUTPUT_XML_FORMAT_FILE    = FORMAT_OUTPUTS_DIR / "audit_output.xml"
+AUDIT_OUTPUT_JSON_FORMAT_FILE    = FORMAT_OUTPUTS_DIR / "audit_output.json"
 COMPONENT_INDEX_FORMAT_FILE     = FORMAT_OUTPUTS_DIR / "component-output.json"
 COMPONENT_CTX_FORMAT_FILE       = FORMAT_OUTPUTS_DIR / "component_context.md"  # kept for backward compat
 COMPONENT_CTX_XML_FORMAT_FILE   = FORMAT_OUTPUTS_DIR / "component_context.xml"
@@ -42,3 +43,4 @@ CORE_REPORT_NAMES = ["identity", "structure", "imports", "database"]
 # ── Environment configuration ────────────────────────────────────────────────
 # Accepted values: auto | xml | md | yml
 CONTEXT_FORMAT = os.getenv("CONTEXT_FORMAT", "auto").strip().lower()
+ANALYSIS_OUTPUT_FORMAT = os.getenv("ANALYSIS_OUTPUT_FORMAT", "json").strip().lower()

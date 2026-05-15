@@ -43,3 +43,7 @@ class LLMProvider(ABC):
     @abstractmethod
     def get_provider_name(self) -> str:
         """Return provider name (copilot, claude, etc)."""
+
+    @abstractmethod
+    def get_account_info(self) -> dict:
+        """Return account/auth info for the current provider."""

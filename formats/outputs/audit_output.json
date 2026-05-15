@@ -1,6 +1,5 @@
 {
     "comp_id": "String: El ID exacto del componente evaluado (ej. admin_management).",
-    "chapter": "String: El capítulo ASVS evaluado (ej. V10).",
     "results": [
       {
         "req": "String: ID del requerimiento ASVS que no se cumple (ej. 10.1.1).",
@@ -17,5 +16,9 @@
         ],
         "hint": "String: Guía técnica y accionable para que los desarrolladores remedien el fallo."
       }
+    ],
+    "argument": "why is or not is applicable",
+    "auditor_diary":[
+      "only related  with the current asvs chapter"
     ]
   }

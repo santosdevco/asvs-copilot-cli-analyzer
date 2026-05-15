@@ -69,14 +69,28 @@ def log_event(event: str, data: Any = None) -> None:
 
 
 def log_prompt(prompt: str, label: str = "llm_prompt") -> None:
-    """Persist full prompt text to log file."""
-    _append(f"\n--- {label.upper()} START [{_now_iso()}] ---\n")
-    _append(prompt)
-    _append(f"\n--- {label.upper()} END ---\n")
+    """Log prompt reference only (full content saved in prompts/ directory)."""
+    timestamp = _now_iso()
+    payload = {
+        "timestamp": timestamp,
+        "event": "prompt",
+        "label": label,
+        "size_chars": len(prompt),
+        "size_kb": len(prompt) // 1024,
+        "note": f"Full content in outputs/{_CURRENT_APP}/prompts/{label}.xml"
+    }
+    _append(json.dumps(payload, ensure_ascii=False) + "\n")
 
 
 def log_output(output: str, label: str = "llm_output") -> None:
-    """Persist full model output text to log file."""
-    _append(f"\n--- {label.upper()} START [{_now_iso()}] ---\n")
-    _append(output)
-    _append(f"\n--- {label.upper()} END ---\n")
+    """Log output reference only (avoid bloating log file)."""
+    timestamp = _now_iso()
+    payload = {
+        "timestamp": timestamp,
+        "event": "output",
+        "label": label,
+        "size_chars": len(output),
+        "size_kb": len(output) // 1024,
+        "preview": output[:200] + "..." if len(output) > 200 else output
+    }
+    _append(json.dumps(payload, ensure_ascii=False) + "\n")

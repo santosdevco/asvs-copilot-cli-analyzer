@@ -47,7 +47,12 @@ from cli.commands import (
     triage_cmd,
     chat_cmd,
     report_cmd,
-  validate_static_context_cmd,
+    report_md_cmd,
+    validate_static_context_cmd,
+    list_cmd,
+    list_components_cmd,
+    save_analysis_cmd,
+    account_cmd,
 )
 
 console = Console()
@@ -65,8 +70,13 @@ main.add_command(audit_cmd)
 main.add_command(batch_audit_cmd)
 main.add_command(chat_cmd)
 main.add_command(report_cmd)
+main.add_command(report_md_cmd)
 main.add_command(build_report_cmd)
 main.add_command(validate_static_context_cmd)
+main.add_command(list_cmd)
+main.add_command(list_components_cmd)
+main.add_command(save_analysis_cmd)
+main.add_command(account_cmd)
 
 
 # ── Convenience: full pipeline ────────────────────────────────────────────────

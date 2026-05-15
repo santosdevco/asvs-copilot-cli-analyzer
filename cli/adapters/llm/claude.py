@@ -10,7 +10,7 @@ from cli.adapters.llm.base import LLMProvider, LLMResponse, LLMUsage
 
 console = Console(stderr=True)
 
-_ALLOWED_TOOLS = ["Read", "Write", "Edit", "Bash", "Grep", "Glob", "LS", "WebSearch", "WebFetch"]
+_DEFAULT_TOOLS = ["Read", "Write", "Edit", "Bash", "Grep", "Glob", "LS", "WebSearch", "WebFetch"]
 
 
 class ClaudeProvider(LLMProvider):
@@ -19,6 +19,14 @@ class ClaudeProvider(LLMProvider):
     def __init__(self):
         self.settings = self._load_settings()
         self.model = self._resolve_model()
+        self.active_tools = _DEFAULT_TOOLS
+
+    def set_active_tools(self, tools: list[str] | None) -> None:
+        """Set the active tools for this provider instance."""
+        if tools is None:
+            self.active_tools = []
+        else:
+            self.active_tools = tools
 
     def execute(self, prompt: str, streaming: bool = False, interactive: bool = False) -> LLMResponse:
         """Execute via Claude Agent SDK using query() function."""
@@ -34,7 +42,7 @@ class ClaudeProvider(LLMProvider):
 
         options = ClaudeAgentOptions(
             model=self.model,
-            tools=_ALLOWED_TOOLS,
+            tools=self.active_tools,
             max_turns=20,
             permission_mode="acceptEdits",
         )
@@ -94,10 +102,19 @@ class ClaudeProvider(LLMProvider):
                     elif isinstance(message, ResultMessage):
                         usage = getattr(message, "usage", None)
                         if usage:
-                            usage_data.input_tokens = float(getattr(usage, "input_tokens", 0) or 0)
-                            usage_data.output_tokens = float(getattr(usage, "output_tokens", 0) or 0)
-                            usage_data.cache_read_tokens = float(getattr(usage, "cache_read_tokens", 0) or 0)
-                            usage_data.cache_write_tokens = float(getattr(usage, "cache_write_tokens", 0) or 0)
+                            # usage is a dict, not an object
+                            if isinstance(usage, dict):
+                                usage_data.input_tokens = float(usage.get("input_tokens", 0) or 0)
+                                usage_data.output_tokens = float(usage.get("output_tokens", 0) or 0)
+                                usage_data.cache_read_tokens = float(usage.get("cache_read_input_tokens", 0) or 0)
+                                usage_data.cache_write_tokens = float(usage.get("cache_creation_input_tokens", 0) or 0)
+                            else:
+                                # Fallback for object-style usage
+                                usage_data.input_tokens = float(getattr(usage, "input_tokens", 0) or 0)
+                                usage_data.output_tokens = float(getattr(usage, "output_tokens", 0) or 0)
+                                usage_data.cache_read_tokens = float(getattr(usage, "cache_read_tokens", 0) or 0)
+                                usage_data.cache_write_tokens = float(getattr(usage, "cache_write_tokens", 0) or 0)
+
                             usage_data.total_cost_usd = float(getattr(message, "total_cost_usd", 0) or 0)
                             usage_data.num_turns = int(getattr(message, "num_turns", 0) or 0)
             except Exception as e:
@@ -124,9 +141,90 @@ class ClaudeProvider(LLMProvider):
     def get_provider_name(self) -> str:
         return "claude"
 
+    def get_account_info(self) -> dict:
+        """Run the claude CLI to collect version and auth status."""
+        import subprocess
+        import shutil
+
+        claude_bin = shutil.which("claude") or "claude"
+        info: dict = {"provider": "claude", "model": self.model}
+
+        # Version
+        try:
+            out = subprocess.run([claude_bin, "--version"], capture_output=True, text=True, timeout=5)
+            info["version"] = out.stdout.strip() or out.stderr.strip()
+        except Exception as e:
+            info["version"] = f"error — {e}"
+
+        # Auth probe: ask claude to report its own session context
+        _session_prompt = (
+            'Output ONLY a JSON object (no markdown) with these keys: '
+            '"email" (your authenticated user email or null), '
+            '"login_method" (e.g. "Claude Pro account", "API key", "Amazon Bedrock"), '
+            '"organization" (org name or null). '
+            'Example: {"email":"user@example.com","login_method":"Claude Pro account","organization":"Acme"}'
+        )
+        try:
+            out = subprocess.run(
+                [claude_bin, "-p", _session_prompt, "--output-format", "json"],
+                capture_output=True, text=True, timeout=30,
+            )
+            raw = out.stdout.strip()
+            data = {}
+            if raw:
+                try:
+                    data = json.loads(raw)
+                except json.JSONDecodeError:
+                    pass
+
+            if data and not data.get("is_error"):
+                info["auth"] = "ok"
+                # parse inner JSON from result field
+                result_str = data.get("result", "")
+                try:
+                    session_data = json.loads(result_str) if isinstance(result_str, str) else {}
+                    if session_data.get("email"):
+                        info["email"] = session_data["email"]
+                    if session_data.get("login_method"):
+                        info["login_method"] = session_data["login_method"]
+                    if session_data.get("organization"):
+                        info["organization"] = session_data["organization"]
+                    # infer backend from login_method
+                    lm = (session_data.get("login_method") or "").lower()
+                    if "bedrock" in lm:
+                        info["backend"] = "Amazon Bedrock"
+                    elif "vertex" in lm:
+                        info["backend"] = "Google Vertex AI"
+                    elif "api key" in lm:
+                        info["backend"] = "Anthropic API"
+                    elif "pro" in lm or "account" in lm:
+                        info["backend"] = "Claude Pro (OAuth)"
+                except (json.JSONDecodeError, AttributeError):
+                    pass
+                cost = data.get("cost_usd") or data.get("total_cost_usd")
+                if cost is not None:
+                    info["probe_cost_usd"] = f"${float(cost):.6f}"
+                if data.get("model"):
+                    info["resolved_model"] = data["model"]
+                if data.get("session_id"):
+                    info["session_id"] = data["session_id"]
+            elif data and data.get("is_error"):
+                msg = data.get("result") or data.get("message") or f"HTTP {data.get('api_error_status','?')}"
+                info["auth"] = f"error — {str(msg)[:120]}"
+            else:
+                info["auth"] = f"error (exit {out.returncode})"
+                info["detail"] = (out.stderr or raw or "").strip()[:120]
+        except Exception as e:
+            info["auth"] = f"error — {e}"
+
+        settings_env = os.environ.get("CLAUDE_SETTINGS_PATH")
+        info["settings_path"] = settings_env if settings_env else str(Path.home() / ".claude" / "settings.json")
+        return info
+
     def _load_settings(self) -> dict:
         """Load ~/.claude/settings.json."""
-        path = Path.home() / ".claude" / "settings.json"
+        settings_env = os.environ.get("CLAUDE_SETTINGS_PATH")
+        path = Path(settings_env) if settings_env else Path.home() / ".claude" / "settings.json"
         if not path.exists():
             return {}
         try:

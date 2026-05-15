@@ -16,6 +16,7 @@ from pathlib import Path
 
 import click
 from rich.console import Console
+from pathlib import Path  
 
 from cli.config import MAPPER_SCRIPT, OUTPUTS_DIR
 from cli.core.app_logger import init_app_logger, log_event
@@ -77,18 +78,28 @@ def _build_static_context_xml(source_dir: Path, source_fmt: str, xml_path: Path)
     show_default=True,
     help="Output format. xml generates only outputs/<app_name>/static_context.xml.",
 )
-def extract_cmd(app_name: str, source_dir: str | None, fmt: str) -> None:
+@click.option(
+    "--print-output",
+    is_flag=True,
+    default=False,
+    help="Print the generated output to stdout (for piping). Implies --format xml. Status messages go to stderr.",
+)
+def extract_cmd(app_name: str, source_dir: str | None, fmt: str, print_output: bool) -> None:
     """Step 1 — Generate static context files from source code."""
+    if print_output:
+        fmt = "xml"
+    status = Console(stderr=True) if print_output else console
     init_app_logger(
         app_name=app_name,
         command_name="extract",
         command_line=" ".join(sys.argv),
-        options={"source_dir": source_dir, "format": fmt},
+        options={"source_dir": source_dir, "format": fmt, "print_output": print_output},
     )
     fmt = fmt.lower()
     app_dir = source_dir or app_name
+    
     app_out_dir = OUTPUTS_DIR / app_name
-
+        
     if fmt == "xml":
         xml_path = app_out_dir / "static_context.xml"
         with tempfile.TemporaryDirectory(prefix="mapper_static_") as tmpdir:
@@ -101,7 +112,7 @@ def extract_cmd(app_name: str, source_dir: str | None, fmt: str) -> None:
                 "--out-dir", str(temp_out_dir),
             ]
 
-            console.print(f"[bold cyan]extract[/bold cyan] → {' '.join(cmd)}")
+            status.print(f"[bold cyan]extract[/bold cyan] → {' '.join(cmd)}")
             log_event(
                 "extract.subprocess",
                 {"cmd": cmd, "out_dir": str(temp_out_dir), "requested_format": fmt},
@@ -110,17 +121,19 @@ def extract_cmd(app_name: str, source_dir: str | None, fmt: str) -> None:
 
             if result.returncode != 0:
                 log_event("extract.failed", {"returncode": result.returncode})
-                console.print(f"[bold red]✗ run_mapper.py exited with code {result.returncode}[/bold red]")
+                status.print(f"[bold red]✗ run_mapper.py exited with code {result.returncode}[/bold red]")
                 raise SystemExit(result.returncode)
 
             built_xml = _build_static_context_xml(temp_out_dir, "txt", xml_path)
             if not built_xml:
-                console.print("[bold red]✗ No section files found to build static_context.xml[/bold red]")
+                status.print("[bold red]✗ No section files found to build static_context.xml[/bold red]")
                 log_event("extract.xml_skipped", {"reason": "no_reports_found", "format": fmt})
                 raise SystemExit(1)
 
-        console.print(f"[bold green]✓ XML static context written to {xml_path}[/bold green]")
+        status.print(f"[bold green]✓ XML static context written to {xml_path}[/bold green]")
         log_event("extract.completed", {"returncode": 0, "xml_path": str(xml_path), "format": fmt})
+        if print_output:
+            sys.stdout.write(xml_path.read_text(encoding="utf-8"))
         return
 
     out_dir = app_out_dir / "static_context"
@@ -134,14 +147,14 @@ def extract_cmd(app_name: str, source_dir: str | None, fmt: str) -> None:
         "--out-dir", str(out_dir),
     ]
 
-    console.print(f"[bold cyan]extract[/bold cyan] → {' '.join(cmd)}")
+    status.print(f"[bold cyan]extract[/bold cyan] → {' '.join(cmd)}")
     log_event("extract.subprocess", {"cmd": cmd, "out_dir": str(out_dir), "requested_format": fmt})
     result = subprocess.run(cmd, check=False)
 
     if result.returncode != 0:
         log_event("extract.failed", {"returncode": result.returncode})
-        console.print(f"[bold red]✗ run_mapper.py exited with code {result.returncode}[/bold red]")
+        status.print(f"[bold red]✗ run_mapper.py exited with code {result.returncode}[/bold red]")
         raise SystemExit(result.returncode)
 
     log_event("extract.completed", {"returncode": result.returncode, "format": fmt})
-    console.print(f"[bold green]✓ Static context written to {out_dir}[/bold green]")
+    status.print(f"[bold green]✓ Static context written to {out_dir}[/bold green]")

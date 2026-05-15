@@ -22,3 +22,5 @@ class ComponentItem(BaseModel):
 
 class ComponentIndex(BaseModel):
     project_triage: List[ComponentItem] = Field(default_factory=list)
+    core_paths: List[str] = Field(default_factory=list)
+    source_dir_path: Optional[str] = None

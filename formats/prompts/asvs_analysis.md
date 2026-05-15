@@ -31,20 +31,27 @@
 			NO anides las carpetas de salida dentro de 'analysis-repos'. 
 			La estructura correcta debe ser: ROOT/outputs/..., NO ROOT/analysis-repos/app/outputs/...
 		</item>
+		<item id="9">
+			CRÍTICO -Enfocate solo en el capitulo seleccionado e ignora vulnerabilidades de otras areas. Analiza exaustivamente el codigo adjunto validando los requerimientos de {{asvsid}}
+		</item>
 	</strict_instructions>
 	<files_to_audit>
 	{{files_to_audit}}
 	</files_to_audit>
 
-	<outputs>
-		<file required="true">outputs/{{app_name}}/components/{{component_key}}/analysis/{{asvsid}}.json</file>
-	</outputs>
-
-	<output_contract><![CDATA[{{audit_output.xml}}]]></output_contract>
 
 	<asvs_rules><![CDATA[{{asvs_i_rules_txt}}]]></asvs_rules>
 
 	<component_context><![CDATA[{{context_md}}]]></component_context>
 
 	<tactical_static_context>{{filtered_static_context}}</tactical_static_context>
+	<file_contents>
+	{{file_contents}}
+	</file_contents>
+
+	<outputs>
+		<file required="true">outputs/{{app_name}}/components/{{component_key}}/analysis/{{asvsid}}.json</file>
+	</outputs>
+
+	<output_contract><![CDATA[{{audit_output.xml}}]]></output_contract>
 </prompt>

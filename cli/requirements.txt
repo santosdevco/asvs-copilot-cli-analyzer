@@ -4,6 +4,7 @@ github-copilot-sdk          # official GitHub Copilot SDK (pip install github-co
 python-dotenv>=1.0
 rich>=13.0
 anyio>=4.0                  # async runtime used by claude-agent-sdk
+pyperclip>=1.8              # clipboard support (--copy-clipboard flag)
 # optional BYOK fallbacks
 openai>=1.0                 # LLM_PROVIDER=openai
 anthropic>=0.20             # LLM_PROVIDER=anthropic

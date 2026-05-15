@@ -124,6 +124,7 @@ def _run_one(
     include_auditor_diary: bool,
     use_lock: bool = False,
     streaming: bool = False,
+    add_file_content: bool = False,
 ) -> dict:
     """Execute a single audit call; returns a usage/result dict.
 
@@ -138,6 +139,7 @@ def _run_one(
             component.component_id,
             asvs_key,
             include_auditor_diary=include_auditor_diary,
+            add_file_content=add_file_content,
         )
     except FileNotFoundError as exc:
         console.print(f"[red]  ⚠ Skipped {label} — {exc}[/red]")
@@ -284,6 +286,7 @@ def _run_grouped_batch(
         interactive=False,
         streaming=streaming,
         include_auditor_diary=include_auditor_diary,
+        add_file_content=add_file_content,
     )
 
     usage_calls: list[dict] = []
@@ -421,6 +424,20 @@ def _print_grouped_plan(worklist: list[tuple], group_by: str) -> None:
     default=True, show_default=True,
     help="Include the AUDITOR DIARY section from context.md in the prompt.",
 )
+@click.option(
+    "--active-tools",
+    default=None,
+    help=(
+        "Comma-separated list of tools to enable for Claude SDK (e.g., 'Read,Write,Edit'). "
+        "Use 'None' to disable all tools. Only applies when LLM_PROVIDER=claude."
+    ),
+)
+@click.option(
+    "--add-file-content",
+    is_flag=True,
+    default=False,
+    help="Include full file contents in the prompt context (increases token usage).",
+)
 def batch_audit_cmd(
     app_name: str,
     component_filter: str | None,
@@ -434,6 +451,8 @@ def batch_audit_cmd(
     dry_run: bool,
     show_prompt: bool,
     include_auditor_diary: bool,
+    active_tools: str | None,
+    add_file_content: bool,
 ) -> None:
     """Batch-audit all components for a single ASVS chapter.
 
@@ -448,6 +467,14 @@ def batch_audit_cmd(
     if streaming and parallel:
         console.print("[yellow]⚠ --streaming is ignored in --parallel mode.[/yellow]")
         streaming = False
+
+    # Parse active_tools flag
+    parsed_tools: list[str] | None = None
+    if active_tools is not None:
+        if active_tools.strip().lower() == "none":
+            parsed_tools = []
+        else:
+            parsed_tools = [t.strip() for t in active_tools.split(",") if t.strip()]
 
     init_app_logger(
         app_name=app_name,
@@ -464,9 +491,17 @@ def batch_audit_cmd(
             "streaming": streaming,
             "dry_run": dry_run,
             "include_auditor_diary": include_auditor_diary,
+            "active_tools": active_tools,
+            "add_file_content": add_file_content,
         },
     )
-    init_llm_session(app_name=app_name, command_name="batch-audit")
+    init_llm_session(app_name=app_name, command_name="batch-audit", active_tools=parsed_tools)
+
+    if active_tools is not None:
+        tools_display = "none" if not parsed_tools else ", ".join(parsed_tools)
+        console.print(f"[dim]Active tools: {tools_display}[/dim]")
+    if add_file_content:
+        console.print("[dim]File contents: enabled (increased token usage)[/dim]")
 
     console.print(
         f"[bold cyan]batch-audit[/bold cyan] {app_name}  "
@@ -565,7 +600,7 @@ def batch_audit_cmd(
         for comp, asvs_key in work:
             result = _run_one(
                 app_name, comp, asvs_key, dry_run, include_auditor_diary,
-                use_lock=False, streaming=streaming,
+                use_lock=False, streaming=streaming, add_file_content=add_file_content,
             )
             if result.get("usage"):
                 usage_calls.append(result)

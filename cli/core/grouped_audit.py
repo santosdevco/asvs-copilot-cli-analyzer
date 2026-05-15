@@ -37,7 +37,6 @@ from cli.core import (
     complete,
     complete_interactive,
     get_applicable_asvs_keys,
-    get_last_usage_summary,
     get_provider_and_model,
     load_component_index,
     missing_keys,
@@ -349,17 +348,18 @@ def _call_llm(
     verbose: bool,
     interactive: bool,
     streaming: bool,
-) -> str:
+) -> tuple[dict, str]:
+    """Call LLM and return (usage_summary, response)."""
     if verbose or interactive or streaming:
-        _, response = complete_interactive(
+        usage_summary, response = complete_interactive(
             prompt,
             verbose=verbose,
             interactive=interactive,
             streaming=streaming,
             context=label,
         )
-        return response
-    return complete(prompt)
+        return usage_summary, response
+    return {}, complete(prompt)
 
 
 def run_grouped_by_chapter_job(
@@ -373,6 +373,7 @@ def run_grouped_by_chapter_job(
     interactive: bool = False,
     streaming: bool = False,
     include_auditor_diary: bool = True,
+    prompt_sections: str = "component_context,filtered_static_context,file_contents,files_to_audit",
 ) -> list[dict]:
     """Run one grouped audit: 1 ASVS chapter × N components.
 
@@ -384,7 +385,7 @@ def run_grouped_by_chapter_job(
     console.print(f"\n[bold yellow]🔍 {label}[/bold yellow]")
 
     try:
-        ctx = build_by_chapter_context(app_name, asvs_key, components, include_auditor_diary)
+        ctx = build_by_chapter_context(app_name, asvs_key, components, include_auditor_diary, prompt_sections)
     except FileNotFoundError as exc:
         console.print(f"[red]⚠ Skipped — {exc}[/red]")
         return []
@@ -409,8 +410,7 @@ def run_grouped_by_chapter_job(
         return []
 
     console.print(f"🤖 Calling AI ({len(components)} components, chapter {ch})…")
-    response = _call_llm(prompt, label, verbose, interactive, streaming)
-    usage_summary = get_last_usage_summary()
+    usage_summary, response = _call_llm(prompt, label, verbose, interactive, streaming)
     log_event("grouped_audit.by_chapter.completed", {
         "asvs_key": asvs_key,
         "response_chars": len(response),
@@ -490,6 +490,7 @@ def run_grouped_by_component_job(
     interactive: bool = False,
     streaming: bool = False,
     include_auditor_diary: bool = True,
+    prompt_sections: str = "component_context,filtered_static_context,file_contents,files_to_audit",
 ) -> list[dict]:
     """Run one grouped audit: 1 component × N ASVS chapters.
 
@@ -500,7 +501,7 @@ def run_grouped_by_component_job(
     console.print(f"\n[bold yellow]🔍 {label}[/bold yellow]")
 
     try:
-        ctx = build_by_component_context(app_name, component_id, asvs_keys, include_auditor_diary)
+        ctx = build_by_component_context(app_name, component_id, asvs_keys, include_auditor_diary, prompt_sections)
     except FileNotFoundError as exc:
         console.print(f"[red]⚠ Skipped — {exc}[/red]")
         return []
@@ -527,8 +528,7 @@ def run_grouped_by_component_job(
         return []
 
     console.print(f"🤖 Calling AI ({component_id}, {len(asvs_keys)} chapters)…")
-    response = _call_llm(prompt, label, verbose, interactive, streaming)
-    usage_summary = get_last_usage_summary()
+    usage_summary, response = _call_llm(prompt, label, verbose, interactive, streaming)
     # Build chapter_id → asvs_key mapping for write_audit_result
     key_map = {_chapter_id(k): k for k in asvs_keys}
     log_event("grouped_audit.by_component.completed", {

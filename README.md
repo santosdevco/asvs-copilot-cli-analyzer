@@ -24,7 +24,8 @@ sonarqube-reports/
 │   └── commands/
 │       ├── extract.py              ← Step 1
 │       ├── triage.py               ← Step 2
-│       └── audit.py                ← Step 4
+│       ├── audit.py                ← Step 4
+│       └── validate_static_context.py  ← Validación de filtrado de contexto estático
 ├── formats/
 │   ├── asvs_json/                  ← reglas OWASP por capítulo
 │   ├── prompts/                    ← plantillas con {{keys}}
@@ -42,6 +43,19 @@ sonarqube-reports/
                     └── V6.json
 ```
 
+---
+
+## Guía rápida de comandos
+
+| Comando | Paso | Descripción |
+|---|---|---|
+| `extract` | 1 | Extrae contexto estático desde el código fuente |
+| `triage` | 2 | Agrupa archivos en componentes (agent arquitecto) |
+| `audit` | 4 | Audita componentes contra OWASP ASVS |
+| `list-components` | Utilidad | Lista los componentes de un proyecto |
+| `save-analysis` | Utilidad | Guarda resultados de análisis (no-interactivo, ideal para integración) |
+| `list` | Menu de issues | Lista de issues y su estado |
+| `report` | Reporte | Genera reporte final en Markdown |
 ---
 
 ## Instalación
@@ -146,8 +160,12 @@ python3 cli.py audit <app_name> [OPTIONS]
 | Opción | Descripción |
 |---|---|
 | `--component ID` | Auditar solo un componente específico |
-| `--chapter V6` | Restringir a un solo capítulo ASVS (acepta prefijo, ej. `V6`) |
+| `--chapter V6` | Restringir a un solo capítulo ASVS (acepta prefijo, ej. `V6`). Use `n` para el siguiente capítulo pendiente |
 | `--dry-run` | Renderiza prompts sin llamar al LLM |
+| `--show-prompt` | Muestra el contenido completo del prompt |
+| `--copy-clipboard` | Copia automáticamente el prompt al portapapeles (útil con `--show-prompt`) |
+| `--it false` | Modo no-interactivo: omite prompts de "¿Pegar análisis?" y "¿Ejecutar otra auditoría?". Default: `true` (interactivo) |
+| `--prompt-sections SECTIONS` | Secciones a incluir en el prompt (comma-separated). Opciones: `component_context`, `filtered_static_context`, `file_contents`, `files_to_audit`. Default: todas incluidas. Valida valores automáticamente. |
 
 **Salida por cada (componente, capítulo):**
 - `outputs/{app_name}/components/{component_id}/analysis/{chapter}.json`
@@ -168,6 +186,193 @@ python3 cli.py audit watshelp-bancodebogota-api \
 
 # Ver prompts sin gastar tokens
 python3 cli.py audit watshelp-bancodebogota-api --dry-run
+
+# Ver prompt y copiarlo al portapapeles automáticamente
+python3 cli.py audit watshelp-bancodebogota-api \
+  --component auth_and_session_module \
+  --chapter V6 \
+  --show-prompt --copy-clipboard
+
+# Copiar el prompt al portapapeles sin mostrarlo (modo interactivo o dry-run)
+python3 cli.py audit watshelp-bancodebogota-api --copy-clipboard
+
+# Copiar y mostrar en modo dry-run
+python3 cli.py audit watshelp-bancodebogota-api --dry-run --copy-clipboard
+
+# Incluir solo cierto contenido en el prompt (reducir tokens)
+python3 cli.py audit watshelp-bancodebogota-api \
+  --component auth_and_session_module \
+  --chapter V6 \
+  --prompt-sections "component_context,files_to_audit"
+
+# Incluir archivos con números de línea pero sin contexto estático
+python3 cli.py audit watshelp-bancodebogota-api \
+  --component auth_and_session_module \
+  --chapter V6 \
+  --prompt-sections "component_context,file_contents,files_to_audit"
+
+# Solo ver lista de archivos sin contenido
+python3 cli.py audit watshelp-bancodebogota-api \
+  --component auth_and_session_module \
+  --chapter V6 \
+  --prompt-sections "files_to_audit" \
+  --dry-run --show-prompt --copy-clipboard
+
+# Auditar el siguiente capítulo pendiente (no interactivo)
+python3 cli.py audit watshelp-bancodebogota-api \
+  --component auth_and_session_module \
+  --chapter n \
+  --dry-run --it false
+
+# Modo no-interactivo: sin prompts de pegar análisis ni "¿ejecutar otra?"
+python3 cli.py audit watshelp-bancodebogota-api \
+  --component auth_and_session_module \
+  --chapter V1 \
+  --dry-run --it false
+```
+
+---
+
+### `list-components` — Listar componentes del proyecto
+
+Comando rápido para listar todos los componentes de un proyecto en varios formatos.
+
+```bash
+python3 cli.py list-components <app_name> [--format FORMAT]
+```
+
+| Opción | Descripción |
+|---|---|
+| `app_name` | Nombre lógico de la app |
+| `--format` | Formato de salida: `table` (default), `json`, `ids`, o `names` |
+
+**Formatos disponibles:**
+- `table` — Tabla formateada con información de riesgo y progreso
+- `json` — Salida JSON con metadatos completos del componente
+- `ids` — Solo IDs de componentes, uno por línea
+- `names` — Solo nombres de componentes, uno por línea (raw)
+
+```bash
+# Tabla formateada (por defecto)
+python3 cli.py list-components watshelp-bancodebogota-api
+
+# JSON para procesamiento automatizado
+python3 cli.py list-components watshelp-bancodebogota-api --format json
+
+# Solo IDs para piping
+python3 cli.py list-components watshelp-bancodebogota-api --format ids
+
+# Solo nombres (raw)
+python3 cli.py list-components watshelp-bancodebogota-api --format names
+```
+
+---
+
+### `save-analysis` — Guardar resultados de análisis (no-interactivo)
+
+Comando no-interactivo para guardar resultados de análisis JSON desde otra aplicación.
+Seguro para JSON grandes: lee desde archivo o stdin (evita límites de argumentos shell).
+
+```bash
+python3 cli.py save-analysis <app_name> --component <id> --chapter <V#> [--file FILE]
+```
+
+| Argumento/Opción | Descripción |
+|---|---|
+| `app_name` | Nombre lógico de la app |
+| `--component` | ID del componente (requerido) |
+| `--chapter` | Capítulo ASVS (ej. V1, V2, ..., V14) (requerido) |
+| `--file` | Ruta al archivo JSON. Si se omite, lee desde stdin |
+
+**Salida:**
+- Archivo JSON guardado en `outputs/{app_name}/components/{component_id}/analysis/{chapter}.json`
+- Una línea JSON en stdout con confirmación (para parseo automático)
+- Errores en stderr
+
+**Ejemplos:**
+
+```bash
+# Vía archivo
+python3 cli.py save-analysis watshelp-bancodebogota-api \
+  --component room_message_management \
+  --chapter V1 \
+  --file analysis_result.json
+
+# Vía stdin (recomendado para JSON grande)
+cat analysis_result.json | python3 cli.py save-analysis watshelp-bancodebogota-api \
+  --component room_message_management \
+  --chapter V1
+
+# Echo directo (para testing)
+echo '{"results":[{"req":"V1.1","status":"PASS"}]}' | python3 cli.py save-analysis watshelp-bancodebogota-api \
+  --component room_message_management \
+  --chapter V1
+
+# En un pipeline desde otra aplicación
+some_analysis_tool output.json | python3 cli.py save-analysis watshelp-bancodebogota-api \
+  --component auth_mfa_session_module \
+  --chapter V6
+```
+
+**Ejemplo de integración (no-interactivo):**
+
+```bash
+# Script que integra análisis externo
+#!/bin/bash
+
+APP_NAME="watshelp-bancodebogota-api"
+COMPONENT="auth_mfa_session_module"
+CHAPTER="V6"
+
+# Obtener análisis desde API/herramienta externa
+curl -s "https://analysis-service/generate?component=$COMPONENT" | \
+  python3 cli.py save-analysis "$APP_NAME" \
+    --component "$COMPONENT" \
+    --chapter "$CHAPTER"
+
+# Resultado en JSON (parseable)
+# {"success": true, "saved": "outputs/..../V6.json", "component": "...", "chapter": "V6"}
+```
+
+---
+
+### `validate-static-context` — Validación de compresión/filtrado del contexto estático
+
+Emite a `stdout` el `static_context.xml` ya filtrado con la misma lógica usada por el flujo de auditoría.
+Sirve para validar compresión de contexto por componente sin ejecutar el loop completo de audit.
+
+El comando:
+
+- recibe `app_name` y `component_id`
+- usa los `files_to_audit` del componente y los `core_paths` desde `outputs/{app_name}/components/index.json`
+- usa los `asset_tags` del componente por defecto
+- permite sobrescribir los `asset_tags` con `--asset-tag`
+- imprime el XML filtrado a `stdout`, para que puedas redirigirlo con `>`
+
+```bash
+python3 cli.py validate-static-context <app_name> <component_id> [--asset-tag TAG]
+```
+
+| Opción | Descripción |
+|---|---|
+| `app_name` | Nombre lógico de la app |
+| `component_id` | ID exacto del componente en `outputs/{app_name}/components/index.json` |
+| `--asset-tag` | Override opcional de asset tags. Puede repetirse o pasarse como lista separada por comas. Si no se envía, usa los tags del componente. |
+
+```bash
+# Usa los asset_tags definidos en index.json para el componente
+python3 cli.py validate-static-context \
+  watshelp-bancodebogota-admin-new \
+  auth_and_mfa \
+  > filtered_context.xml
+
+# Override de asset tags para probar otro routing táctico
+python3 cli.py validate-static-context \
+  watshelp-bancodebogota-admin-new \
+  auth_and_mfa \
+  --asset-tag auth_service \
+  --asset-tag frontend_http_client \
+  > filtered_context.xml
 ```
 
 ---
@@ -185,7 +390,39 @@ python3 cli.py run watshelp-bancodebogota-api \
   --source-dir analysis-repos/watshelp-bancodebogota-api
 ```
 
-Para reducir consumo de tokens durante audit, puedes excluir el diario incremental del contexto:
+### Controlar contenido del prompt con `--prompt-sections`
+
+Para reducir consumo de tokens, puedes incluir solo las secciones que necesitas:
+
+**Secciones disponibles:**
+- `component_context` — Contexto y arquitectura del componente (análisis previos)
+- `filtered_static_context` — Reportes estáticos filtrados (señales de código, importes, etc.)
+- `file_contents` — Contenido real de los archivos con números de línea
+- `files_to_audit` — Lista de archivos a auditar (sin contenido)
+
+**Validación:**
+El comando valida automáticamente los valores. Si usas un valor inválido, obtendrás un error claro:
+
+```bash
+$ python3 cli.py audit app --prompt-sections "invalid_section"
+Error: Invalid prompt section(s): invalid_section. Valid options are: 
+  component_context, file_contents, files_to_audit, filtered_static_context
+```
+
+**Ejemplos de combinaciones:**
+
+```bash
+# Solo componente y archivos (más tokens)
+python3 cli.py audit app --prompt-sections "component_context,file_contents"
+
+# Solo lista de archivos y contenido (sin contexto estático)
+python3 cli.py audit app --prompt-sections "file_contents,files_to_audit"
+
+# Mínimo: solo lista de archivos (eficiente en tokens)
+python3 cli.py audit app --prompt-sections "files_to_audit"
+```
+
+Para reducir consumo de tokens durante audit, también puedes excluir el diario incremental del contexto:
 
 ```bash
 python3 cli.py audit <app_name> --no-include-auditor-diary

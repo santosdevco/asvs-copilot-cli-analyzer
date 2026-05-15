@@ -105,6 +105,7 @@ def build_by_chapter_context(
     asvs_key: str,
     components: List[ComponentItem],
     include_auditor_diary: bool = True,
+    prompt_sections: str = "component_context,filtered_static_context,file_contents,files_to_audit",
 ) -> Dict[str, str]:
     """Context dict for the by-chapter grouped prompt (N components × 1 chapter).
 
@@ -115,7 +116,10 @@ def build_by_chapter_context(
       outputs_xml       — pre-assembled <file> lines (N×2)
       components_xml    — pre-assembled <component> sub-nodes (one per component)
       audit_output_grouped.json
+      file_contents     — optional XML with file contents (if "file_contents" in prompt_sections)
     """
+    from cli.core.context_builder import _build_file_contents_xml
+
     chapter_id, meta = _chapter_meta(asvs_key)
     asvs_rules_txt = _asvs_json_to_text(_load_json(ASVS_JSON_DIR / meta["source_file"]))
     report_names   = _tactical_report_names(asvs_key)
@@ -161,6 +165,14 @@ def build_by_chapter_context(
             f'  </component>'
         )
 
+    # Build file contents XML if requested
+    file_contents_xml = ""
+    if "file_contents" in prompt_sections:
+        # Combine all component paths for file content inclusion
+        all_paths = list(set(all_component_paths))
+        if all_paths:
+            file_contents_xml = _build_file_contents_xml(app_name, all_paths)
+
     return {
         "app_name":                    app_name,
         "asvsid":                      chapter_id,
@@ -171,6 +183,7 @@ def build_by_chapter_context(
         "outputs_xml":                 "\n".join(output_lines),
         "components_xml":              "\n".join(component_nodes),
         "audit_output_grouped.json":   AUDIT_OUTPUT_GROUPED_FORMAT_FILE.read_text(encoding="utf-8"),
+        "file_contents":               file_contents_xml,
     }
 
 
@@ -179,6 +192,7 @@ def build_by_component_context(
     component_id: str,
     asvs_keys: List[str],
     include_auditor_diary: bool = True,
+    prompt_sections: str = "component_context,filtered_static_context,file_contents,files_to_audit",
 ) -> Dict[str, str]:
     """Context dict for the by-component grouped prompt (1 component × N chapters).
 
@@ -190,7 +204,10 @@ def build_by_component_context(
       outputs_xml             — pre-assembled <file> lines (context.md + N analysis files)
       chapters_xml            — pre-assembled <chapter> sub-nodes (one per chapter)
       audit_output_grouped.json
+      file_contents           — optional XML with file contents (if add_file_content=True)
     """
+    from cli.core.context_builder import _build_file_contents_xml
+
     context_md = _read_context_md(app_name, component_id, include_auditor_diary)
 
     # Union all tactical report names across every chapter
@@ -233,6 +250,11 @@ def build_by_component_context(
             f'  </chapter>'
         )
 
+    # Build file contents XML if requested
+    file_contents_xml = ""
+    if "file_contents" in prompt_sections and component_paths:
+        file_contents_xml = _build_file_contents_xml(app_name, component_paths)
+
     return {
         "app_name":                    app_name,
         "component_key":               component_id,
@@ -243,4 +265,5 @@ def build_by_component_context(
         "outputs_xml":                 "\n".join(output_lines),
         "chapters_xml":                "\n".join(chapter_nodes),
         "audit_output_grouped.json":   AUDIT_OUTPUT_GROUPED_FORMAT_FILE.read_text(encoding="utf-8"),
+        "file_contents":               file_contents_xml,
     }

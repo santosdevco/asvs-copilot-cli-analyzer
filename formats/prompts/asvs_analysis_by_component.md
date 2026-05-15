@@ -40,11 +40,7 @@
 	{{files_to_audit}}
 	</files_to_audit>
 
-	<outputs>
-{{outputs_xml}}
-	</outputs>
-
-	<output_contract><![CDATA[{{audit_output_grouped.json}}]]></output_contract>
+	
 
 	<component_context><![CDATA[{{context_md}}]]></component_context>
 
@@ -53,4 +49,13 @@
 	<chapters>
 {{chapters_xml}}
 	</chapters>
+	<file_contents>
+		{{file_contents}}
+	</file_contents>
+
+	<outputs>
+{{outputs_xml}}
+	</outputs>
+
+	<output_contract><![CDATA[{{audit_output_grouped.json}}]]></output_contract>
 </prompt>

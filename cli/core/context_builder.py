@@ -24,6 +24,7 @@ from cli.config import (
     ASVS_JSON_DIR,
     ASSET_CATEGORY_FILE,
     AUDIT_OUTPUT_FORMAT_FILE,
+    AUDIT_OUTPUT_JSON_FORMAT_FILE,
     AUDIT_OUTPUT_XML_FORMAT_FILE,
     COMPONENT_CTX_FORMAT_FILE,
     COMPONENT_CTX_XML_FORMAT_FILE,
@@ -32,6 +33,7 @@ from cli.config import (
     CONTEXT_FORMAT,
     CONTEXT_CHOOSE_FILE,
     OUTPUTS_DIR,
+    ANALYSIS_OUTPUT_FORMAT
 )
 from cli.core.app_logger import log_event
 
@@ -103,7 +105,7 @@ def _read_component_context(
     component_dir = OUTPUTS_DIR / app_name / "components" / component_id
     xml_path = component_dir / "context.xml"
     md_path = component_dir / "context.md"
-    yml_path = component_dir / "context.yaml"
+    yml_path = component_dir / "context.yml"
     
     preferred = _context_format_preference()
     # print(
@@ -160,6 +162,45 @@ def clear_static_cache() -> None:
 def _to_cdata(text: str) -> str:
     """Wrap arbitrary text as XML CDATA, preserving literal content."""
     return "<![CDATA[" + text.replace("]]>", "]]]]><![CDATA[>") + "]]>"
+
+
+def _add_line_numbers(content: str) -> str:
+    """
+    Add line numbers to file content with proper alignment.
+
+    Format: "[padded_line_number] | [original_line]"
+    Padding is based on total line count for vertical alignment.
+
+    Preserves original indentation and handles empty lines.
+    Memory-efficient: processes content line-by-line.
+    """
+    if not content:
+        return content
+
+    lines = content.splitlines(keepends=True)
+    if not lines:
+        return content
+
+    # Calculate padding width based on total number of lines
+    total_lines = len(lines)
+    line_num_width = len(str(total_lines))
+
+    # Build result with numbered lines
+    numbered_lines: list[str] = []
+    for i, line in enumerate(lines, 1):
+        # Right-align the line number with padding
+        padded_num = str(i).rjust(line_num_width)
+
+        # Handle lines with/without newline
+        if line.endswith(('\n', '\r\n', '\r')):
+            # Remove newline to process, we'll add it back
+            line_content = line.rstrip('\n\r')
+            numbered_lines.append(f"{padded_num} | {line_content}\n")
+        else:
+            # Last line without newline
+            numbered_lines.append(f"{padded_num} | {line}")
+
+    return "".join(numbered_lines)
 
 
 def _clean_target_paths(paths: List[str]) -> List[str]:
@@ -302,6 +343,124 @@ def _format_files_to_audit(paths: List[str]) -> str:
     return "\n".join(cleaned)
 
 
+def _extract_source_dir_from_static(app_name: str) -> str:
+    """Parse the Project path from the identity report in static_context.xml.
+
+    Looks for a line like:  Project : /some/absolute/path
+    Returns the path string, or empty string if not found.
+    """
+    try:
+        xml_text = _read_static_xml(app_name)
+        root = ET.fromstring(xml_text)
+        for report in root.findall("report"):
+            if (report.get("type") or "").strip().lower() == "identity":
+                text = "".join(report.itertext())
+                for line in text.splitlines():
+                    stripped = line.strip()
+                    if stripped.lower().startswith("project :"):
+                        return stripped.split(":", 1)[1].strip()
+    except Exception:
+        pass
+    return ""
+
+
+def _get_source_dir_path(app_name: str) -> Path:
+    """Get the source directory path from index.json."""
+    index_path = OUTPUTS_DIR / app_name / "components" / "index.json"
+    if not index_path.exists():
+        # Fallback to default repo path
+        return OUTPUTS_DIR / app_name / "repo"
+
+    try:
+        index_data = _load_json(index_path)
+        source_dir = index_data.get("source_dir_path", "")
+        if source_dir:
+            # source_dir_path is relative to BASE_DIR (repo root)
+            from cli.config import BASE_DIR
+            return BASE_DIR / source_dir
+    except Exception:
+        pass
+
+    # Fallback to default repo path
+    return OUTPUTS_DIR / app_name / "repo"
+
+
+def _read_file_content_safe(file_path: str, app_name: str) -> str:
+    """Read file content safely, handling errors and binary files.
+
+    Automatically adds line numbers with proper alignment for LLM context.
+    Format: "[padded_line_number] | [original_line_content]"
+    """
+    try:
+        source_dir = _get_source_dir_path(app_name)
+        full_path = source_dir / file_path.lstrip("./")
+
+        log_event(
+            "context.read_file_content",
+            {
+                "app_name": app_name,
+                "file_path": file_path,
+                "source_dir": str(source_dir),
+                "full_path": str(full_path),
+                "exists": full_path.exists(),
+            },
+        )
+
+        if not full_path.exists():
+            return f"<!-- File not found: {file_path} (full path: {full_path}) -->"
+
+        # Skip large files (> 500KB)
+        if full_path.stat().st_size > 500_000:
+            return f"<!-- File too large (>{full_path.stat().st_size / 1024:.0f}KB): {file_path} -->"
+
+        content = full_path.read_text(encoding="utf-8")
+
+        # Add line numbers for better LLM context
+        numbered_content = _add_line_numbers(content)
+
+        log_event(
+            "context.file_content_read",
+            {
+                "file_path": file_path,
+                "size_bytes": full_path.stat().st_size,
+                "line_count": len(content.splitlines()),
+            },
+        )
+        return numbered_content
+    except UnicodeDecodeError:
+        return f"<!-- Binary file skipped: {file_path} -->"
+    except Exception as e:
+        log_event(
+            "context.read_file_error",
+            {"file_path": file_path, "error": str(e)},
+        )
+        return f"<!-- Error reading file: {file_path} - {str(e)} -->"
+
+
+def _build_file_contents_xml(app_name: str, file_paths: List[str]) -> str:
+    """Build XML section with file contents for the specified paths."""
+    if not file_paths:
+        return ""
+
+    cleaned_paths = _clean_target_paths(file_paths)
+    if not cleaned_paths:
+        return ""
+
+    file_entries: list[str] = []
+    for file_path in cleaned_paths:
+        content = _read_file_content_safe(file_path, app_name)
+        escaped_path = escape(file_path)
+        file_entries.append(
+            f'  <file path="{escaped_path}">{_to_cdata(content)}</file>'
+        )
+
+    return "\n".join([
+        # "<file_contents>",
+        *file_entries,
+        # "</file_contents>"
+    ])
+
+
 def _parse_static_reports(
     xml_text: str,
     report_names: List[str],
@@ -389,7 +548,20 @@ def build_triage_context(app_name: str) -> Dict[str, str]:
     """Build the context dict for the Architect (triage) prompt."""
     # Respect CONTEXT_FORMAT env var
     preferred = _context_format_preference()
-    full_static = _slice_report_content(_read_static_xml(app_name))
+
+    # Use _parse_static_reports so each report's content is CDATA-wrapped
+    # properly — avoids injecting raw XML into the prompt which causes
+    # truncated/corrupt documents when reports contain < > & or ]]> sequences.
+    context_choose = _load_json(CONTEXT_CHOOSE_FILE)
+    all_report_names = list(context_choose.get("core_reports", []))
+    seen: set[str] = set(all_report_names)
+    for v in context_choose.get("asvs_tactical_mapping", {}).values():
+        for name in v.get("tactical_reports", []):
+            if name not in seen:
+                all_report_names.append(name)
+                seen.add(name)
+
+    full_static = _parse_static_reports(_read_static_xml(app_name), all_report_names)
 
     # 1. Full static context in preferred format
     if preferred in ("yaml", "yml"):
@@ -403,12 +575,14 @@ def build_triage_context(app_name: str) -> Dict[str, str]:
 
     # 3. Output format examples shown verbatim to the LLM
     component_json_format = COMPONENT_INDEX_FORMAT_FILE.read_text(encoding="utf-8")
+    source_dir_path = _extract_source_dir_from_static(app_name)
     return {
         "app_name": app_name,
         "asset_tags": asset_tags_txt,
         "component_json_format": component_json_format,
         "component_context_format": component_context_format,
         "full_static_context": full_static,
+        "source_dir_path": source_dir_path,
     }
 
 
@@ -417,8 +591,16 @@ def build_audit_context(
     component_id: str,
     asvs_key: str,           # e.g. "V6_Authentication"
     include_auditor_diary: bool = True,  # kept for backward compat; context.xml has no diary
+    prompt_sections: str = "component_context,filtered_static_context,file_contents,files_to_audit",
 ) -> Dict[str, str]:
-    """Build the context dict for the Audit-loop prompt."""
+    """Build the context dict for the Audit-loop prompt.
+
+    prompt_sections: comma-separated list of sections to include
+      - component_context: component analysis context
+      - filtered_static_context: static context reports (core + tactical)
+      - file_contents: actual file code (with line numbers)
+      - files_to_audit: list of files to audit
+    """
     # 1. ASVS chapter rules → plain text
     asvs_matrix = _load_json(ASVS_ASSET_RELATION_FILE)["asvs_routing_matrix"]
     chapter_meta = asvs_matrix[asvs_key]
@@ -440,20 +622,53 @@ def build_audit_context(
         component_paths=component_paths,
         core_paths=core_paths,
     )
+    if ANALYSIS_OUTPUT_FORMAT == 'xml':
+        # 4. Output format example (XML)
+        audit_output_format = AUDIT_OUTPUT_XML_FORMAT_FILE.read_text(encoding="utf-8")
+    else:
+        audit_output_format = AUDIT_OUTPUT_JSON_FORMAT_FILE.read_text(encoding="utf-8")
+        
 
-    # 4. Output format example (XML)
-    audit_output_format = AUDIT_OUTPUT_XML_FORMAT_FILE.read_text(encoding="utf-8")
+    # Parse prompt sections to include
+    sections_set = set(s.strip() for s in prompt_sections.split(",") if s.strip())
 
-    return {
+    # 5. Build context dict with conditional sections
+    context = {
         "app_name": app_name,
         "component_key": component_id,
         "asvsid": v_num,
         "asvs_i_rules_txt": asvs_rules_txt,
-        "context_md": context_content,      # key name kept; prompt reads it as <component_context>
-        "filtered_static_context": filtered_static,
         "audit_output.xml": audit_output_format,
-        "files_to_audit": _format_files_to_audit(component_paths),
     }
+
+    # Add conditional sections
+    if "component_context" in sections_set:
+        context["context_md"] = context_content
+    else:
+        context["context_md"] = ""
+
+    if "filtered_static_context" in sections_set:
+        context["filtered_static_context"] = filtered_static
+    else:
+        context["filtered_static_context"] = ""
+
+    if "files_to_audit" in sections_set:
+        context["files_to_audit"] = _format_files_to_audit(component_paths)
+    else:
+        context["files_to_audit"] = ""
+
+    # 6. Optionally add file contents (with line numbers)
+    if "file_contents" in sections_set:
+        # Combine core_paths and component_paths, removing duplicates
+        combined_paths = list(dict.fromkeys(core_paths + component_paths))
+        if combined_paths:
+            context["file_contents"] = _build_file_contents_xml(app_name, combined_paths)
+        else:
+            context["file_contents"] = ""
+    else:
+        context["file_contents"] = ""
+
+    return context
 
 
 def get_applicable_asvs_keys(asset_tags: List[str]) -> List[str]:
@@ -465,6 +680,28 @@ def get_applicable_asvs_keys(asset_tags: List[str]) -> List[str]:
         for key, meta in matrix.items()
         if tag_set & set(meta.get("target_assets", []))
     ]
+
+
+def get_recommended_and_unrecommended_chapters(asset_tags: List[str]) -> tuple[List[str], List[str]]:
+    """Separate ASVS chapters into recommended and unrecommended for given asset_tags.
+
+    Returns:
+        (recommended_keys, unrecommended_keys) where recommended are those with
+        target_assets overlapping asset_tags, and unrecommended are the rest.
+    """
+    matrix = _load_json(ASVS_ASSET_RELATION_FILE)["asvs_routing_matrix"]
+    tag_set = set(asset_tags)
+
+    recommended = []
+    unrecommended = []
+
+    for key, meta in matrix.items():
+        if tag_set & set(meta.get("target_assets", [])):
+            recommended.append(key)
+        else:
+            unrecommended.append(key)
+
+    return recommended, unrecommended
 
 
 def build_filtered_static_context(

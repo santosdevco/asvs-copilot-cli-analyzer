@@ -29,3 +29,16 @@ def get_llm_provider() -> LLMProvider:
 def get_current_model() -> str:
     """Return current model name."""
     return get_llm_provider().get_model_name()
+
+
+def set_active_tools(tools: list[str] | None) -> None:
+    """Set active tools for the current provider (Claude only)."""
+    provider = get_llm_provider()
+    if hasattr(provider, "set_active_tools"):
+        provider.set_active_tools(tools)
+
+
+def reset_provider() -> None:
+    """Reset the provider instance (for testing or reconfiguration)."""
+    global _provider_instance
+    _provider_instance = None

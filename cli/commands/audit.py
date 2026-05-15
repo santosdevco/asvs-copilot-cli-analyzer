@@ -17,26 +17,58 @@ import json
 import sys
 
 import click
+import pyperclip
 from rich.console import Console
 from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.prompt import Prompt, Confirm
 from rich.table import Table
 
-from cli.config import AUDIT_PROMPT_FILE
+from cli.config import AUDIT_PROMPT_FILE, ANALYSIS_OUTPUT_FORMAT
 from cli.core import (
     build_audit_context,
     complete,
     complete_interactive,
-    get_last_usage_summary,
     get_provider_and_model,
     get_applicable_asvs_keys,
+    get_recommended_and_unrecommended_chapters,
     load_component_index,
     missing_keys,
     render,
     write_usage_report,
 )
 from cli.core import init_llm_session, finalize_llm_session
+from rich.prompt import Prompt as RichPrompt
+
+
+# Valid prompt sections
+VALID_PROMPT_SECTIONS = {
+    "component_context",
+    "filtered_static_context",
+    "file_contents",
+    "files_to_audit",
+}
+
+
+def _validate_prompt_sections(ctx, param, value: str) -> str:
+    """Validate and normalize prompt sections parameter.
+
+    Raises Click.BadParameter if any section is invalid.
+    """
+    if not value:
+        return value
+
+    sections = set(s.strip().lower() for s in value.split(",") if s.strip())
+    invalid = sections - VALID_PROMPT_SECTIONS
+
+    if invalid:
+        valid_list = ", ".join(sorted(VALID_PROMPT_SECTIONS))
+        raise click.BadParameter(
+            f"Invalid prompt section(s): {', '.join(sorted(invalid))}. "
+            f"Valid options are: {valid_list}"
+        )
+
+    return ",".join(sorted(sections))
 from cli.core.grouped_audit import (
     build_grouped_worklist,
     run_grouped_by_chapter_job,
@@ -48,6 +80,7 @@ from cli.core.grouped_audit import (
 )
 from cli.models import ComponentItem
 from cli.core.app_logger import init_app_logger, log_event, log_prompt
+from cli.commands.save_analysis import _extract_json
 
 # Summary/status output goes to stderr so stdout stays clean for redirection
 console = Console(stderr=True)
@@ -55,7 +88,10 @@ console = Console(stderr=True)
 
 def _write_audit_usage_report(app_name: str, usage_calls: list[dict]) -> None:
     """Persist usage report for this audit command execution."""
+    console.print(f"[yellow]DEBUG: _write_audit_usage_report called with {len(usage_calls)} calls[/yellow]")
+
     if not usage_calls:
+        console.print("[yellow]⚠ No usage calls to report[/yellow]")
         return
 
     provider, model = get_provider_and_model()
@@ -96,30 +132,90 @@ def _print_call_usage(call_usage: dict | None) -> None:
     )
 
 
+def _save_pasted_analysis(app_name: str, component: ComponentItem, asvs_key: str) -> None:
+    """Save analysis results pasted by user in dry-run mode."""
+    chapter_id = asvs_key.split("_")[0]
+    console.print("\n[cyan]Paste the analysis JSON result, then press Ctrl+D (Linux/Mac) or Ctrl+Z+Enter (Windows):[/cyan]")
+
+    try:
+        pasted_content = sys.stdin.read()
+        if not pasted_content.strip():
+            console.print("[yellow]⚠ No content pasted[/yellow]")
+            return
+
+        # Extract JSON (handles plain JSON, markdown fences, and free-form text)
+        analysis_data, is_raw = _extract_json(pasted_content)
+        if is_raw:
+            console.print("[yellow]⚠ Could not identify a single JSON object — saving raw content as-is.[/yellow]")
+
+        # Ensure output directory exists
+        output_dir = Path(f"outputs/{app_name}/components/{component.component_id}/analysis")
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+        # Remove any existing files with same chapter name but different extension
+        for existing in output_dir.glob(f"{chapter_id}.*"):
+            if existing.suffix.lower() in (".json", ".xml"):
+                existing.unlink()
+
+        # Save to file with normalized extension
+        target_format = ANALYSIS_OUTPUT_FORMAT if ANALYSIS_OUTPUT_FORMAT in ("json", "xml") else "json"
+        output_file = output_dir / f"{chapter_id}.{target_format}"
+        with open(output_file, "w") as f:
+            if is_raw or target_format == "xml":
+                f.write(pasted_content)
+            else:
+                json.dump(analysis_data, f, indent=2, ensure_ascii=False)
+
+        console.print(f"[green]✅ Saved analysis to {output_file}[/green]")
+        log_event(
+            "audit.pasted_analysis_saved",
+            {"component_id": component.component_id, "asvs_key": asvs_key, "file": str(output_file)},
+        )
+
+    except KeyboardInterrupt:
+        console.print("[yellow]⚠ Cancelled[/yellow]")
+
+
 def _scan_existing_analyses(app_name: str) -> dict[str, dict[str, dict]]:
     """Scan for existing analysis files and return progress data."""
     analyses = {}
     components_dir = Path(f"outputs/{app_name}/components")
-    
+
     if not components_dir.exists():
         return {}
-    
+
+    target_format = ANALYSIS_OUTPUT_FORMAT if ANALYSIS_OUTPUT_FORMAT in ("json", "xml") else "json"
+
     for component_dir in components_dir.iterdir():
         if not component_dir.is_dir() or component_dir.name in ['README.md', 'index.json']:
             continue
-        
+
         component_id = component_dir.name
         analyses[component_id] = {}
-        
+
         analysis_dir = component_dir / "analysis"
         if analysis_dir.exists():
-            for analysis_file in analysis_dir.glob("*.xml"):
+            # Case-insensitive extension matching
+            for analysis_file in analysis_dir.iterdir():
+                if not analysis_file.is_file():
+                    continue
+
+                file_ext = analysis_file.suffix.lower()
+                if file_ext != f".{target_format}":
+                    continue
+
                 chapter = analysis_file.stem  # V1, V2, etc.
                 try:
-                    import xml.etree.ElementTree as ET
-                    root = ET.parse(analysis_file).getroot()
-                    reqs = root.findall("requirements/requirement")
-                    issues = sum(1 for r in reqs if r.get("status") == "FAIL")
+                    if target_format == "xml":
+                        import xml.etree.ElementTree as ET
+                        root = ET.parse(analysis_file).getroot()
+                        reqs = root.findall("requirements/requirement")
+                        issues = sum(1 for r in reqs if r.get("status") == "FAIL")
+                    else:  # json
+                        data = json.load(analysis_file.open())
+                        reqs = data.get("results", [])
+                        issues = sum(1 for r in reqs if r.get("status") == "FAIL")
+
                     analyses[component_id][chapter] = {
                         'file': analysis_file,
                         'issues': issues,
@@ -127,7 +223,7 @@ def _scan_existing_analyses(app_name: str) -> dict[str, dict[str, dict]]:
                     }
                 except Exception:
                     continue
-    
+
     return analyses
 
 
@@ -167,31 +263,33 @@ def _select_component_interactive(components: list[ComponentItem], analyses: dic
     table = Table(show_header=True, header_style="bold magenta")
     table.add_column("#", style="cyan", width=3)
     table.add_column("Component", style="bold")
+    table.add_column("Folder ID", style="dim")
     table.add_column("Risk Level", justify="center")
     table.add_column("Asset Tags", style="dim")
     table.add_column("Progress", justify="center")
-    
+
     for i, component in enumerate(components, 1):
         applicable_chapters = get_applicable_asvs_keys(component.asset_tags)
         component_analyses = analyses.get(component.component_id, {})
         completed = len(component_analyses)
         total = len(applicable_chapters)
-        
+
         # Color risk level
         risk_color = {
             "CRITICAL": "red",
-            "HIGH": "yellow", 
+            "HIGH": "yellow",
             "MEDIUM": "blue",
             "LOW": "green"
         }.get(component.risk_level, "white")
-        
+
         progress_text = f"{completed}/{total}"
         if completed > 0:
             progress_text += f" ({completed/total*100:.0f}%)"
-        
+
         table.add_row(
             str(i),
             component.component_name[:40],
+            component.component_id,
             f"[{risk_color}]{component.risk_level}[/{risk_color}]",
             ", ".join(component.asset_tags[:2]),
             progress_text
@@ -212,25 +310,57 @@ def _select_component_interactive(components: list[ComponentItem], analyses: dic
     return components[int(choice) - 1]
 
 
-def _select_chapter_interactive(component: ComponentItem, analyses: dict) -> str | None:
-    """Show chapter selection menu for a component."""
-    applicable_chapters = get_applicable_asvs_keys(component.asset_tags)
+def _select_chapter_interactive(
+    component: ComponentItem,
+    analyses: dict,
+    include_unrecommended: bool = True,
+    only_unrecommended: bool = False,
+) -> str | None:
+    """Show chapter selection menu for a component.
+
+    Args:
+        component: Component to audit
+        analyses: Existing analyses dict
+        include_unrecommended: If True, show unrecommended chapters; if False, only show recommended.
+        only_unrecommended: If True, show ONLY unrecommended chapters (overrides include_unrecommended).
+    """
     component_analyses = analyses.get(component.component_id, {})
-    
+
     console.print(f"\n[bold cyan]📖 ASVS Chapters for {component.component_name}:[/bold cyan]")
-    
+
+    # Get recommended and unrecommended chapters
+    recommended, unrecommended = get_recommended_and_unrecommended_chapters(component.asset_tags)
+
+    # Decide which chapters to show based on scope
+    if only_unrecommended:
+        # Only show unrecommended chapters
+        shown_recommended = []
+        shown_unrecommended = unrecommended
+    elif include_unrecommended:
+        # Show both
+        shown_recommended = recommended
+        shown_unrecommended = unrecommended
+    else:
+        # Show only recommended
+        shown_recommended = recommended
+        shown_unrecommended = []
+
     # Create table with chapter info
     table = Table(show_header=True, header_style="bold magenta")
     table.add_column("#", style="cyan", width=3)
     table.add_column("Chapter", style="bold")
     table.add_column("Title", style="dim")
+    table.add_column("Recommended", justify="center", width=12)
     table.add_column("Status", justify="center")
-    
+
     chapter_map = {}
-    for i, asvs_key in enumerate(applicable_chapters, 1):
+    counter = 1
+
+    # Add recommended chapters
+    for asvs_key in shown_recommended:
         chapter_id = asvs_key.split("_")[0]
         chapter_title = asvs_key.split("_", 1)[1].replace("_", " ") if "_" in asvs_key else "Unknown"
-        
+
         # Check if completed
         if chapter_id in component_analyses:
             issues = component_analyses[chapter_id]['issues']
@@ -240,30 +370,71 @@ def _select_chapter_interactive(component: ComponentItem, analyses: dict) -> str
                 status = f"[yellow]⚠️ {issues} issues[/yellow]"
         else:
             status = "[dim]⏳ Pending[/dim]"
-        
+
         table.add_row(
-            str(i),
+            str(counter),
             chapter_id,
             chapter_title[:40],
+            "[green]✓[/green]",
             status
         )
-        chapter_map[str(i)] = asvs_key
-    
+        chapter_map[str(counter)] = asvs_key
+        counter += 1
+
+    # Add unrecommended chapters (if enabled)
+    for asvs_key in shown_unrecommended:
+        chapter_id = asvs_key.split("_")[0]
+        chapter_title = asvs_key.split("_", 1)[1].replace("_", " ") if "_" in asvs_key else "Unknown"
+
+        # Check if completed
+        if chapter_id in component_analyses:
+            issues = component_analyses[chapter_id]['issues']
+            if issues == 0:
+                status = "[green]✅ CLEAN[/green]"
+            else:
+                status = f"[yellow]⚠️ {issues} issues[/yellow]"
+        else:
+            status = "[dim]⏳ Pending[/dim]"
+
+        table.add_row(
+            str(counter),
+            chapter_id,
+            chapter_title[:40],
+            "[dim]⊘[/dim]",
+            status
+        )
+        chapter_map[str(counter)] = asvs_key
+        counter += 1
+
     console.print(table)
-    
+
+    # Find first pending chapter
+    first_pending = None
+    for idx, asvs_key in enumerate(shown_recommended + shown_unrecommended, 1):
+        chapter_id = asvs_key.split("_")[0]
+        if chapter_id not in component_analyses:
+            first_pending = str(idx)
+            break
+
     # Get selection
-    choice = Prompt.ask(
-        "\nEnter chapter number (or 'b' for back, 'q' to quit)", 
-        choices=list(chapter_map.keys()) + ['b', 'q']
-    )
+    help_text = "\nEnter chapter number (or 'b' for back, 'n' for next pending, 'q' to quit)"
+    choices = list(chapter_map.keys()) + ['b', 'n', 'q']
+    choice = Prompt.ask(help_text, choices=choices)
     log_event(
         "audit.chapter_choice",
         {"component_id": component.component_id, "choice": choice},
     )
-    
+
+    if choice == 'n':
+        if first_pending:
+            return chapter_map[first_pending]
+        else:
+            console.print("[green]✓ All chapters analyzed[/green]")
+            return _select_chapter_interactive(component, analyses, include_unrecommended, only_unrecommended)
+
     if choice in ['q', 'b']:
         return choice
-    
+
     return chapter_map[choice]
 
 
@@ -369,6 +540,8 @@ def _run_asset_tags_interactive(
     interactive: bool,
     streaming: bool,
     include_auditor_diary: bool,
+    prompt_sections: str,
+    copy_clipboard: bool,
     usage_calls: list[dict],
 ) -> None:
     """Full interactive loop for --group-by asset_tags."""
@@ -379,6 +552,8 @@ def _run_asset_tags_interactive(
         interactive=interactive,
         streaming=streaming,
         include_auditor_diary=include_auditor_diary,
+        prompt_sections=prompt_sections,
+        copy_clipboard=copy_clipboard,
     )
 
     while True:
@@ -433,6 +608,15 @@ def _run_asset_tags_interactive(
             )
 
             results = run_grouped_by_chapter_job(app_name, asvs_key, pending, **common_kwargs)
+
+            # DEBUG: Check what we got
+            console.print(f"[yellow]DEBUG: Got {len(results)} results from grouped job[/yellow]")
+            for i, r in enumerate(results):
+                has_usage = r.get("usage")
+                console.print(f"[yellow]  Result {i}: usage={'present' if has_usage else 'missing/empty'}, keys={list(r.keys())}[/yellow]")
+                if has_usage:
+                    console.print(f"[yellow]    usage content: {r.get('usage')}[/yellow]")
+
             usage_calls.extend(r for r in results if r.get("usage"))
 
             if not dry_run:
@@ -447,6 +631,9 @@ def _run_asset_tags_interactive(
         if not Confirm.ask("\nSelect another tag?"):
             break
 
+    # After interactive loop ends
+    console.print(f"[yellow]DEBUG: Exiting asset_tags interactive mode with {len(usage_calls)} usage calls[/yellow]")
+
 
 def _run_grouped_audit(
     app_name: str,
@@ -460,6 +647,8 @@ def _run_grouped_audit(
     interactive: bool,
     streaming: bool,
     include_auditor_diary: bool,
+    prompt_sections: str,
+    copy_clipboard: bool,
     usage_calls: list[dict],
 ) -> None:
     """Delegate to grouped runners and collect usage records."""
@@ -480,6 +669,8 @@ def _run_grouped_audit(
             interactive=interactive,
             streaming=streaming,
             include_auditor_diary=include_auditor_diary,
+            prompt_sections=prompt_sections,
+            copy_clipboard=copy_clipboard,
             usage_calls=usage_calls,
         )
         return
@@ -509,6 +700,8 @@ def _run_grouped_audit(
         interactive=interactive,
         streaming=streaming,
         include_auditor_diary=include_auditor_diary,
+        prompt_sections=prompt_sections,
+        copy_clipboard=copy_clipboard,
     )
 
     if group_by in ("asvs_chapter", "asset_tags"):
@@ -588,6 +781,50 @@ def _target_chapters(
     show_default=True,
     help="Include the AUDITOR DIARY section from context.md in the prompt.",
 )
+@click.option(
+    "--active-tools",
+    default=None,
+    help=(
+        "Comma-separated list of tools to enable for Claude SDK (e.g., 'Read,Write,Edit'). "
+        "Use 'None' to disable all tools. Only applies when LLM_PROVIDER=claude."
+    ),
+)
+@click.option(
+    "--prompt-sections",
+    type=str,
+    default="component_context,filtered_static_context,file_contents,files_to_audit",
+    callback=_validate_prompt_sections,
+    help=(
+        "Comma-separated list of prompt sections to include. "
+        "Options: component_context, filtered_static_context, file_contents, files_to_audit. "
+        "Default includes all."
+    ),
+)
+@click.option(
+    "--copy-clipboard",
+    is_flag=True,
+    default=False,
+    help="Automatically copy the prompt to the clipboard (useful with --show-prompt).",
+)
+@click.option(
+    "--it",
+    "interactive_mode",
+    default=True,
+    type=bool,
+    show_default=True,
+    help="Interactive mode; set false to skip prompts (e.g. --it false).",
+)
+@click.option(
+    "--chapter-scope",
+    type=click.Choice(["all", "recommended-only", "unrecommended-only"], case_sensitive=False),
+    default="all",
+    help=(
+        "Filter chapters by recommendation status:\n"
+        "  all — show all chapters (default)\n"
+        "  recommended-only — only show chapters recommended for component\n"
+        "  unrecommended-only — only show chapters NOT recommended for component"
+    ),
+)
 def audit_cmd(
     app_name: str,
     component_filter: str | None,
@@ -600,8 +837,29 @@ def audit_cmd(
     interactive: bool,
     streaming: bool,
     include_auditor_diary: bool,
+    active_tools: str | None,
+    prompt_sections: str,
+    copy_clipboard: bool,
+    interactive_mode: bool,
+    chapter_scope: str,
 ) -> None:
     """Step 4 — Interactive security audit with progress tracking."""
+
+    # Convert chapter_scope to include/exclude unrecommended
+    # "all" → include unrecommended (True)
+    # "recommended-only" → exclude unrecommended (False)
+    # "unrecommended-only" → only unrecommended (special handling)
+    include_unrecommended = chapter_scope.lower() != "recommended-only"
+    only_unrecommended = chapter_scope.lower() == "unrecommended-only"
+
+    # Parse active_tools flag
+    parsed_tools: list[str] | None = None
+    if active_tools is not None:
+        if active_tools.strip().lower() == "none":
+            parsed_tools = []
+        else:
+            parsed_tools = [t.strip() for t in active_tools.split(",") if t.strip()]
+
     init_app_logger(
         app_name=app_name,
         command_name="audit",
@@ -617,10 +875,19 @@ def audit_cmd(
             "interactive": interactive,
             "streaming": streaming,
             "include_auditor_diary": include_auditor_diary,
+            "active_tools": active_tools,
+            "prompt_sections": prompt_sections,
         },
     )
-    init_llm_session(app_name=app_name, command_name="audit")
+    init_llm_session(app_name=app_name, command_name="audit", active_tools=parsed_tools)
     console.print(f"[bold cyan]🔒 Security Audit[/bold cyan] {app_name}")
+
+    if active_tools is not None:
+        tools_display = "none" if not parsed_tools else ", ".join(parsed_tools)
+        console.print(f"[dim]Active tools: {tools_display}[/dim]")
+    if "file_contents" in prompt_sections:
+        console.print("[dim]Prompt sections: file contents enabled (increased token usage)[/dim]")
+
     usage_calls: list[dict] = []
 
     # ── Grouped mode: bypass interactive menu, delegate to grouped runners ────
@@ -637,6 +904,8 @@ def audit_cmd(
             interactive=interactive,
             streaming=streaming,
             include_auditor_diary=include_auditor_diary,
+            prompt_sections=prompt_sections,
+            copy_clipboard=copy_clipboard,
             usage_calls=usage_calls,
         )
         _write_audit_usage_report(app_name, usage_calls)
@@ -654,13 +923,43 @@ def audit_cmd(
     # If both component and chapter are specified, run directly
     if component_filter and chapter_filter:
         selected_component = components[0]  # Already filtered by _target_components
-        applicable_chapters = get_applicable_asvs_keys(selected_component.asset_tags)
-        
-        # Find matching chapter
-        matching_chapters = [k for k in applicable_chapters if k.startswith(chapter_filter)]
-        if not matching_chapters:
-            console.print(f"[bold red]Chapter {chapter_filter} not applicable to {component_filter}[/bold red]")
-            return
+        recommended, unrecommended = get_recommended_and_unrecommended_chapters(selected_component.asset_tags)
+
+        # Determine which chapters to consider based on scope
+        if only_unrecommended:
+            chapters_to_consider = unrecommended
+        elif not include_unrecommended:
+            chapters_to_consider = recommended
+        else:
+            chapters_to_consider = recommended + unrecommended
+
+        # Handle --chapter n (next pending)
+        if chapter_filter == 'n':
+            component_analyses = analyses.get(selected_component.component_id, {})
+            pending = [k for k in chapters_to_consider if k.split('_')[0] not in component_analyses]
+            if not pending:
+                scope_label = {
+                    True: "unrecommended",
+                    False: "recommended"
+                }.get(only_unrecommended, "")
+                if scope_label:
+                    console.print(f"[green]✓ All {scope_label} chapters already analyzed for {component_filter}[/green]")
+                else:
+                    console.print(f"[green]✓ All chapters already analyzed for {component_filter}[/green]")
+                finalize_llm_session()
+                return
+            matching_chapters = [pending[0]]
+        else:
+            # Find matching chapter
+            matching_chapters = [k for k in chapters_to_consider if k.startswith(chapter_filter)]
+            if not matching_chapters:
+                scope_label = {
+                    True: "unrecommended for",
+                    False: "recommended for"
+                }.get(only_unrecommended, "applicable to")
+                console.print(f"[bold red]Chapter {chapter_filter} not {scope_label} {component_filter}[/bold red]")
+                finalize_llm_session()
+                return
 
         call_usage = _run_audit(
             app_name,
@@ -672,6 +971,9 @@ def audit_cmd(
             interactive,
             streaming,
             include_auditor_diary,
+            prompt_sections,
+            copy_clipboard,
+            interactive_mode,
         )
         if call_usage:
             usage_calls.append(call_usage)
@@ -692,7 +994,7 @@ def audit_cmd(
         # If component specified, go to chapter selection
         if component_filter:
             selected_component = components[0]  # Already filtered
-            result = _select_chapter_interactive(selected_component, analyses)
+            result = _select_chapter_interactive(selected_component, analyses, include_unrecommended, only_unrecommended)
             
             if result == 'q':
                 break
@@ -710,6 +1012,9 @@ def audit_cmd(
                     interactive,
                     streaming,
                     include_auditor_diary,
+                    prompt_sections,
+                    copy_clipboard,
+                    interactive_mode,
                 )
                 if call_usage:
                     usage_calls.append(call_usage)
@@ -719,8 +1024,8 @@ def audit_cmd(
                 
                 # Refresh analyses after audit
                 analyses = _scan_existing_analyses(app_name)
-                
-                if not Confirm.ask("\nRun another audit?"):
+
+                if not interactive_mode or not Confirm.ask("\nRun another audit?"):
                     break
         else:
             # Component selection
@@ -744,13 +1049,16 @@ def _run_audit(
     interactive: bool,
     streaming: bool,
     include_auditor_diary: bool,
+    prompt_sections: str = "component_context,filtered_static_context,file_contents,files_to_audit",
+    copy_clipboard: bool = False,
+    interactive_mode: bool = True,
 ) -> dict | None:
     """Execute a single audit."""
     chapter_id = asvs_key.split("_")[0]
     label = f"{component.component_id} → {chapter_id}"
-    
+
     console.print(f"\n[bold yellow]🔍 Auditing {label}[/bold yellow]")
-    
+
     # Build and render prompt
     try:
         ctx = build_audit_context(
@@ -758,6 +1066,7 @@ def _run_audit(
             component.component_id,
             asvs_key,
             include_auditor_diary=include_auditor_diary,
+            prompt_sections=prompt_sections,
         )
     except FileNotFoundError as exc:
         console.print(f"[red]⚠ Skipped — {exc}[/red]")
@@ -787,21 +1096,40 @@ def _run_audit(
     if dry_run or show_prompt:
         chars = len(prompt)
         tokens_est = chars // 4
-        console.print(f"[dim]chars={chars:,}  tokens≈{tokens_est:,}[/dim]")
 
-        if show_prompt:
+        if not interactive_mode:
+            # Batch/script mode: raw prompt to stdout only, nothing else
             sys.stdout.write(prompt)
             sys.stdout.write("\n")
             sys.stdout.flush()
+        else:
+            # Interactive mode: clipboard + stats + optional show-prompt
+            if copy_clipboard:
+                try:
+                    pyperclip.copy(prompt)
+                    console.print("[green]✅ Prompt copied to clipboard[/green]")
+                except Exception as e:
+                    console.print(f"[yellow]⚠ Could not copy to clipboard: {e}[/yellow]")
+
+            console.print(f"[dim]chars={chars:,}  tokens≈{tokens_est:,}[/dim]")
+            if show_prompt:
+                sys.stdout.write(prompt)
+                sys.stdout.write("\n")
+                sys.stdout.flush()
+
+            if dry_run and Confirm.ask("\n[cyan]Do you want to paste analysis results to save?[/cyan]"):
+                _save_pasted_analysis(app_name, component, asvs_key)
+
         return None
 
     # Call LLM
     console.print("🤖 Calling AI for security analysis...")
+    usage_summary = {}
     try:
         if verbose or interactive or streaming:
-            parsed_result, response = complete_interactive(
-                prompt, 
-                verbose=verbose, 
+            usage_summary, response = complete_interactive(
+                prompt,
+                verbose=verbose,
                 interactive=interactive,
                 streaming=streaming,
                 context=f"ASVS {chapter_id} audit for {component.component_id}"
@@ -809,7 +1137,6 @@ def _run_audit(
         else:
             response = complete(prompt)
 
-        usage_summary = get_last_usage_summary()
         log_event(
             "audit.call_completed",
             {
@@ -819,7 +1146,7 @@ def _run_audit(
                 "usage_captured": bool(usage_summary),
             },
         )
-        
+
         console.print(f"[green]✅ Analysis complete for {label}[/green]")
         return {
             "operation": "audit",
@@ -829,9 +1156,8 @@ def _run_audit(
             "response_chars": len(response),
             "usage": usage_summary,
         }
-        
+
     except Exception as exc:
-        usage_summary = get_last_usage_summary()
         log_event(
             "audit.call_failed",
             {

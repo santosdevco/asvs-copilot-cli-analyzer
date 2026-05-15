@@ -55,3 +55,17 @@ class CopilotProvider(LLMProvider):
 
     def get_provider_name(self) -> str:
         return "copilot"
+
+    def get_account_info(self) -> dict:
+        """Return Copilot token status and model."""
+        token = os.environ.get("GITHUB_TOKEN", os.environ.get("GH_TOKEN", ""))
+        if token:
+            masked = token[:6] + "..." + token[-4:] if len(token) > 10 else "***"
+        else:
+            masked = "(not set)"
+
+        return {
+            "provider": "copilot",
+            "model": self.model,
+            "github_token": masked,
+        }

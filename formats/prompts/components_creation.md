@@ -7,12 +7,16 @@
 		Analizar el contexto estático completo de una aplicación y agrupar los archivos en componentes
 		de alto nivel para auditoría posterior.
 	</objective>
+	<source_dir_path>
+		{{source_dir_path}}
+	</source_dir_path>
 
 	<strict_instructions>
 		<item id="1">
 			Analiza el CONTEXTO ESTÁTICO DE LA APLICACIÓN y complementa leyendo rutas de código
 			referenciadas en el static context. Confirma que estas leyendo las rutas correctas. Agrupa archivos en componentes lógicos de alto nivel
 			(ej. Módulo de Autenticación, Procesamiento de Pagos, Frontend UI).
+			Solo puedes leer lo que esta adentro de source_dir_path
 		</item>
 		<item id="2">
 			Asigna a cada componente las etiquetas correctas en asset_tags usando solo el catálogo permitido.
@@ -33,7 +37,7 @@
 			ni menciones a ASVS checks. Esa información va en los archivos de análisis por capítulo (V1.xml, V2.xml, etc.).
 		</item>
 		<item id="7">
-			El index.json contiene SOLO: component_id, component_name, risk_level, asset_tags, files_to_audit.
+			El index.json contiene SOLO: component_id, component_name, risk_level, asset_tags, files_to_audit,core_paths.
 			NO incluyas initial_semantic_context ni ningún otro campo adicional. El contexto arquitectónico
 			va exclusivamente en context.xml.
 		</item>

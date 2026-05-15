@@ -5,16 +5,19 @@ This module provides backward-compatible functions while internally using the ne
 from __future__ import annotations
 
 from cli.adapters.llm import get_llm_provider
+from cli.adapters.llm.factory import set_active_tools as _set_active_tools
 from cli.adapters.logging import get_logger, init_logging
 
 # Global state for backward compatibility
 _session_initialized = False
 
 
-def init_llm_session(app_name: str, command_name: str) -> None:
-    """Initialize LLM session with logging."""
+def init_llm_session(app_name: str, command_name: str, active_tools: list[str] | None = None) -> None:
+    """Initialize LLM session with logging and optional tool configuration."""
     global _session_initialized
     init_logging(app_name, command_name)
+    if active_tools is not None:
+        _set_active_tools(active_tools)
     _session_initialized = True
 
 
@@ -68,3 +71,8 @@ def get_provider_and_model() -> tuple[str, str]:
     """Return current provider and model."""
     provider = get_llm_provider()
     return provider.get_provider_name(), provider.get_model_name()
+
+
+def configure_active_tools(tools: list[str] | None) -> None:
+    """Configure active tools for the LLM provider (Claude only)."""
+    _set_active_tools(tools)
